@@ -1,0 +1,21 @@
+Django==4.2.16
+asgiref
+# autopep8==1.6.0
+# dj-database-url==0.5.0
+# gunicorn==20.1.0
+# pycodestyle==2.8.0
+pytz==2022.7.1
+sqlparse==0.5.0
+# toml==0.10.2
+whitenoise==6.7.0
+django-environ==0.11.2
+django-jazzmin==3.0.0
+requests==2.31.0
+pillow==11.0.0
+django-colorfield==0.11.0
+django-allauth==65.3.1
+PyJWT==2.6.0
+cryptography==41.0.3
+django-allauth-ui==1.5.3
+django-widget-tweaks==1.5.0
+slippers==0.6.2

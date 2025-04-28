@@ -1,0 +1,107 @@
+{% extends "../layouts/base.html" %}
+
+{% block title %} 官方檔案 {% endblock %}
+
+<!-- Specific Page CSS goes HERE -->
+{% block stylesheets %}
+<style>
+    .copy-btn {
+        cursor: pointer;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>將感測器數據上傳至網站</h1>
+            <h2>必須先<a href="/add_sensor.html">新增感測器</a>並為感測器命名</h2>
+            <h3>將感測器的數據上傳至
+            <div class="card">
+                <div class="card-body">
+                     <code id="domain"></code>
+                    <button class="btn btn-primary copy-btn" onclick="copyToClipboard('#domain')">複製</button>
+                </div>
+            </div></h3>
+            <h1>
+                範例 
+                <div class="card">
+                    <div class="card-body">
+                        <code class="url">https://example.com/add_sensor_data?name=mySensor&data=100
+                        </code>
+                    </div>
+                </div>
+            </h1>
+
+            <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">伺服器回傳狀態碼</h4>
+                </div>
+                <div class="card-body col-md-6">
+                  <div class="table-responsive">
+                    <table class="table tablesorter ">
+                      <thead class=" text-primary">
+                        <tr>
+                          <th>
+                            狀態碼
+                          </th>
+                          <th>
+                            狀態
+                          </th>
+                          <th>
+                            回應內容
+                          </th>
+                          <th>
+                            解決方法
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for response in responses %}
+                        <tr>
+                          <td>
+                              {{ response.status_code }}
+                          </td>
+                          <td>
+                              {{ response.status }}
+                          </td>
+                          <td>
+                              {{ response.context }}
+                          </td>
+                          <td>
+                              {{ response.solution }}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+        var domain = window.location.hostname;
+        document.getElementById("domain").textContent = domain + "/add_sensor_data?name=你的感測器名稱&data=你的數據資料";
+    });
+
+    function copyToClipboard(element) {
+        var tempInput = document.createElement("input");
+        tempInput.style.position = "absolute";
+        tempInput.style.left = "-9999px";
+        tempInput.value = document.querySelector(element).textContent;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        showNotification('top', 'center', '系統訊息 - <b>複製成功</b>');
+    }
+</script>
+{% endblock javascripts %}

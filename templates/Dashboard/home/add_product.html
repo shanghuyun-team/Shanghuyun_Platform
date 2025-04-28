@@ -1,0 +1,274 @@
+{% extends "../layouts/base.html" %}
+
+{% block title %} 新增商品 {% endblock %}
+
+{% block stylesheets %}
+<style>
+  .upload-container {
+    cursor: pointer;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .upload-container:hover {
+    border-color: #888;
+  }
+  .upload-container i {
+    font-size: 24px;
+  }
+  .upload-container p {
+    margin: 0;
+  }
+  .image-preview {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .image-preview img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
+  .image-preview .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">新增商品</h5>
+        </div>
+        <div class="card-body">
+          <form id="productForm" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>賣家姓名</label>
+                  {{ form.name }}
+                </div>
+              </div>
+              <div class="col-md-4 pl-md-1">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">電子信箱</label>
+                  {{ form.email }}
+                </div>
+              </div>
+              <div class="col-md-4 pl-md-1">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">連絡電話</label>
+                  {{ form.phone_number }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>聯絡地址</label>
+                  {{ form.address }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>商品名稱</label>
+                  {{ form.product_name }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>商品價錢</label>
+                  {{ form.price }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>商品描述</label>
+                  {{ form.description }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                    <label>上傳商品照片封面照</label>
+                    <div id="imageUploadContainer" class="upload-container" onclick="triggerFileInput('productImage')">
+                        <i class="tim-icons icon-cloud-upload-94"></i>
+                        <p>點擊上傳照片</p>
+                    </div>
+                    {{ form.image }}
+                    <div id="imagePreviewContainer" style="margin-top: 10px;">
+                        <!-- 預覽照片區域 -->
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group">
+                      <label>上傳商品照片</label>
+                      <div id="multiImageUploadContainer" class="upload-container" onclick="triggerFileInput('multiImageInput')">
+                          <i class="tim-icons icon-cloud-upload-94"></i>
+                          <p>點擊上傳照片</p>
+                      </div>
+                      <input type="file" id="multiImageInput" name="multiImageInput" accept="image/*" multiple style="display: none;" onchange="previewMultiImages(event)">
+                      <div id="multiImagePreviewContainer" style="margin-top: 10px;">
+                          <!-- 多圖預覽區域 -->
+                      </div>
+                  </div>
+              </div>
+          </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-fill btn-primary">新增</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-user">
+        <div class="card-body">
+          <p class="card-text">
+          <div class="author">
+            <div class="block block-one"></div>
+            <div class="block block-two"></div>
+            <div class="block block-three"></div>
+            <div class="block block-four"></div>
+            <a href="javascript:void(0)">
+              <img class="avatar" src="{% if profile.photo %}{{ profile.photo.url }}{% else %}{{ DASHBOARD_STATIC_URL }}/img/anime3.png{% endif %}" alt="..." onerror="this.src='{{ DASHBOARD_STATIC_URL }}/img/anime3.png'">
+              <h5 class="title">賣家資料</h5>
+            </a>
+            <p>{% if profile.real_name %}{{ profile.real_name }}{% endif %}</p>
+          </div>
+          </p>
+          <div class="card-description">
+            {% if profile.description %}{{ profile.description }}{% endif %}
+          </div>
+          <div class="card-footer">
+            <div class="button-container">
+              <button href="javascript:void(0)" class="btn btn-icon btn-round btn-facebook">
+                <i class="fab fa-facebook"></i>
+              </button>
+              <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
+                <i class="fab fa-twitter"></i>
+              </button>
+              <button href="javascript:void(0)" class="btn btn-icon btn-round btn-google">
+                <i class="fab fa-google-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+function previewImage(event) {
+    var file = event.target.files[0];
+    if (file.type.startsWith('image/')) {  // 確認文件類型為圖片
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('imagePreviewContainer');
+            var div = document.createElement('div');
+            div.classList.add('image-preview');
+            var img = document.createElement('img');
+            img.src = reader.result;
+            div.appendChild(img);
+            var btn = document.createElement('button');
+            btn.classList.add('delete-btn');
+            btn.innerHTML = 'X';
+            btn.onclick = function() {
+                div.remove();
+                document.getElementById('productImage').value = '';  // 清空文件選擇器的值
+            };
+            div.appendChild(btn);
+            output.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        alert('請上傳圖片文件');
+    }
+}
+
+function previewMultiImages(event) {
+  var files = event.target.files;
+  var output = document.getElementById('multiImagePreviewContainer');
+  output.innerHTML = '';  // 清空預覽區域
+  for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      if (file.type.startsWith('image/')) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              var div = document.createElement('div');
+              div.classList.add('image-preview');
+              var img = document.createElement('img');
+              img.src = e.target.result;
+              div.appendChild(img);
+              var btn = document.createElement('button');
+              btn.classList.add('delete-btn');
+              btn.innerHTML = 'X';
+              btn.onclick = function() {
+                  div.remove();
+              };
+              div.appendChild(btn);
+              output.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+      } else {
+          alert('請上傳圖片文件');
+      }
+  }
+}
+
+function triggerFileInput(id) {
+    document.getElementById(id).click();
+}
+
+document.getElementById('productImage').addEventListener('change', previewImage);
+
+// 檢查是否需要顯示保存成功通知
+document.addEventListener('DOMContentLoaded', function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('save_success') === 'True') {
+        showNotification('top', 'center', '系統訊息 - <b>新增成功</b>');
+    }
+});
+
+function validateForm() {
+    const price = parseFloat(document.querySelector('[name="price"]').value);
+    if (price < 0) {
+        showNotification('top', 'center', '<b>價錢不得小於0</b>', 'danger');
+        return false; // 阻止表單提交
+    }
+    return true; // 允許表單提交
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const notification = "{{ notification }}";
+  if (notification === 'True') {
+      showNotification('top', 'center', '提示 - <b>完成個人資料將啟動自動填入功能</b>', "info");
+  }
+});
+</script>
+{% endblock javascripts %}

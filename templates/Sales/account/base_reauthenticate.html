@@ -1,0 +1,23 @@
+{% extends "account/base_reauthenticate.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% block content %}
+    {% trans "確認訪問" as heading %}
+    {% blocktranslate asvar subheading %}
+    請重新驗證以保護您的帳戶。
+    {% endblocktranslate %}
+    {% #container heading=heading subheading=subheading %}
+    {% block reauthenticate_content %}{% endblock %}
+    {% if reauthentication_alternatives %}
+        <div class="divider divider-neutral"></div>
+        <h2 class="text-lg my-3">{% translate "替代選項" %}</h2>
+        <ul>
+            {% for alt in reauthentication_alternatives %}
+                <li>
+                    <a class="link" href="{{ alt.url }}">{{ alt.description }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% /container %}
+{% endblock content %}

@@ -1,0 +1,518 @@
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap');
+*
+{
+  
+  font-weight: 400;
+  font-family: "LXGW WenKai Mono TC", monospace;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  text-transform: capitalize;
+  transition: .2s linear;
+}
+body
+{
+  background-color:	 #000000;
+ 
+}
+html
+{
+    font-size: 70%;
+    scroll-padding-top: 9rem;
+    scroll-behavior: smooth;
+}
+
+
+
+
+/*滾輪消失*/
+::-webkit-scrollbar
+ {
+  width: 0px;
+}
+HTML {  
+  scrollbar-base-color: #fff;  
+  scrollbar-3dlight-color: #fff;  
+  scrollbar-highlight-color: #fff;  
+  scrollbar-track-color: #fff;  
+  scrollbar-arrow-color: #fff;  
+  scrollbar-shadow-color: #fff;  
+  } 
+/*滾輪消失*/
+
+
+/*標題列*/
+.nav {
+  display:  flex;
+  align-items: center;
+  justify-content:  center;
+  padding: 3rem 0%;
+	width: 100%;
+	height: 60px;
+	position: fixed;
+  top:0; 
+  left: 0;
+  right: 0;
+	background-color: transparent;
+  z-index: 9999;
+}
+
+.nav .logo img
+{
+  height: 5rem;
+   
+}
+
+.nav .nav-text a
+{
+  margin: 0 0.8rem; 
+  color: #ffffff;
+  font-size: 1.5rem;
+ 
+}
+
+.nav .nav-text a:hover
+{
+  color: #ffffff;
+	border-bottom:1.5px solid #ffffff;
+	transition: 0.5s;
+}
+
+/*標題列*/
+
+
+/*圖片輪播*/
+
+.slider{
+  height: 100vh;
+  margin-top: 60px;
+  position: relative;
+}
+.slider .list .item{
+  position: absolute;
+  inset: 0 0 0 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: .5s;
+}
+.slider .list .item img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.slider .list .item::after{
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+      to top, #000 15%, transparent
+  );
+  
+}
+.slider .list .item .content{
+  position: absolute;
+  left: 10%;
+  top: 20%;
+  width: 500px;
+  max-width: 80%;
+  z-index: 1;
+}
+.slider .list .item .content p:nth-child(1){
+  text-transform: uppercase;
+  letter-spacing: 10px;
+}
+.slider .list .item .content h2{
+  font-size: 100px;
+  margin: 0;
+}
+.slider .list .item.active{
+  opacity: 1;
+  z-index: 10;
+}
+@keyframes showContent {
+  to{
+      transform: translateY(0);
+      filter: blur(0);
+      opacity: 1;
+  }
+}
+.slider .list .item.active p:nth-child(1),
+.slider .list .item.active h2,
+.slider .list .item.active p:nth-child(3){
+  transform: translateY(30px);
+  filter: blur(20px);
+  opacity: 0;
+  animation: showContent .5s .7s ease-in-out 1 forwards;
+}
+.slider .list .item.active h2{
+  animation-delay: 1s;
+}
+.slider .list .item.active p:nth-child(3){
+  animation-duration: 1.3s;
+  font-size: 2rem;
+}
+.arrows{
+  position: absolute;
+  top: 30%;
+  right: 50px;
+  z-index: 100;
+}
+.arrows button{
+  background-color: #eee5;
+  border: none;
+  font-family: monospace;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  font-size: x-large;
+  color: #eee;
+  transition: .5s;
+}
+.arrows button:hover{
+  background-color: #eee;
+  color: black;
+}
+.thumbnail{
+  position: absolute;
+  bottom: 50px;
+  z-index: 11;
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  height: 250px;
+  padding: 0 50px;
+  box-sizing: border-box;
+  overflow: auto;
+  justify-content: center;
+}
+.thumbnail::-webkit-scrollbar{
+  width: 0;
+}
+.thumbnail .item{
+  width: 150px;
+  height: 220px;
+  filter: brightness(.5);
+  transition: .5s;
+  flex-shrink: 0;
+}
+.thumbnail .item img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.thumbnail .item.active{
+  filter: brightness(1.5);
+}
+.thumbnail .item .content{
+  position: absolute;
+  inset: auto 10px 10px 10px;
+}
+@media screen and (max-width: 678px) {
+  .thumbnail{
+      justify-content: start;
+  }
+  .slider .list .item .content h2{
+      font-size: 60px;
+  }
+  .arrows{
+      top: 10%;
+  }
+}
+/*圖片輪播 小圖*/
+
+
+/*圖片輪播 小圖*/
+
+
+
+
+
+
+/*介紹*/
+.heading
+{
+  text-align: center;
+  color: #ffffff;
+  text-transform:uppercase;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  font-size: 4rem;
+  
+}
+
+.heading span
+{
+  color: #ff9100;
+  text-transform:uppercase;
+  
+
+}
+.about .row
+{
+  display: flex;
+  align-items: center;
+  background: #1f1f1f93;
+  flex-wrap: wrap;
+  border: 2px solid #eee;
+}
+.about .row .image 
+{
+  flex:1 1 45rem;
+  
+}
+.about .row .image img
+{
+  width: 100%;
+}
+.about .row .content2
+{
+  flex:1 1 45rem;
+  padding: 2rem;
+  
+ 
+}
+.about .row .content2 h3
+{
+  font-size: 3rem;
+  color: #ff9100;
+}
+
+.about .row .content2 p
+{
+  font-size:1.5rem;
+  color: #ffffff;
+  padding: 1rem 0;
+  line-height:1.8;
+}
+/*介紹*/
+
+
+
+/* 產品 */
+.menu .bix-container
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem,1fr));
+  gap:1.5rem;
+}
+
+.menu .bix-container .box
+{
+  padding: 5rem;
+  text-align: center;
+  border: 2px solid #eee;
+}
+
+
+.menu .bix-container .box img
+{
+  height: 20rem;
+}
+
+.menu .bix-container .box h3
+{
+  color:#ff9100;
+  font-size:2.5rem;
+  padding:1rem 0;
+}
+
+.menu .bix-container .box a
+{
+  
+  font-size:1.5rem;
+  padding:1.25rem;
+}
+
+.menu .bix-container .box:hover
+{
+  background: #1f1f1f93;
+}
+
+.menu .bix-container .box:hover > a
+{
+  color:#1f1f1f93;
+}
+
+/* 產品 */
+
+
+
+/* 按鈕 */
+.btn {
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  min-width: 200px;
+  background: #FFFFFF;
+  border: 2px solid #ff9100;
+  border-radius: 4px;
+  color: #ff9100;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  transition: 0.5s;
+  padding: 10px 20px;
+}
+.btn span {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  background-color: #ff9100;
+  transform: translateY(150%);
+  border-radius: 50%;
+  left: calc((var(--n) - 1) * 25%);
+  transition: 0.5s;
+  transition-delay: calc((var(--n) - 1) * 0.1s);
+  z-index: -1;
+}
+.btn:hover,
+.btn:focus {
+  color: black;
+}
+.btn:hover span {
+  transform: translateY(0) scale(2);
+}
+.btn span:nth-child(1) {
+  --n: 1;
+}
+.btn span:nth-child(2) {
+  --n: 2;
+}
+/* 按鈕 */
+
+
+/* 聯絡 */
+.contact .row
+{
+  display: flex;
+  align-items: center;
+  background-color: #000000;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.contact .row .map
+{
+  flex:1 1 45rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.contact .row form
+{
+  flex:1 1 45rem;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.contact .row form h3
+{
+  text-transform: uppercase;
+  font-size: 3.5rem;
+  color: #e7e6e5;
+}
+
+.contact .row form .inputBox
+{
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border: 2px solid #ff9100;
+}
+
+.contact .row form .inputBox span
+{
+  color: #ffffff;
+  font-size: 2rem;
+  padding-left: 2rem;
+}
+
+.contact .row form .inputBox input
+{
+  width: 100%;
+  padding: 2rem;
+  font-size: 1.5rem;
+  color:#ffffff;
+  text-transform: none;
+  background: none;
+}
+/* 聯絡 */
+
+.footer
+{
+  border-top: 3px solid #ff9100;
+  background: #1f1f1f93;
+  text-align: center;
+  padding: 2px;
+  
+}
+
+.footer .share
+{
+  size: 3rem;
+  padding: 0.25rem 0;
+  font-size: 2.5rem;
+}
+
+.footer .credit
+{
+  font-size: 1.5rem;
+  color: #eee;
+  font-weight: lighter;
+  padding: 1rem;
+}
+
+
+
+
+
+@media screen and (max-width: 678px) {
+  .home .list .item .content{
+      padding-right: 0;
+  }
+  .home .list .item .content .title{
+      font-size: 30px;
+  }
+}
+
+
+
+
+@media (max-width:990px) 
+{
+  html
+  {
+    font-size: 55%;
+  }
+
+  .header
+  {
+    padding: 1.5rem 2rem;
+
+  }
+  
+}
+@media (max-width:990px) 
+{
+  .images img
+{
+  width: 75vh;
+  height: 60vh;
+  padding: 0%;
+  margin: 0%;
+}
+  
+}
+

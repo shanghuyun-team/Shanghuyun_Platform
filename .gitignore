@@ -3,4 +3,5 @@ ngrok.exe
 **/__pycache__/
 venv/
 env/
+venv_laptop/
 db.sqlite3

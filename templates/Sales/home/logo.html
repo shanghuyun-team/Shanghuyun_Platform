@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+
+{% comment %} 這個是網頁的title {% endcomment %}
+{% block title %} Animated Login Form {% endblock title %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="{{ ASSETS_ROOT }}/css/logo.css">
+{% endblock stylesheets %}
+
+{% block container %}
+<img class="wave" src="{{ ASSETS_ROOT }}/images/背景.png">
+	<div class="container">
+		<div class="img">
+			
+		</div>
+		<div class="login-content">
+			<form action="index.html">
+				<img src="{{ ASSETS_ROOT }}/images/大頭貼.png">
+				<h2 class="title">Welcome</h2>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<input type="text" class="input" placeholder="Username">
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<input type="password" class="input" placeholder="Password">
+            	   </div>
+            	</div>
+            	<a href="#">Forgot Password?</a>
+            	<input type="submit" class="btn" value="Login">
+            </form>
+        </div>
+    </div>
+{% endblock container %}
+
+{% block javascripts %}
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<script type="{{ ASSETS_ROOT }}text/javascript" src="js/logo.js"></script>
+{% endblock javascripts %}

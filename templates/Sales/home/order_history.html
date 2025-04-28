@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>歷史訂單</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .details {
+            display: none;
+            background-color: #e0e0e0; /* 灰色背景 */
+        }
+        .back-button {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function toggleDetails(id) {
+            var details = document.getElementById(id);
+            if (details.style.display === "none") {
+                details.style.display = "table-row";
+            } else {
+                details.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'home' %}" class="btn btn-primary">回首頁</a>
+        </div>
+        <h1>歷史訂單</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>訂單編號</th>
+                    <th>總金額</th>
+                    <th>狀態</th>
+                    <th>建立時間</th>
+                    <th>更新時間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for info in order_info %}
+                <tr onclick="toggleDetails('details-{{ forloop.counter }}')">
+                    <td>{{ info.order.merchant_trade_no }}</td>
+                    <td>{{ info.order.total_amount }}</td>
+                    <td>{{ info.order.status }}</td>
+                    <td>{{ info.order.created_at }}</td>
+                    <td>{{ info.order.updated_at }}</td>
+                    <td>
+                        {% if not info.has_shipping_info and info.order.status == '已付款'%}
+                            <a href="{% url 'shipping_info' info.order.id %}">填寫送貨資訊</a>
+                        {% elif info.order.status == '已付款' %}
+                            已填寫
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr id="details-{{ forloop.counter }}" class="details">
+                    <td colspan="6">
+                        <strong>購買細項:</strong>
+                        <ul>
+                            {% for item in info.items %}
+                            <li>{{ item.product }} - {{ item.quantity }} x {{ item.price }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

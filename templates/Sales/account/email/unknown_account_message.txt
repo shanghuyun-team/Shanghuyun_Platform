@@ -1,0 +1,10 @@
+{% extends "account/email/base_message.txt" %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% blocktranslate %}您收到此電子郵件是因為您或其他人嘗試使用電子郵件 {{ email }} 訪問帳戶。然而，我們的數據庫中沒有此帳戶的記錄。{% endblocktranslate %}
+
+{% blocktranslate %}如果您沒有發起此操作，可以安全地忽略此郵件。{% endblocktranslate %}
+
+{% blocktranslate %}如果是您本人操作，您可以使用以下鏈接註冊帳戶。{% endblocktranslate %}
+
+{{ signup_url }}{% endautoescape %}{% endblock content %}

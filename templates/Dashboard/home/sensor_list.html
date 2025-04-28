@@ -1,0 +1,121 @@
+<!-- sensor_list.html -->
+{% extends "../layouts/base.html" %}
+
+{% block title %} 感測器列表 {% endblock %}
+
+{% block stylesheets %}
+<!-- 加入 Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card  card-plain">
+          <div class="card-header">
+            <h4 class="card-title">感測器列表</h4>
+            <p class="category">在此查看所有感測器</p>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table tablesorter " id="">
+                <thead class=" text-primary">
+                  <tr>
+                    <th>
+                      感測器名稱
+                    </th>
+                    <th>
+                      最新紀錄時間
+                    </th>
+                    <th>
+                      最新一筆數據
+                    </th>
+                    <th class="text-center">
+                      操作
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for sensor in sensors %}
+                  <tr>
+                    <td>
+                        {{ sensor.name }}
+                    </td>
+                    <td>
+                        {{ sensor.timestamp }}
+                    </td>
+                    <td>
+                        {{ sensor.data }}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'sensor_data_list' sensor.name %}" class="btn btn-info btn-sm">查看所有數據</a>
+                        <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-sensor-name="{{ sensor.name }}">刪除</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- 刪除確認視窗 -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        你確定要刪除此感測器的數據嗎？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">刪除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<!-- 加入 jQuery 和 Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $('#deleteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var sensorName = button.data('sensor-name');
+    var modal = $(this);
+    modal.find('#confirmDelete').data('sensor-name', sensorName);
+  });
+
+  $('#confirmDelete').on('click', function () {
+    var sensorName = $(this).data('sensor-name');
+    $.ajax({
+      url: "{% url 'delete_sensor_data' 'SENSOR_NAME' %}".replace('SENSOR_NAME', sensorName),
+      type: 'POST',
+      data: {
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function (response) {
+        if (response.status === 'success') {
+          location.reload();
+        } else {
+          showNotification('top', 'center', '系統訊息 - <b>新增成功</b>');
+        }
+      }
+    });
+  });
+</script>
+{% endblock javascripts %}

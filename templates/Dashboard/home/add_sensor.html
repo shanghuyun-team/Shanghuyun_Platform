@@ -1,0 +1,94 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} 新增感測器 {% endblock %}
+
+{% block stylesheets %}
+<style>
+  .upload-container {
+    cursor: pointer;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .upload-container:hover {
+    border-color: #888;
+  }
+  .upload-container i {
+    font-size: 24px;
+  }
+  .upload-container p {
+    margin: 0;
+  }
+  .image-preview {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .image-preview img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
+  .image-preview .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">新增感測器</h5>
+        </div>
+        <div class="card-body">
+          <form id="productForm" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-4 pr-md-1">
+                <div class="form-group">
+                  <label>感測器名稱</label>
+                  {{ form.name }}
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-fill btn-primary">新增</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+
+// 檢查是否需要顯示保存成功通知
+document.addEventListener('DOMContentLoaded', function() {
+    {% if sensor_add_success %}
+      showNotification('top', 'center', '系統訊息 - <b>新增成功</b>');
+    {% endif %}
+
+    {% comment %} 表單錯誤通知 {% endcomment %}
+    
+    {% if has_errors %}
+      showNotification('top', 'center', '系統訊息 - <b>新增失敗：{{ form.errors }}</b>', 'danger');
+    {% endif %}
+});
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,14 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% blocktrans %}您收到此郵件是因為您的帳戶發生了以下變更：{% endblocktrans %}
+
+{% block notification_message %}
+{% endblock notification_message%}
+
+{% blocktrans %}如果您不認識此變更，請立即採取適當的安全措施。您的帳戶變更來自：
+
+- IP 地址: {{ip}}
+- 瀏覽器: {{user_agent}}
+- 日期: {{timestamp}}{% endblocktrans %}{% endautoescape %}{% endblock %}

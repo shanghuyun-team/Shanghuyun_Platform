@@ -1,0 +1,30 @@
+{% comment %} 右方旁邊浮動的設定 {% endcomment %}
+<div class="fixed-plugin">
+    <div class="dropdown show-dropdown">
+        <a href="#" data-toggle="dropdown">
+            <i class="fa fa-cog fa-2x"> </i>
+        </a>
+        <form method="post">
+        {% csrf_token %}
+        <ul class="dropdown-menu">
+            <li class="header-title"> 導覽列背景顏色</li>
+            <li class="adjustments-line">
+                <label for="{{ color_form.color.id_for_label }}">選擇顏色</label>
+                {{ color_form.color }}
+            </li>
+            <li class="adjustments-line">
+                <label for="{{ color_form.gradient.id_for_label }}">是否使用漸層</label>
+                {{ color_form.gradient }}
+            </li>
+            <li class="adjustments-line">
+                <label for="{{ color_form.gradient_color.id_for_label }}">漸層顏色</label>
+                {{ color_form.gradient_color }}
+            </li>
+            <li class="adjustments-line">
+                <button type="submit" class="btn btn-primary btn-block btn-round">提交</button>
+            </li>
+            <li class="adjustments-line"></li>
+        </ul>
+    </form>
+    </div>
+</div>

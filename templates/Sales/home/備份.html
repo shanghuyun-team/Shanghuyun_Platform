@@ -1,0 +1,252 @@
+{% extends "../layouts/base.html" %}
+
+{% comment %} 這個是網頁的title {% endcomment %}
+{% block title %} 
+  {% if web_inf.title %}
+    {{ web_inf.title }}
+  {% else %}
+    尚虎雲
+  {% endif %} 
+{% endblock title %}
+
+{% comment %} 在這裡加入css {% endcomment %}
+{% block stylesheets %}
+<link href="{{ SALES_STATIC_URL }}/css/home.css" rel="stylesheet" media="all" autostart="true">
+<style>
+  .active { /* 示例樣式 */
+      color: red;
+  }
+  .slide {
+      display: inline-block;
+      width: 100%;
+  }
+  .carousel-container {
+      width: 100%;
+      overflow: hidden;
+  }
+  .carousel-inner {
+      display: flex;
+      transition: margin-left 0.5s ease;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block container %}
+<!--首頁-->
+<div class="bg1">
+  <div class="nav">
+    <a href="#" class="logo">
+      <img src="{% if web_inf.logo %}{{ web_inf.logo.url }}{% else %}{{ SALES_STATIC_URL }}/images/favicon.png{% endif %}">
+    </a>
+    <div class="nav-text">
+      <a href="#home">主頁</a>
+      <a href="#about">關於我們</a>
+      <a href="#menu">賣家</a>
+      <a href="#contact">聯絡我們</a>
+      {% comment %} {% if user.is_authenticated %}
+        <a href="{% url 'order_history' %}">歷史訂單</a>
+        <a href="{% url 'account_logout' %}">登出</a>
+      {% else %}
+        <a href="{% url 'account_login' %}">登入</a>
+      {% endif %} {% endcomment %}
+    </div>
+  </div>
+</div>
+<!--首頁-->
+
+<!--圖片輪播-->
+<section class="home" id="home">
+  <div class="slider">
+    <!-- list Items -->
+    <div class="list">
+      {% for carousel in carousels %}
+        {% if forloop.first %}
+          <div class="item active">
+        {% else %}
+          <div class="item">
+        {% endif %}
+        <img src="{{ carousel.image.url }}">
+            <div class="content" style="color: {{ carousel.color }}">
+              {% if carousel.header %}
+                <p>
+                  {{ carousel.header }}
+                </p>
+              {% endif %}
+              {% if carousel.title %}
+                <h2>
+                  {{ carousel.title }}
+                </h2>
+              {% endif %}
+
+              {% if carousel.content %}
+                <p>
+                  {{ carousel.content }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+      {% endfor %}
+    </div>
+
+    <!-- button arrows -->
+    <div class="arrows">
+        <button id="prev"><</button>
+        <button id="next">></button>
+    </div>
+
+    <!-- thumbnail -->
+    <div class="thumbnail">
+      {% for carousel in carousels %}
+        {% if forloop.first %}
+          <div class="item active">
+        {% else %}
+          <div class="item">
+        {% endif %}
+        <img src="{{ carousel.image.url }}">
+          {% if carousel.title %}
+          <div class="title" style="color: {{ carousel.color }}">
+              {{ carousel.title }}
+          </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!--圖片輪播-->
+
+<!--介紹-->
+{% if about %}
+  <section class="about" id="about">
+    <h1 class="heading"> <span>about</span> us </h1>
+    <div class="row">
+      <div class="image">
+          <img src="{{ about.image.url }}" alt="">
+      </div>
+      <div class="content2">
+        <h3>{{ about.title }}</h3>
+        {% if about.simple_introduce %}
+          <p>{{ about.simple_introduce }}</p>
+        {% endif %}
+        {% if about.introduce %}
+          <p>{{ about.introduce }}</p>  
+        {% endif %}
+        {% if about.link %}
+        <a href="{{ about.link }}" class="btn">   
+          關於更多
+          <span></span><span></span><span></span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+<!--介紹-->
+
+<!--產品-->
+<section class="menu" id="menu">
+  <h1 class="heading">our <span>partner vendors</span> </h1> 
+  <div class="bix-container">
+    {% for parent in parents %}
+      <div class="box">
+        <img src="{{ parent.seller_image.url }}" alt="">
+        <h3>{{ parent.seller_name }}</h3>
+        <a href="{% url 'seller_detail' parent.id %}" class="btn">
+          關於更多
+          <span></span><span></span><span></span>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+<!--產品-->
+
+<!--聯絡-->
+<section class="contact" id="contact">
+  <h1 class="heading"><span>contact </span>us</h1>
+  <div class="row">
+    {% if mapIframe %}
+      {{ mapIframe.map_iframe | safe }}
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <h3>聯 絡 我 們</h3>
+      <div class="inputBox">
+        <span class="fa-solid fa-user"></span>
+        {{ form.name }}
+      </div>
+      <div class="inputBox">
+        <span class="fa-solid fa-envelope"></span>
+        {{ form.email }}
+      </div>
+      <div class="inputBox">
+        <span class="fa-solid fa-phone"></span>
+        {{ form.phone }}
+      </div>
+      <div class="inputBox">
+        <span class="fa-solid fa-question"></span>
+        {{ form.question }}
+      </div>
+      <button type="submit" class="btn">
+        提 交
+        <span></span><span></span><span></span>
+      </button>
+    </form>
+  </div>
+</section>
+<!--聯絡-->
+
+<!--底部-->
+<section class="footer">
+  <div class="share">
+    {% if profiles.facebook_link %}
+      <a href="{{ profiles.facebook_link }}" class="fa-brands fa-facebook"></a>
+    {% endif %}
+    {% if profiles.instagram_link %}
+      <a href="{{ profiles.instagram_link }}" class="fa-brands fa-instagram"></a>
+    {% endif %}
+    {% if profiles.youtube_link %}
+      <a href="{{ profiles.youtube_link }}" class="fa-brands fa-youtube"></a>
+    {% endif %}
+  </div>
+  <div class="credit">© <script>document.write(new Date().getFullYear());</script> Copyrights 尚虎雲產銷平台</br><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with Wen Qi</div> 
+  {% if profiles.phone_number %}
+    <div class="credit">連絡電話: {{ profiles.phone_number }}</div> 
+  {% endif %}
+  {% if profiles.contact_address %}
+    <div class="credit">連絡地址: {{ profiles.contact_address }}</div>
+  {% endif %}
+  {% if profiles.real_name %}
+    <div class="credit">聯絡人: {{ profiles.real_name }}</div> 
+  {% endif %}
+  {% if profiles.description %}
+    <div class="credit">個人簡介: {{ profiles.description }}</div> 
+  {% endif %}
+</section>
+<!--底部-->
+{% endblock container %}
+
+{% block javascripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    {% if send_success %}
+      alert("表單已提交");
+    {% endif %}
+  });
+
+  function scroll() {
+    var top = $(".bg1").offset().top; // 獲取導航欄變色的位置距頂部的高度
+    var scrollTop = $(window).scrollTop(); // 獲取當前窗口距頂部的高度
+    if (scrollTop <= top) {
+      $('.nav').css('background-color', 'transparent');
+    } else {
+      $('.nav').css('background-color', '#111111');
+    }
+  }
+
+  $(window).on('scroll', function() {
+    scroll();
+  });
+</script>
+<script src="{{ SALES_STATIC_URL }}/js/home.js"></script>
+{% endblock javascripts %}

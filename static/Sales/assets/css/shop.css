@@ -1,0 +1,359 @@
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap');
+*
+{
+    font-weight: 400;
+    font-family: "LXGW WenKai Mono TC", monospace;
+}
+body
+{
+    background-color: #120f0f;
+    
+}
+
+a{
+    text-decoration: none; 
+    color: #a98a62;
+}
+button{
+    cursor: pointer;
+}
+.container{
+    width: 1000px;
+    margin: auto;
+    max-width: 90vw;
+    text-align: center;
+    padding-top: 20px;
+    transition: 0.5s;
+    color: #d5b582;  
+
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f1ebeb;  
+}
+.icon-cart img{
+    width:2.5rem ;
+}
+.icon-cart{
+    position: relative;
+}
+.icon-cart span{
+    position: absolute;
+    background-color: #a98a62;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    
+    top: 50%;
+    right: -20px;
+}
+.title{
+    font-size: xx-large;
+    font-family: "LXGW WenKai Mono TC", monospace;
+}
+
+.cartTab{
+    width: 400px;
+    max-width: 100%;
+    background-color: rgb(14, 16, 18);
+    position: fixed;
+    top: 0;
+    right: 0px;
+    bottom: 0;
+    color: #caa88d;
+    display: grid;
+    grid-template-rows: 70px 1fr 70px;
+    font-family: "LXGW WenKai Mono TC", monospace;
+}
+.cartTab h1{
+    padding: 20px;
+    margin: 0;
+    font-weight:300;
+    
+}
+.cartTab .btn{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+.cartTab button{
+    background-color: #a98a62;
+    border: none;
+    font-family: Poppins;
+    font-size: large;
+    cursor: pointer;
+    color: #000000;
+}
+.cartTab .close{
+    background-color: #ffffff;
+    font-family: "LXGW WenKai Mono TC", monospace;
+}
+.listCart{
+    overflow: auto;
+    
+}
+.listCart::-webkit-scrollbar{
+    width: 0;
+}
+ 
+.cartTab{
+    right: -400px;
+    transition: 0.5s;
+}
+body.activeTabCart .cartTab{
+    right: 0;
+}
+body.activeTabCart .container{
+    transform: translateX(-250px);
+}
+
+
+.listProduct .item img
+{
+    width: 90%;
+    
+}
+.listProduct
+{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.listProduct .item
+{
+    background-color:#120f0f;
+    padding: 20px;
+    border-radius: 50px;
+    
+}
+.listProduct .item:hover
+{
+    background-color: #352f2f;
+}
+.listProduct .item h2
+{
+    font-weight: 500;
+    font-size: large;
+    
+}
+.listProduct .item .price
+{
+    letter-spacing: 7px;
+    font-size: 1rem;
+}
+
+
+
+.listProduct .item button
+{
+    width: 140px;
+    margin: 1rem;
+}
+
+.listProduct .item button,
+.listProduct .item button:focus
+ {
+    position: relative;
+    min-width: 60px;
+    border: none;
+    border-radius: 100px;
+    background-color: #a98a62;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition-duration: 0.4s;
+    padding: 10px 20px;
+}
+.listProduct .item button:hover
+ {
+    
+    box-shadow: 0px 2px 10px 5px #a98a62;
+    color: #070606;
+}
+.listProduct .item button:after 
+{
+    content: "";
+    display: block;
+    position: absolute;
+    background: #a98a62;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -20px !important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s
+}
+.listProduct .item button:active:after 
+{
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s;
+}
+
+
+.listCart .item img
+{
+    width: 100%;
+}
+.listCart .item
+{
+    display: grid;
+    grid-template-columns: 70px 150px 50px 1fr;
+    gap: 10px;
+    text-align: center;
+    align-items: center;
+}
+.listCart .quantity span
+{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-color: #000000;
+    border-radius: 50%;
+    color: #f5ebeb;
+    cursor: pointer;
+}
+.listCart .quantity span:nth-child(2)
+{
+    background-color: transparent;
+    color: #eae0e0;
+    cursor: auto;
+}
+.listCart .quantity
+{
+    display: flex;
+}
+
+
+
+
+.detail
+{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+    text-align: left;
+}
+.detail .image img
+{
+    width: 100%;
+}
+.detail .image
+{
+    position: relative;
+}
+
+.detail .name
+{
+    font-size: xxx-large;
+    padding: 40px 0 0 0;
+    margin: 0 0 10px 0;
+}
+.detail .price
+{
+    font-weight: bold;
+    font-size: x-large;
+    letter-spacing: 7px;
+    margin-bottom: 20px;
+}
+.detail .buttons
+{
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.detail .buttons button
+{
+    background-color: #d3c4c4;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 20px;
+    font-family: Poppins;
+    font-size: large;
+}
+.detail .buttons svg
+{
+    width: 15px;
+}
+.detail .buttons span
+{
+    background-color: #a98a62;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-left: 20px;
+}
+.detail .buttons button:nth-child(2)
+{
+    background-color: #a98a62;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    
+}
+.detail .description
+{
+    font-weight: 300;
+}
+
+ 
+
+@media only screen and (max-width: 992px)
+ {
+    .listProduct{
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .detail{
+        grid-template-columns:  40% 1fr;
+    }
+}
+
+
+
+@media only screen and (max-width: 767px) {
+    .listProduct{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .detail{
+        text-align: center;
+        padding-top: 0px;
+        grid-template-columns: 1fr;
+        
+    }
+    .detail .content
+    {
+        font-size: 1em;
+        z-index: 100;
+       
+    }
+    .detail .image img{
+        width: unset;
+        height: 40vh;
+        
+    } 
+    .detail .name{
+        font-size: x-large;
+        margin: 0;
+
+    }
+    .detail .buttons button{
+        font-size: small;
+    }
+    .detail .buttons{
+        justify-content: center;
+    }
+}
+

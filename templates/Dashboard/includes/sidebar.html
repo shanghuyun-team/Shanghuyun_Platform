@@ -1,0 +1,80 @@
+{% comment %} 右邊導覽列 {% endcomment %}
+    <div class="sidebar" style="
+    {% if background_color.gradient %}
+        background: linear-gradient(0deg, {{ background_color.color }} 0%, {{ background_color.gradient_color }} 100%);
+    {% else %}
+        background: {{ background_color.color }};
+    {% endif %}"
+     >
+        <style>
+            ul.nav li a p{
+                font-size: 20px;
+            }
+        </style>
+        <!--
+          Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+      -->
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="javascript:void(0)" class="simple-text logo-mini">
+                    
+                </a> 
+                <a href="javascript:void(0)" class="simple-text logo-normal">
+                    儀表板
+                </a>
+            </div>
+            <ul class="nav">
+                <li class="{% if 'index' in segment %} active {% endif %} ">
+                    <a href="/">
+                        <i class="tim-icons icon-chart-pie-36"></i>
+                        <p>數據分析</p>
+                    </a>
+                </li>
+                <li class="{% if 'document.html' in segment %} active {% endif %} ">
+                    <a href="/document.html">
+                        <i class="tim-icons icon-map-big"></i>
+                        <p>官方檔案</p>
+                    </a>
+                </li>
+                <li class="{% if 'add_product' in segment %} active {% endif %}">
+                    <a href="{% url 'add_product' %}">
+                        <i class="tim-icons icon-upload"></i>
+                        <p>新增商品</p>
+                    </a>
+                </li>
+                <li class="{% if 'add_sensor' in segment %} active {% endif %}">
+                    <a href="/add_sensor.html">
+                        <i class="tim-icons icon-simple-add"></i>
+                        <p>新增感測器</p>
+                    </a>
+                </li>
+                <li class="{% if 'product_list' in segment %} active {% endif %}">
+                    <a href="/product_list.html">
+                        <i class="tim-icons icon-app"></i>
+                        <p>商品列表</p>
+                    </a>
+                </li>
+                <li class="{% if 'sensor_list' in segment %} active {% endif %}">
+                    <a href="/sensor_list.html">
+                        <i class="tim-icons icon-bullet-list-67"></i>
+                        <p>感測器列表</p>
+                    </a>
+                </li>
+                <li class="{% if 'user' in segment %} active {% endif %}">
+                    <a href="/user.html">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>個人資料</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="document.getElementById('logout-form').submit();" style="color: inherit; text-decoration: none;">
+                        <i class="tim-icons icon-button-power"></i>
+                        <p>登出</p>
+                    </a>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>

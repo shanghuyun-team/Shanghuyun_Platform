@@ -1,0 +1,9 @@
+{% extends "account/signup_closed.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% block content %}
+    {% trans "註冊已關閉" as heading %}
+    {% trans "很抱歉，目前註冊已關閉。" as subheading %}
+    {% #container heading=heading subheading=subheading %}
+    {% /container %}
+{% endblock content %}

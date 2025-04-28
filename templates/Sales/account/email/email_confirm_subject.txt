@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}電子郵件確認{% endblocktrans %}
+{% endautoescape %}

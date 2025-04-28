@@ -1,0 +1,166 @@
+{% extends "../layouts/base.html" %}
+
+{% block title %} 個人資訊 {% endblock %} 
+
+{% block stylesheets %}
+<style>
+  .form-group img {
+    max-width: 200px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    display: block;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+  }
+  .form-group input[type="file"] {
+    display: block;
+    margin-top: 10px;
+    color: #fff;
+  }
+  .photo-section {
+    border: 2px dashed #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .photo-section h5 {
+    color: #fff;
+    margin-bottom: 10px;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">編輯個人資料</h5>
+        </div>
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data" name="user">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div class="form-group">
+                  <label>使用者帳號</label>
+                  <input type="text" class="form-control" disabled="" placeholder="{{ username }}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2 pr-md-1">
+                <div class="form-group">
+                  <label>姓名</label>
+                  {{ form.real_name }}
+                </div>
+              </div>
+              <div class="col-md-3 pr-md-1">
+                <div class="form-group">
+                  <label>電話</label>
+                  {{ form.phone_number }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5 pr-md-1">
+                <div class="form-group">
+                  <label>聯絡地址</label>
+                  {{ form.contact_address }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label>簡介</label>
+                  {{ form.description }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group photo-section">
+                  <h5>照片</h5>
+                  {% if profile.photo %}
+                    <img src="{{ profile.photo.url }}" id="photo-preview" alt="Profile Photo">
+                  {% else %}
+                    <img src="{{ DASHBOARD_STATIC_URL }}/img/anime3.png" id="photo-preview" alt="Placeholder">
+                  {% endif %}
+                  {{ form.photo }}
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-fill btn-primary">保存</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-user">
+        <div class="card-body">
+          <p class="card-text">
+            <div class="author">
+              <div class="block block-one"></div>
+              <div class="block block-two"></div>
+              <div class="block block-three"></div>
+              <div class="block block-four"></div>
+              <a href="javascript:void(0)">
+                <img class="avatar" src="{% if profile.photo %}{{ profile.photo.url }}{% else %}{{ DASHBOARD_STATIC_URL }}/img/anime3.png {% endif %}" alt="..." onerror="this.src='{{ DASHBOARD_STATIC_URL }}/img/anime3.png'">
+                <h5 class="title">{% if form.real_name.value %}{{ form.real_name.value }}{% endif %}</h5>
+              </a>
+              <p class="description"></p>
+            </div>
+          </p>
+          <div class="card-description">
+            {% if form.description.value %}{{ form.description.value }}{% endif %}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="button-container">
+            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-facebook">
+              <i class="fab fa-facebook"></i>
+            </button>
+            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
+              <i class="fab fa-twitter"></i>
+            </button>
+            <button href="javascript:void(0)" class="btn btn-icon btn-round btn-google">
+              <i class="fab fa-google-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+  document.querySelector('input[type="file"]').addEventListener('change', function(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var output = document.getElementById('photo-preview');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  });
+  // 檢查是否需要顯示保存成功通知
+  document.addEventListener('DOMContentLoaded', function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('save_success') === 'True') {
+      showNotification('top', 'center', '系統訊息 - <b>保存成功</b>');
+    }
+  });
+</script>
+{% endblock javascripts %}

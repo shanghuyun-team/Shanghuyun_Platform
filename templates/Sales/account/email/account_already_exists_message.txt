@@ -1,0 +1,10 @@
+{% extends "account/email/base_message.txt" %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% blocktrans %}您收到此電子郵件是因為您或其他人嘗試使用以下電子郵件地址註冊帳戶：
+
+{{ email }}
+
+然而，使用該電子郵件地址的帳戶已經存在。如果您忘記了密碼，請使用忘記密碼程序來恢復您的帳戶：
+
+{{ password_reset_url }}{% endblocktrans %}{% endautoescape %}{% endblock content %}

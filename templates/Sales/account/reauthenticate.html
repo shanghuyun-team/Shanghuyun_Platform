@@ -1,0 +1,14 @@
+{% extends "account/reauthenticate.html" %}
+{% load i18n %}
+{% load allauth_ui %}
+{% block reauthenticate_content %}
+    <div class="mt-5">
+        {% blocktranslate %}輸入您的密碼：{% endblocktranslate %}
+    </div>
+    {% url 'account_reauthenticate' as action_url %}
+    {% trans "確認" as button_text %}
+    {% #form form=form url=action_url button_text=button_text %}
+    {{ redirect_field }}
+    {% csrf_token %}
+    {% /form %}
+{% endblock reauthenticate_content %}

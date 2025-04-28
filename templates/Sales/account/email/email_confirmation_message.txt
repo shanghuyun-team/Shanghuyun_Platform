@@ -1,0 +1,9 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% user_display user as user_display %}{% blocktranslate with site_name=current_site.name site_domain=current_site.domain %}您收到這封電子郵件是因為用戶 {{ user_display }} 已經使用您的電子郵件地址在 {{ site_domain }} 註冊了一個帳戶。{% endblocktranslate %}
+
+{% if code %}{% blocktranslate %}您的電子郵件驗證碼如下。請在您打開的瀏覽器窗口中輸入此驗證碼。{% endblocktranslate %}
+
+{{ code }}{% else %}{% blocktranslate %}要確認這是正確的，請訪問 {{ activate_url }}{% endblocktranslate %}{% endif %}{% endautoescape %}{% endblock content %}

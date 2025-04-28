@@ -1,0 +1,4 @@
+{% extends "account/email/base_notification.txt" %}
+{% load i18n %}
+
+{% block notification_message %}{% blocktrans %}您的電子郵件已從 {{ from_email }} 更改為 {{ to_email }}。{% endblocktrans %}{% endblock notification_message %}

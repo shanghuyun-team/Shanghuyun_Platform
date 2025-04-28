@@ -1,0 +1,4 @@
+{% extends "account/email/base_notification.txt" %}
+{% load i18n %}
+
+{% block notification_message %}{% blocktrans %}您的電子郵件已被確認。{% endblocktrans %}{% endblock notification_message %}

@@ -1,0 +1,9 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% blocktranslate %}您的登入代碼如下。請在您打開的瀏覽器窗口中輸入此代碼。{% endblocktranslate %}{% endautoescape %}
+
+{{ code }}
+
+{% blocktranslate %}如果您沒有發起此操作，則可以安全地忽略此郵件。{% endblocktranslate %}{% endblock content %}

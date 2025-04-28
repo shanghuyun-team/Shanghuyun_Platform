@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} {{ web_inf.title }} {% endblock title %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block container %}
+    <div id="app"></div>
+    <div id="temporaryContent">
+        <div class="listProduct">
+            if you don't know how to run this project.
+        </div>
+    </div>
+{% endblock container %}
+
+{% block javascripts %}
+    <script>
+        const sellerId = "{{ seller.id }}";
+    </script>
+    <script src="{{ ASSETS_ROOT }}/js/index.js" type="module"></script>
+{% endblock javascripts %}

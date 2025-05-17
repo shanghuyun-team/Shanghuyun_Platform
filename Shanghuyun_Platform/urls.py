@@ -1,41 +1,35 @@
-"""
-URL configuration for Shanghuyun_Platform project.
-
-This module defines the URL routes for the entire Django project, including:
-  - Admin site
-  - Frontend sale and dashboard apps
-  - REST API (v1)
-  - Authentication (logout)
-
-When DEBUG is True, also serves media files via Django's static helper.
-"""
-from django.contrib import admin
 from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path, include
-from django.contrib.auth.views import LogoutView as auth_views
+from django.urls import include, path
+from django.contrib import admin
+
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
+
+from search import views as search_views
 
 urlpatterns = [
-    # Django Admin site
-    path('admin/', admin.site.urls),
-
-    # 銷售模組：前端販售頁面路由，apps.sale.urls 負責具體 view mapping
-    path('sales/', include('apps.sale.urls')),
-
-    # 賣家後台 Dashboard：商家管理介面，apps.vendor_dashboard.urls 定義子路由
-    path('dashboard/', include('apps.vendor_dashboard.urls')),
-
-    # REST API v1：統一的 API endpoints，包含 Product 及其他資源
-    path('api/v1/', include('api.v1.urls')),
-
-    # 登出路由：使用 Django 內建 LogoutView
-    path('logout/', auth_views.as_view(), name='logout'),
+    path("django-admin/", admin.site.urls),
+    path("admin/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),
+    path("search/", search_views.search, name="search"),
 ]
 
-# 僅在開發模式下，使用 Django 內建 static helper 來提供 MEDIA_URL  & MEDIA_ROOT
-# 上傳的檔案會透過 settings.MEDIA_URL 對應到 settings.MEDIA_ROOT
+
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT,
-    )
+    from django.conf.urls.static import static
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+    # Serve static and media files from development server
+    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns = urlpatterns + [
+    # For anything not caught by a more specific rule above, hand over to
+    # Wagtail's page serving mechanism. This should be the last pattern in
+    # the list:
+    path("", include(wagtail_urls)),
+    # Alternatively, if you want Wagtail pages to be served from a subpath
+    # of your site, rather than the site root:
+    #    path("pages/", include(wagtail_urls)),
+]

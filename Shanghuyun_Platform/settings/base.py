@@ -26,8 +26,10 @@ load_dotenv(f'{BASE_DIR}/.env')
 # Application definition
 
 INSTALLED_APPS = [
+    'api.v1.account.apps.AccountConfig',
     "home",
     "search",
+    
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -59,8 +61,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
-    'api.v1.account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [

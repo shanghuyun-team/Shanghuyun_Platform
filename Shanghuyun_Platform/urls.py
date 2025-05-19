@@ -1,6 +1,7 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.contrib import admin
+from django.template.response import TemplateResponse
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -8,13 +9,17 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
+def users_not_found(request, *args, **kwargs):
+    return TemplateResponse(request, 'wagtailadmin/404.html', status=404)
+
 urlpatterns = [
-    path("django-admin/", admin.site.urls),
+    re_path(r'^admin/users/.*$', users_not_found),
     path("admin/", include(wagtailadmin_urls)),
-    path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("api/v1/account/", include("api.v1.account.urls")),
     path('accounts/', include('allauth.urls')),
+    #path("documents/", include(wagtaildocs_urls)),
+    #path("django-admin/", admin.site.urls),
 ]
 
 

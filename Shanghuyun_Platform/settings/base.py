@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from dotenv import load_dotenv
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+load_dotenv(f'{BASE_DIR}/.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -46,9 +48,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     'wagtail_modeladmin',
+
     "phonenumber_field",
-    "api.v1.account",
+
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
+    'api.v1.account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +68,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -188,10 +201,36 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 WAGTAILDOCS_EXTENSIONS = ['csv', 'docx', 'key', 'odt', 'pdf', 'pptx', 'rtf', 'txt', 'xlsx', 'zip']
 
 # Use Custom User
-AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "api_v1_account.User"
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_USERNAME_REQUIRED     = True
+ACCOUNT_EMAIL_REQUIRED        = False
+ACCOUNT_EMAIL_VERIFICATION    = 'optional'
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
+}
+
+SOCIALACCOUNT_AUTO_SIGNUP = False
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id':     os.getenv('GOOGLE_CLIENT_ID'),
+            'secret':        os.getenv('GOOGLE_CLIENT_SECRET'),
+            'key':           ''
+        },
+        'SCOPE': ['openid',],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
 }

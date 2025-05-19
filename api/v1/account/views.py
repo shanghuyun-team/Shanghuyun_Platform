@@ -1,14 +1,36 @@
-from rest_framework import viewsets, permissions
-from .models import User
-from .serializers import UserSerializer
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework import status
+from .models import User, Profile
+from .serializers import (
+    UserRegistrationSerializer,
+    PasswordChangeSerializer,
+    ProfileUpdateSerializer
+)
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class RegisterAPIView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.AllowAny]
+
+class PasswordChangeAPIView(generics.UpdateAPIView):
+    serializer_class = PasswordChangeSerializer
+    model = User
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_permissions(self):
-        # 只有 superuser 或自己才能修改自己的資料
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [permissions.IsAdminUser()]
-        return super().get_permissions()
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'detail': '密碼已更新'}, status=status.HTTP_200_OK)
+
+class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        # 如果不存在就建立一個空的
+        profile, _ = Profile.objects.get_or_create(user=self.request.user)
+        return profile

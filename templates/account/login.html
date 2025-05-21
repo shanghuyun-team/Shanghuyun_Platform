@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
-{% load allauth account widget_tweaks %}
+{% load allauth account widget_tweaks socialaccount  %}
 
 {% block body_class %}starter-page-page{% endblock %}
 
@@ -38,7 +38,7 @@
             <div class="card-body p-4">
               <form method="post" action="{% url 'account_login' %}" id="login-form" novalidate>
                 {% csrf_token %}
-                {{ form.non_field_errors }}
+                <div id="form-non-field-errors" class="alert alert-danger d-none" role="alert"></div>
                 <div class="mb-3">
                   <label for="id_login" class="form-label">
                     <i class="fa fa-user me-2"></i>用戶名或電子郵件
@@ -64,9 +64,9 @@
                   <p class="text-muted">或使用以下方式登入</p>
                 </div>
                 <div class="d-grid mb-3">
-                  <a href="{% url 'google_login' %}?process=login" class="btn btn-google btn-outline d-flex align-items-center justify-content-center google-auth-btn">
+                  <a href="{% provider_login_url 'google' process='login' %}" class="btn btn-google btn-outline d-flex align-items-center justify-content-center google-auth-btn">
                     <span class="google-icon-wrapper">
-                      <i class="fab fa-google"></i>
+                      <img src="{% static 'img/google-logo.svg' %}" alt="Google" width="20" height="20" />
                     </span>
                     <span class="google-btn-text">使用 Google 帳號登入</span>
                   </a>

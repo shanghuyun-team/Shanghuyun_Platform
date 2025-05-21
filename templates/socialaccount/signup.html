@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n allauth account widget_tweaks %}
+{% load i18n allauth account widget_tweaks socialaccount %}
 
 {% block body_class %}starter-page-page{% endblock %}
 
 {% block extra_css %}
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/intl-tel-input/css/intlTelInput.min.css' %}" rel="stylesheet">
-  <link href="{% static 'css/signup.css' %}" rel="stylesheet">
+  <link href="{% static 'css/login.css' %}" rel="stylesheet">
+  <style>
+    /* 你可在這裡加入自訂CSS */
+  </style>
 {% endblock %}
 
 {% block head_title %}{% trans "Sign Up" %}{% endblock %}
@@ -17,14 +20,8 @@
 <main class="main">
   <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
     <div class="container position-relative">
-      <h1>註冊新帳號</h1>
-      <p>歡迎加入我們的平台。註冊後即可使用所有功能與服務。</p>
-      <nav class="breadcrumbs">
-        <ol>
-          <li><a href="/">首頁</a></li>
-          <li class="current">註冊</li>
-        </ol>
-      </nav>
+      <h1>註冊</h1>
+      <p>您是第一次使用Goole登入，請完成以下表單完成註冊</p>
     </div>
   </div>
   <section id="register" class="section bg-light text-dark" data-aos="fade-up">
@@ -36,35 +33,21 @@
         <div class="col-lg-6 col-xl-5">
           <div class="card shadow-sm">
             <div class="card-body p-4">
-              <form method="post" action="{% url 'account_signup' %}" id="register-form" novalidate>
+              <form method="post" action="{% url 'socialaccount_signup' %}" id="register-form" novalidate>
                 {% csrf_token %}
                 <div id="form-non-field-errors" class="alert alert-danger d-none" role="alert"></div>
-                {{ form.non_field_errors }}
                 {% for field in form.visible_fields %}
-                  {% if field.name != 'email' %}
+                  {% if field.name == 'username' %}
                   <div class="mb-3">
                     <label for="id_{{ field.name }}" class="form-label">
-                      {% if field.name == 'username' %}<i class="fa fa-user me-2"></i>用戶名{% elif field.name == 'password1' %}<i class="fa fa-lock me-2"></i>密碼{% elif field.name == 'password2' %}<i class="fa fa-lock me-2"></i>確認密碼{% else %}{{ field.label }}{% endif %}
-                      {% if field.field.required %}<span class="text-danger ms-1">*</span>{% endif %}
+                      用戶名稱 <span class="text-danger ms-1">*</span>
                     </label>
-                    {{ field|add_class:'form-control' }}
-                    {# 移除欄位下的錯誤顯示，統一由 form-non-field-errors 顯示 #}
+                    {{ field|add_class:'form-control'|attr:'placeholder:請輸入用戶名稱' }}
                   </div>
                   {% endif %}
                 {% endfor %}
-                <div class="d-grid mt-4">
-                  <button type="submit" class="btn btn-lg custom-btn">立即註冊</button>
-                </div>
-                <div class="text-center my-3">
-                  <p class="text-muted">或使用以下方式註冊</p>
-                </div>
-                <div class="d-grid mb-3">
-                  <a href="{% url 'google_login' %}?process=login" class="btn btn-google btn-outline d-flex align-items-center justify-content-center google-auth-btn">
-                    <span class="google-icon-wrapper">
-                      <img src="{% static 'img/google-logo.svg' %}" alt="Google" width="20" height="20" />
-                    </span>
-                    <span class="google-btn-text">使用 Google 帳號註冊/登入</span>
-                  </a>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-lg custom-btn">註冊</button>
                 </div>
                 <p class="text-center mt-3">
                   已有帳號？
@@ -85,5 +68,5 @@
   <script src="{% static 'assets/vendor/jquery-validation/js/jquery.validate.min.js' %}"></script>
   <script src="{% static 'assets/vendor/jquery-validation/js/additional-methods.min.js' %}"></script>
   <script src="{% static 'assets/vendor/intl-tel-input/js/intlTelInput.min.js' %}"></script>
-  <script src="{% static 'js/signup.js' %}"></script>
+  <script src="{% static 'js/socialmedia_signup.js' %}"></script>
 {% endblock %}

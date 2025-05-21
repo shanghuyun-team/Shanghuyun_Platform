@@ -6,27 +6,63 @@ $(document).ready(function() {
     onfocusout: function(elem) { this.element(elem); },
     errorPlacement: function(error, element) {
       error.addClass("invalid-feedback");
-
-      if (element.attr("id") === "phone") {
-        // 把錯誤訊息放在 intl-tel-input 容器後
-        element.closest(".intl-tel-input").after(error);
-      } else {
-        element.after(error);
-      }
+      element.after(error);
     },
-
     rules: {
-      username: { required: true },
-      password: {
-        required: true
-      }
+      login: { required: true },
+      password: { required: true }
     },
     messages: {
-      username: { required: "請輸入使用者名稱" },
-      password: {
-        required: "請輸入密碼",
-        minlength: "密碼至少需 6 個字元"
+      login: { required: "請輸入用戶名或電子郵件" },
+      password: { required: "請輸入密碼" }
+    },
+    invalidHandler: function(event, validator) {
+      if (validator.errorList.length) {
+        $("#form-non-field-errors")
+          .removeClass("d-none")
+          .text("");
+      } else {
+        $("#form-non-field-errors").addClass("d-none").text("");
       }
+    },
+    success: function(label, element) {
+      $("#form-non-field-errors").addClass("d-none").text("");
+    },
+    submitHandler: function(form, event) {
+      event.preventDefault();
+      var $form = $(form);
+      var postData = $form.serialize();
+      // Get the CSRF token from the form
+      var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+      $.ajax({
+        url: $form.attr('action'),
+        type: 'POST',
+        data: postData,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        },
+        success: function(data) {
+          if (data.success) {
+            window.location.href = data.redirect_url || '/';
+          } else if (data.error) {
+            $("#form-non-field-errors").removeClass("d-none").text("登入失敗，請檢查帳號或密碼");
+          } else {
+            window.location.reload();
+          }
+        },
+        error: function(xhr) {
+          $("#form-non-field-errors").removeClass("d-none").text("登入失敗，請檢查帳號或密碼");
+        }
+      });
+      return false;
     }
   });
+
+
+  var serverErrors = $(".nonfield, .errorlist.nonfield, .errorlist li").text();
+  if (serverErrors && serverErrors.length > 0) {
+    $("#form-non-field-errors")
+      .removeClass("d-none")
+      .text("登入失敗，請檢查帳號或密碼");
+  }
 });

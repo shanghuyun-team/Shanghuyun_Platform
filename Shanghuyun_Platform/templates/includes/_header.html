@@ -30,7 +30,7 @@
             <li><a href="/">首頁<br></a></li>
             <li><a href="#about">關於我們</a></li>
             <li><a href="#menu">合作夥伴</a></li>
-            <li><a href="#specials">Specials</a></li>
+            {% comment %} <li><a href="#specials">Specials</a></li>
             <li><a href="#events">Events</a></li>
             <li><a href="#chefs">Chefs</a></li>
             <li><a href="#gallery">Gallery</a></li>
@@ -51,28 +51,53 @@
                 <li><a href="#">Dropdown 4</a></li>
               </ul>
             </li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#contact">Contact</a></li> {% endcomment %}
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
 
-        <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a>
+        {% comment %} <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a> {% endcomment %}
 
+        {% if user.is_authenticated %}
         <!-- User Profile Dropdown -->
         <div class="user-profile-dropdown dropdown ms-2 ms-xl-3">
           <a href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="d-flex align-items-center">
-            <!-- Replace with actual user avatar URL, e.g., from user data -->
             <img src="{% static 'assets/img/specials-1.png' %}" alt="User Avatar" class="user-avatar-header">
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
-            <li><h6 class="dropdown-header">使用者名稱</h6></li> <!-- Optional: Replace with actual username -->
-            <li><a class="dropdown-item" href="用戶資料.html#profile-details-tab"><i class="fas fa-user-circle"></i>個人資料</a></li>
-            <li><a class="dropdown-item" href="用戶資料.html#account-management-tab"><i class="fas fa-cog"></i>帳號管理</a></li>
+            <li><h6 class="dropdown-header">{{ user.username }}</h6></li>
+            <li><a class="dropdown-item" href="{% url "profile" %}"><i class="fas fa-user-circle"></i>個人資料</a></li>
+            <li><a class="dropdown-item" href="/profile/#account-management-tab"><i class="fas fa-cog"></i>帳號管理</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt"></i>登出</a></li> <!-- Replace # with actual logout URL/action -->
+            <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i>登出</a></li>
           </ul>
         </div>
-        <!-- End User Profile Dropdown -->
+        {% else %}
+        <div class="d-flex ms-2 ms-xl-3">
+          <a href="{% url 'account_login' %}" class="btn login-signup-btn rounded-pill px-4 py-2 fw-bold shadow-sm">
+            <i class="fas fa-sign-in-alt me-2"></i>登入 / 註冊
+          </a>
+        </div>
+        <style>
+        .login-signup-btn {
+          background: linear-gradient(90deg, #cda45e 0%, #ffb03b 100%);
+          color: #29261f !important;
+          border: none;
+          border-radius: 50px;
+          font-size: 1.08em;
+          letter-spacing: 0.5px;
+          font-family: 'Poppins', 'Roboto', 'Playfair Display', sans-serif;
+          box-shadow: 0 2px 8px rgba(205, 164, 94, 0.10);
+          transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+        }
+        .login-signup-btn:hover, .login-signup-btn:focus {
+          background: linear-gradient(90deg, #ffb03b 0%, #cda45e 100%);
+          color: #fff !important;
+          box-shadow: 0 4px 16px rgba(255, 176, 59, 0.18);
+          text-decoration: none;
+        }
+        </style>
+        {% endif %}
 
       </div>
 

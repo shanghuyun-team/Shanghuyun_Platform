@@ -1,0 +1,7 @@
+.custom-btn{
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+.custom-btn:hover {
+    background-color: color-mix(in srgb, var(--accent-color), transparent 25%) !important;
+}

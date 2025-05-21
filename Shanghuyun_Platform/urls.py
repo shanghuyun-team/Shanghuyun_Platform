@@ -16,10 +16,19 @@ urlpatterns = [
     re_path(r'^admin/users/.*$', users_not_found),
     path("admin/", include(wagtailadmin_urls)),
     path("search/", search_views.search, name="search"),
+
+    ############## API URLS ##############
     path("api/v1/account/", include("api.v1.account.urls")),
+
+    ############## APP URLS ##############
+    path('users/', include('apps.users.urls')),
+
+
+    ############## THIRD-PARTY URLS ##############
     path('accounts/', include('allauth.urls')),
     #path("documents/", include(wagtaildocs_urls)),
     #path("django-admin/", admin.site.urls),
+
 ]
 
 

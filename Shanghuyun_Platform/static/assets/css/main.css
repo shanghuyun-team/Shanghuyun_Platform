@@ -344,6 +344,24 @@ h6 {
   border-color: color-mix(in srgb, var(--accent-color), transparent 80%);
 }
 
+.user-avatar-header {
+      width: 40px; /* Adjust size as needed */
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+      border: 1px solid #ddd; /* Optional: adds a light border */
+    }
+
+    .user-profile-dropdown .dropdown-menu {
+      min-width: 180px; /* Adjust as needed */
+    }
+
+    .user-profile-dropdown .dropdown-item i {
+      width: 20px; /* For icon alignment */
+      margin-right: 8px;
+    }
+
 /* Global Header on Scroll
 ------------------------------*/
 .scrolled .header {

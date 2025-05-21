@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+
+{% block body_class %}starter-page-page{% endblock %}
+
+{% block extra_css %}
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome for icons -->
+  <link href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}" rel="stylesheet">
+  
+  <!-- intl-tel-input for phone number formatting/validation -->
+  <link href="{% static 'assets/vendor/intl-tel-input/css/intlTelInput.min.css' %}" rel="stylesheet">
+
+  <!-- Register Style-->
+  <link href="{% static 'css/register.css' %}" rel="stylesheet">
+
+{% endblock extra_css %}
+
+{% block content %}
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
+      <div class="container position-relative">
+      <h1>註冊新帳號</h1>
+      <p>加入我們的平台，開始您的商業之旅。註冊後即可使用所有功能與服務。</p>
+      <nav class="breadcrumbs">
+        <ol>
+        <li>
+          <a href="/">首頁</a>
+        </li>
+        <li class="current">註冊</li>
+        </ol>
+      </nav>
+      </div>
+    </div>
+    <!-- End Page Title -->
+
+    <!-- Starter Section Section -->
+    <section id="register" class="section bg-light text-dark">
+      <div class="container">
+        <div class="section-title text-center mb-4">
+          <h2 class="text-dark">註冊新帳號</h2>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-xl-5">
+            <div class="card shadow-sm">
+              <div class="card-body p-4">
+                <form id="register-form" novalidate>
+                  <!-- 用戶名 -->
+                  <div class="mb-3">
+                    <label for="username" class="form-label">
+                      <i class="fa fa-user me-2"></i>用戶名
+                    </label>
+                    <input
+                      id="username"
+                      type="text"
+                      name="username"
+                      class="form-control"
+                      placeholder="6–20 字母或數字"
+                      required minlength="6" maxlength="20"
+                    >
+                  </div>
+
+                  <!-- 密碼 -->
+                  <div class="mb-3">
+                    <label for="password" class="form-label">
+                      <i class="fa fa-lock me-2"></i>密碼
+                    </label>
+                    <input
+                      id="password"
+                      type="password"
+                      name="password"
+                      class="form-control"
+                      placeholder="請輸入密碼"
+                      required minlength="6"
+                    >
+                  </div>
+
+                  <!-- 確認密碼 -->
+                  <div class="mb-3">
+                    <label for="confirm_password" class="form-label">
+                      <i class="fa fa-lock me-2"></i>確認密碼
+                    </label>
+                    <input
+                      id="confirm_password"
+                      type="password"
+                      name="confirm_password"
+                      class="form-control"
+                      placeholder="請再次輸入密碼"
+                      required minlength="6"
+                    >
+                  </div>
+
+                  <!-- 按鈕 -->
+                  <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-lg custom-btn">
+                      立即註冊
+                    </button>
+                  </div>
+
+                  <p class="text-center mt-3">
+                    已有帳號？
+                    <a href="login.html" class="text-primary">前往登入</a>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- /Starter Section Section -->
+
+
+  </main>
+
+{% endblock content %}
+
+{% block extra_js %}
+  <!-- jQuery Validation Plugin -->
+  <script src="{% static 'assets/vendor/jquery/js/jquery-3.6.0.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery-validation/js/jquery.validate.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/jquery-validation/js/additional-methods.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/intl-tel-input/js/intlTelInput.min.js' %}"></script>
+
+
+  <script src="{% static 'js/register.js' %}"></script>
+
+{% endblock %}
+
+
+  
+

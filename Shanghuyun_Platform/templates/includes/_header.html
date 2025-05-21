@@ -1,68 +1,81 @@
 {% load static %}
 <header id="header" class="header fixed-top">
-    <!-- Top Bar -->
+
     <div class="topbar d-flex align-items-center">
-        <div class="container d-flex justify-content-center justify-content-md-between">
-            <div class="contact-info d-flex align-items-center">
-                <i class="bi bi-envelope d-flex align-items-center">
-                    <a href="mailto:contact@example.com">contact@example.com</a>
-                </i>
-                <i class="bi bi-phone d-flex align-items-center ms-4">
-                    <span>+1 5589 55488 55</span>
-                </i>
-            </div>
-            <div class="languages d-none d-md-flex align-items-center">
-                <ul>
-                    <li>En</li>
-                    <li><a href="#">De</a></li>
-                </ul>
-            </div>
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@example.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
         </div>
+        <div class="languages d-none d-md-flex align-items-center">
+          <ul>
+            <li>En</li>
+            <li><a href="#">De</a></li>
+          </ul>
+        </div>
+      </div>
     </div><!-- End Top Bar -->
 
-    <!-- Branding and Navigation -->
-    <div class="branding d-flex align-items-center">
-        <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="{% static 'assets/img/logo.png' %}" alt=""> -->
-                <h1 class="sitename">Restaurantly</h1>
-            </a>
+    <div class="branding d-flex align-items-cente">
 
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#menu">Menu</a></li>
-                    <li><a href="#specials">Specials</a></li>
-                    <li><a href="#events">Events</a></li>
-                    <li><a href="#chefs">Chefs</a></li>
-                    <li><a href="#gallery">Gallery</a></li>
-                    <li class="dropdown">
-                        <a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a href="#">Dropdown 1</a></li>
-                            <li class="dropdown">
-                                <a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                                <ul>
-                                    <li><a href="#">Deep Dropdown 1</a></li>
-                                    <li><a href="#">Deep Dropdown 2</a></li>
-                                    <li><a href="#">Deep Dropdown 3</a></li>
-                                    <li><a href="#">Deep Dropdown 4</a></li>
-                                    <li><a href="#">Deep Dropdown 5</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Dropdown 2</a></li>
-                            <li><a href="#">Dropdown 3</a></li>
-                            <li><a href="#">Dropdown 4</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-            </nav>
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+          <!-- Uncomment the line below if you also wish to use an image logo -->
+          <!-- <img src="assets/img/logo.png" alt=""> -->
+          <h1 class="sitename">Restaurantly</h1>
+        </a>
 
-            <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="/">首頁<br></a></li>
+            <li><a href="#about">關於我們</a></li>
+            <li><a href="#menu">合作夥伴</a></li>
+            <li><a href="#specials">Specials</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#chefs">Chefs</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#">Dropdown 1</a></li>
+                <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                  <ul>
+                    <li><a href="#">Deep Dropdown 1</a></li>
+                    <li><a href="#">Deep Dropdown 2</a></li>
+                    <li><a href="#">Deep Dropdown 3</a></li>
+                    <li><a href="#">Deep Dropdown 4</a></li>
+                    <li><a href="#">Deep Dropdown 5</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Dropdown 2</a></li>
+                <li><a href="#">Dropdown 3</a></li>
+                <li><a href="#">Dropdown 4</a></li>
+              </ul>
+            </li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a>
+
+        <!-- User Profile Dropdown -->
+        <div class="user-profile-dropdown dropdown ms-2 ms-xl-3">
+          <a href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="d-flex align-items-center">
+            <!-- Replace with actual user avatar URL, e.g., from user data -->
+            <img src="{% static 'assets/img/specials-1.png' %}" alt="User Avatar" class="user-avatar-header">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
+            <li><h6 class="dropdown-header">使用者名稱</h6></li> <!-- Optional: Replace with actual username -->
+            <li><a class="dropdown-item" href="用戶資料.html#profile-details-tab"><i class="fas fa-user-circle"></i>個人資料</a></li>
+            <li><a class="dropdown-item" href="用戶資料.html#account-management-tab"><i class="fas fa-cog"></i>帳號管理</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt"></i>登出</a></li> <!-- Replace # with actual logout URL/action -->
+          </ul>
         </div>
+        <!-- End User Profile Dropdown -->
+
+      </div>
+
     </div>
-</header>
+
+  </header>

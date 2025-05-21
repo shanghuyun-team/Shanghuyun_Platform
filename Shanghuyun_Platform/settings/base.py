@@ -26,8 +26,7 @@ load_dotenv(f'{BASE_DIR}/.env')
 # Application definition
 
 INSTALLED_APPS = [
-    "home",
-    "search",
+    ######### Wagtail and Django Apps #########
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -49,6 +48,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    ######## Custome Apps ########
+    "home",
+    "search",
+    "apps.users.apps.UsersConfig",
+
+    ######### API Apps #########
+    'api.v1.account.apps.AccountConfig',
+
+    ######### Third Party Apps #########
     'wagtail_modeladmin',
 
     "phonenumber_field",
@@ -60,7 +68,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-    'api.v1.account.apps.AccountConfig',
+
 ]
 
 MIDDLEWARE = [

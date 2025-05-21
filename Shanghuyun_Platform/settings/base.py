@@ -57,9 +57,6 @@ INSTALLED_APPS = [
     "search",
     "apps.users.apps.UsersConfig",
 
-    ######### API Apps #########
-    'api.v1.account.apps.AccountConfig',
-
     ######### Third Party Apps #########
     'wagtail_modeladmin',
     'widget_tweaks',

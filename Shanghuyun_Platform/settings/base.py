@@ -26,7 +26,6 @@ load_dotenv(f'{BASE_DIR}/.env')
 # Application definition
 
 INSTALLED_APPS = [
-    'api.v1.account.apps.AccountConfig',
     ######### Wagtail and Django Apps #########
     
     "wagtail.contrib.forms",

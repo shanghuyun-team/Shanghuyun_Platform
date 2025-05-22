@@ -37,12 +37,12 @@
                 {% csrf_token %}
                 <div id="form-non-field-errors" class="alert alert-danger d-none" role="alert"></div>
                 {% for field in form.visible_fields %}
-                  {% if field.name == 'username' %}
+                  {% if field.name == 'email' %}
                   <div class="mb-3">
                     <label for="id_{{ field.name }}" class="form-label">
-                      用戶名稱 <span class="text-danger ms-1">*</span>
+                      電子郵件 <span class="text-danger ms-1">*</span>
                     </label>
-                    {{ field|add_class:'form-control'|attr:'placeholder:請輸入用戶名稱' }}
+                    {{ field|add_class:'form-control'|attr:'placeholder:請輸入電子郵件' }}
                   </div>
                   {% endif %}
                 {% endfor %}

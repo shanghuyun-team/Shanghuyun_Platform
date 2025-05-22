@@ -221,10 +221,10 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_USERNAME_REQUIRED     = True
-ACCOUNT_EMAIL_REQUIRED        = False
-ACCOUNT_EMAIL_VERIFICATION    = 'optional'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [

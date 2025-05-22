@@ -71,16 +71,20 @@ $(function() {
         beforeSend: function(xhr) {
           xhr.setRequestHeader('X-CSRFToken', csrftoken);
         },
-        success: function(data) {
+        success: function(data, textStatus, jqXHR) {
           // 嘗試判斷是否有成功註冊
           if (data.success) {
             window.location.href = data.redirect_url || '/';
           } else if (data.error) {
             $("#form-non-field-errors").removeClass("d-none").text(data.error);
           } else {
-            // 若回傳 HTML，嘗試解析 non_field_errors
+            // 若回傳 HTML 或 400 Bad Request，嘗試解析 responseText
             var html = $(data);
             var serverErrors = html.find('.nonfield, .errorlist.nonfield, .errorlist li').text();
+            if (!serverErrors && jqXHR && jqXHR.responseText) {
+              var html2 = $(jqXHR.responseText);
+              serverErrors = html2.find('.nonfield, .errorlist.nonfield, .errorlist li').text();
+            }
             if (serverErrors) {
               $("#form-non-field-errors").removeClass("d-none").text(serverErrors);
             } else {
@@ -92,9 +96,24 @@ $(function() {
           var msg = "註冊失敗，請檢查資料或稍後再試";
           if (xhr.responseText) {
             try {
+              console.log(xhr.responseText);
               var resp = JSON.parse(xhr.responseText);
               if (resp.error) msg = resp.error;
-            } catch (e) {}
+            } catch (e) {
+              // 若不是 JSON，嘗試解析 HTML 取得 Django 錯誤
+              var html = $(xhr.responseText);
+              var errorItems = html.find('.errorlist li');
+              if (errorItems.length > 0) {
+                var allErrors = [];
+                errorItems.each(function() {
+                  allErrors.push($(this).text());
+                });
+                msg = allErrors.join('<br>');
+              } else {
+                var serverErrors = html.find('.nonfield, .errorlist.nonfield').text();
+                if (serverErrors) msg = serverErrors;
+              }
+            }
           }
           $("#form-non-field-errors").removeClass("d-none").text(msg);
         }

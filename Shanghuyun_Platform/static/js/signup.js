@@ -18,7 +18,6 @@ $(function() {
       password1: {
         required: true,
         minlength: 8,
-        pwcheck: true,
         notEqualToUsername: true
       },
       password2: {
@@ -45,80 +44,6 @@ $(function() {
         minlength: "密碼至少需 6 個字元",
         equalTo: "兩次密碼輸入不一致"
       }
-    },
-    invalidHandler: function(event, validator) {
-      if (validator.errorList.length) {
-        // 顯示第一個錯誤訊息（中文）
-        $("#form-non-field-errors")
-          .removeClass("d-none")
-          .text(validator.errorList[0].message);
-      } else {
-        $("#form-non-field-errors").addClass("d-none").text("");
-      }
-    },
-    success: function(label, element) {
-      $("#form-non-field-errors").addClass("d-none").text("");
-    },
-    submitHandler: function(form, event) {
-      event.preventDefault();
-      var $form = $(form);
-      var postData = $form.serialize();
-      var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
-      $.ajax({
-        url: $form.attr('action'),
-        type: 'POST',
-        data: postData,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('X-CSRFToken', csrftoken);
-        },
-        success: function(data, textStatus, jqXHR) {
-          // 嘗試判斷是否有成功註冊
-          if (data.success) {
-            window.location.href = data.redirect_url || '/';
-          } else if (data.error) {
-            $("#form-non-field-errors").removeClass("d-none").text(data.error);
-          } else {
-            // 若回傳 HTML 或 400 Bad Request，嘗試解析 responseText
-            var html = $(data);
-            var serverErrors = html.find('.nonfield, .errorlist.nonfield, .errorlist li').text();
-            if (!serverErrors && jqXHR && jqXHR.responseText) {
-              var html2 = $(jqXHR.responseText);
-              serverErrors = html2.find('.nonfield, .errorlist.nonfield, .errorlist li').text();
-            }
-            if (serverErrors) {
-              $("#form-non-field-errors").removeClass("d-none").text(serverErrors);
-            } else {
-              window.location.reload();
-            }
-          }
-        },
-        error: function(xhr) {
-          var msg = "註冊失敗，請檢查資料或稍後再試";
-          if (xhr.responseText) {
-            try {
-              console.log(xhr.responseText);
-              var resp = JSON.parse(xhr.responseText);
-              if (resp.error) msg = resp.error;
-            } catch (e) {
-              // 若不是 JSON，嘗試解析 HTML 取得 Django 錯誤
-              var html = $(xhr.responseText);
-              var errorItems = html.find('.errorlist li');
-              if (errorItems.length > 0) {
-                var allErrors = [];
-                errorItems.each(function() {
-                  allErrors.push($(this).text());
-                });
-                msg = allErrors.join('<br>');
-              } else {
-                var serverErrors = html.find('.nonfield, .errorlist.nonfield').text();
-                if (serverErrors) msg = serverErrors;
-              }
-            }
-          }
-          $("#form-non-field-errors").removeClass("d-none").text(msg);
-        }
-      });
-      return false;
     }
   });
 
@@ -128,13 +53,4 @@ $(function() {
       .removeClass("d-none")
       .text(serverErrors);
   }
-
-  // 自訂密碼驗證規則
-  $.validator.addMethod("pwcheck", function(value, element) {
-    return /[A-Za-z]/.test(value) && /[0-9]/.test(value) && !/^\d+$/.test(value);
-  });
-  $.validator.addMethod("notEqualToUsername", function(value, element) {
-    var username = $("#id_username").val();
-    return value !== username;
-  });
 });

@@ -5,7 +5,7 @@ from .models import User, Profile
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['real_name', 'nickname', 'email', 'portrait', 'address', 'phone']
+        fields = ['real_name', 'nickname', 'portrait', 'address', 'phone']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -13,13 +13,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'profile']
+        fields = ['email', 'password', 'profile']
 
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
         password = validated_data.pop('password')
         user = User.objects.create_user(password=password, **validated_data)
-        # 建立 Profile
         Profile.objects.create(user=user, **profile_data)
         return user
 
@@ -42,4 +41,4 @@ class PasswordChangeSerializer(serializers.Serializer):
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['real_name', 'nickname', 'email', 'portrait', 'address', 'phone']
+        fields = ['real_name', 'nickname', 'portrait', 'address', 'phone']

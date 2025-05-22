@@ -31,6 +31,5 @@ class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        # 如果不存在就建立一個空的
         profile, _ = Profile.objects.get_or_create(user=self.request.user)
         return profile

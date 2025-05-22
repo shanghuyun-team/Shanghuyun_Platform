@@ -41,16 +41,21 @@
                 <div id="form-non-field-errors" class="alert alert-danger d-none" role="alert"></div>
                 {{ form.non_field_errors }}
                 {% for field in form.visible_fields %}
-                  {% if field.name != 'email' %}
                   <div class="mb-3">
                     <label for="id_{{ field.name }}" class="form-label">
-                      {% if field.name == 'username' %}<i class="fa fa-user me-2"></i>用戶名{% elif field.name == 'password1' %}<i class="fa fa-lock me-2"></i>密碼{% elif field.name == 'password2' %}<i class="fa fa-lock me-2"></i>確認密碼{% else %}{{ field.label }}{% endif %}
+                      {% if field.name == 'email' %}
+                        <i class="fa fa-envelope me-2"></i>電子郵件
+                      {% elif field.name == 'password1' %}
+                        <i class="fa fa-lock me-2"></i>密碼
+                      {% elif field.name == 'password2' %}
+                        <i class="fa fa-lock me-2"></i>確認密碼
+                      {% else %}
+                        {{ field.label }}
+                      {% endif %}
                       {% if field.field.required %}<span class="text-danger ms-1">*</span>{% endif %}
                     </label>
                     {{ field|add_class:'form-control' }}
-                    {# 移除欄位下的錯誤顯示，統一由 form-non-field-errors 顯示 #}
                   </div>
-                  {% endif %}
                 {% endfor %}
                 <div class="d-grid mt-4">
                   <button type="submit" class="btn btn-lg custom-btn">立即註冊</button>

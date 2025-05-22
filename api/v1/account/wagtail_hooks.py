@@ -13,7 +13,7 @@ def hide_users_admin_urls():
         return TemplateResponse(request, 'wagtailadmin/404.html', status=404)
 
     return [
-        # 攔截 /admin/users/ 以及所有子路徑 → 回 404
+        # hide all /admin/users/
         re_path(
             r"^users/.*$",
             users_not_found,
@@ -26,8 +26,8 @@ class UserAdmin(ModelAdmin):
     model = User
     menu_label = '用戶管理'
     menu_icon = 'user'
-    list_display = ('username', 'is_active', 'is_staff', 'is_vendor')
-    search_fields = ('username',)
+    list_display = ('email', 'is_active', 'is_staff', 'is_vendor')
+    search_fields = ('email',)
 modeladmin_register(UserAdmin)
 
 """

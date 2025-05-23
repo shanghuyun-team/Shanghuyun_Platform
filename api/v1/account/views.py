@@ -4,8 +4,9 @@ from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialLogin, EmailAddress
 from rest_framework import generics, permissions
 from .models import Profile, User
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, PasswordChangeSerializer
 from django.contrib.auth import login as auth_login
+from rest_framework.response import Response
 
 class ProfileRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     """
@@ -49,3 +50,17 @@ def social_choose(request, pk):
     return render(request, 'socialaccount/social_choose.html', {
         'existing_user': user,
     })
+
+class PasswordChangeAPIView(generics.UpdateAPIView):
+    serializer_class = PasswordChangeSerializer
+    model = User
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'detail': '密碼已更新'}, status=status.HTTP_200_OK)

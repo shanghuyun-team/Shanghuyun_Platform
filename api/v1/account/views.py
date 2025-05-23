@@ -7,6 +7,7 @@ from .models import Profile, User
 from .serializers import ProfileSerializer, PasswordChangeSerializer
 from django.contrib.auth import login as auth_login
 from rest_framework.response import Response
+from rest_framework import status
 
 class ProfileRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     """

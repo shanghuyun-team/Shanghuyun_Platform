@@ -23,8 +23,7 @@ $(function() {
   );
 
   // Get a reference to the file input element
-  const inputElement = document.querySelector('input[type="file"]#avatar');
-  // Create FilePond instance
+  const inputElement = document.querySelector('input[type="file"]#avatar');  // Create FilePond instance
   const pond = FilePond.create(inputElement, {
     labelIdle: '拖曳或點擊上傳頭像 (最大 3MB)',
     imagePreviewHeight: 140,
@@ -58,6 +57,28 @@ $(function() {
         return `${file.name}${extension}`;
       }
       return file.name;
+    }
+  });
+  
+  // 監聽 FilePond 的移除檔案事件，當使用者點擊叉叉按鈕時觸發
+  pond.on('removefile', (error, file) => {
+    // 確認是使用者手動刪除而非程式碼呼叫 removeFile
+    if (file.origin === FilePond.FileOrigin.LOCAL) {
+      // 發送請求到後端刪除頭像
+      $.ajax({
+        url: '/api/v1/account/portrait/delete/',
+        type: 'DELETE',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        success: function(response) {
+          console.log('頭像已成功刪除');
+        },
+        error: function(xhr) {
+          console.warn('頭像刪除失敗', xhr);
+          // 不需要向使用者顯示錯誤，因為前端已經刪除了圖片
+        }
+      });
     }
   });// Initialize intl-tel-input
   const phoneInput = document.querySelector("#phone");
@@ -324,8 +345,7 @@ $(function() {
       current_password: "請輸入目前密碼",
       new_password: {
         required: "請輸入新密碼",
-        minlength: "密碼長度至少8個字元"
-      },
+        minlength: "密碼長度至少8個字元"      },
       confirm_password: {
         required: "請再次輸入新密碼",
         minlength: "密碼長度至少8個字元",
@@ -350,8 +370,10 @@ $(function() {
             text: '密碼已更新',
             icon: 'success',
             confirmButtonColor: 'var(--accent-color)'
+          }).then(() => {
+            // 密碼更新成功後，重新載入整個頁面
+            window.location.reload();
           });
-          form.reset();
         },
         error: function(xhr) {
           Swal.fire({

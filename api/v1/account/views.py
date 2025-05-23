@@ -2,7 +2,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialLogin, EmailAddress
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from .models import Profile, User
 from .serializers import ProfileSerializer, PasswordChangeSerializer
 from django.contrib.auth import login as auth_login

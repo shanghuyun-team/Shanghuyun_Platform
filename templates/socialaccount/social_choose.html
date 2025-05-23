@@ -1,0 +1,27 @@
+{# templates/socialaccount/social_choose.html #}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>帳號已存在</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- 如果有自己的 CSS，就在這裡 link -->
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    button { margin-right: 1rem; padding: .5rem 1rem; }
+  </style>
+</head>
+<body>
+  <h1>嗨，{{ existing_user.email }}</h1>
+  <p>這個 Email 已經註冊過帳號了，請選擇：</p>
+  <form method="post" action="">
+    {% csrf_token %}
+    <button name="choice" value="link" type="submit">
+      把 Google 帳號連結到此帳號
+    </button>
+    <button name="choice" value="new" type="submit">
+      用新的帳號註冊
+    </button>
+  </form>
+</body>
+</html>

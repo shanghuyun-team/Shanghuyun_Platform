@@ -1,9 +1,11 @@
-from rest_framework import generics, permissions, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from allauth.socialaccount.helpers import complete_social_login
+from allauth.socialaccount.models import SocialLogin, EmailAddress
+from rest_framework import generics, permissions
 from .models import Profile, User
-from allauth.account.models import EmailAddress
-from .serializers import ProfileSerializer, UserSerializer
+from .serializers import ProfileSerializer
+from django.contrib.auth import login as auth_login
 
 class ProfileRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     """
@@ -18,44 +20,32 @@ class ProfileRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
         profile, _ = Profile.objects.get_or_create(user=self.request.user)
         return profile
     
-class UserRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
-    """
-    GET  /api/user/ 
-    PUT  /api/user/ 
-    PATCH /api/user/
-    """
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+def social_choose(request, pk):
+    user = get_object_or_404(User, pk=pk)
 
-    def get_object(self):
-        return self.request.user
-    
-class EmailVerifiedAPIView(APIView):
-    """
-    GET /api/user/<int:pk>/email-verified/
-    回傳指定 user.pk 的信箱是否已驗證。
-    """
-    permission_classes = [permissions.IsAuthenticated]
+    if request.method == 'POST':
+        choice = request.POST.get('choice')
 
-    def get(self, request, pk):
-        try:
-            user = User.objects.get(pk=pk)
-        except User.DoesNotExist:
-            return Response(
-                {"detail": "User not found."},
-                status=status.HTTP_404_NOT_FOUND
+        data = request.session.pop('socialaccount_sociallogin', None)
+        sociallogin = SocialLogin.deserialize(data)
+
+        if choice == 'link':
+            sociallogin.connect(request, user)
+            
+            EmailAddress.objects.update_or_create(
+                user=user,
+                email=user.email,
+                defaults={'verified': True, 'primary': True}
             )
+            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        else:
+            with transaction.atomic():
+                user.delete()
+                sociallogin.user.pk = None
+                complete_social_login(request, sociallogin)
+        
+        return redirect('profile')
 
-        if not (request.user.is_staff or request.user.pk == user.pk):
-            return Response(
-                {"detail": "Permission denied."},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        verified = EmailAddress.objects.filter(
-            user=user,
-            email=user.email,
-            verified=True
-        ).exists()
-
-        return Response({"email_verified": verified})
+    return render(request, 'socialaccount/social_choose.html', {
+        'existing_user': user,
+    })

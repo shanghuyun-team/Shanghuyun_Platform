@@ -136,30 +136,25 @@
           <div class="tab-pane fade" id="change-password-tab" role="tabpanel" aria-labelledby="change-password-link">
             <div class="card shadow-sm">
               <div class="card-body p-4">
-                <h3 class="card-title mb-4">更改密碼</h3>
-                <form id="change-password-form" novalidate>
-                  <div class="mb-3">
-                      <label class="form-label">用戶名</label>
-                      <p class="info-display">YourUsername <small>(不可修改)</small></p>
-                  </div>
+                <h3 class="card-title mb-4">更改密碼</h3>                <form id="change-password-form" novalidate>
                   <div class="mb-3">
                     <label for="current-password" class="form-label">
                       <i class="fa fa-lock me-2"></i>目前密碼
                     </label>
-                    <input type="password" id="current-password" name="current_password" class="form-control" required>
+                    <input type="password" id="current-password" name="current_password" class="form-control" autocomplete="current-password" required>
                   </div>
                   <div class="mb-3">
                     <label for="new-password" class="form-label">
                       <i class="fa fa-key me-2"></i>新密碼
                     </label>
-                    <input type="password" id="new-password" name="new_password" class="form-control" required minlength="8">
+                    <input type="password" id="new-password" name="new_password" class="form-control" autocomplete="new-password" required minlength="8">
                     <div class="form-text" id="password-length-hint">密碼長度至少8個字元。</div>
                   </div>
                   <div class="mb-3">
                     <label for="confirm-password" class="form-label">
                       <i class="fa fa-key me-2"></i>確認新密碼
                     </label>
-                    <input type="password" id="confirm-password" name="confirm_password" class="form-control" required>
+                    <input type="password" id="confirm-password" name="confirm_password" class="form-control" autocomplete="new-password" required>
                   </div>
                   <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-lg custom-btn">更新密碼</button>
@@ -224,6 +219,7 @@
   <script src="{% static 'assets/vendor/jquery-validation/js/jquery.validate.min.js' %}"></script>
   <script src="{% static 'assets/vendor/jquery-validation/js/additional-methods.min.js' %}"></script>
   <script src="{% static 'assets/vendor/intl-tel-input/js/intlTelInput.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/intl-tel-input/js/utils.min.js' %}"></script>
 
   <!-- Filepond JavaScript -->
   <script src="{% static 'assets/vendor/filepond/js/filepond-plugin-image-preview.min.js' %}"></script>

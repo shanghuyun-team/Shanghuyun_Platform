@@ -3,6 +3,7 @@ from django.urls import re_path
 from django.http import HttpResponseNotFound
 
 from wagtail_modeladmin.options import ModelAdmin, modeladmin_register
+from allauth.account.models import EmailAddress
 from .models import User#, Profile
 from django.template.response import TemplateResponse
 
@@ -26,8 +27,18 @@ class UserAdmin(ModelAdmin):
     model = User
     menu_label = '用戶管理'
     menu_icon = 'user'
-    list_display = ('email', 'is_active', 'is_staff', 'is_vendor')
+    list_display = ('email', 'email_verified', 'is_active', 'is_staff', 'is_vendor')
     search_fields = ('email',)
+
+    def email_verified(self, obj):
+        return EmailAddress.objects.filter(
+            user=obj,
+            email=obj.email,
+            verified=True
+        ).exists()
+    email_verified.boolean = True
+    email_verified.short_description = '信箱已驗證'
+
 modeladmin_register(UserAdmin)
 
 """

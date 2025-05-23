@@ -24,7 +24,6 @@ $(function() {
 
   // Get a reference to the file input element
   const inputElement = document.querySelector('input[type="file"]#avatar');
-
   // Create FilePond instance
   const pond = FilePond.create(inputElement, {
     labelIdle: '拖曳或點擊上傳頭像 (最大 3MB)',
@@ -40,9 +39,37 @@ $(function() {
     maxFileSize: '3MB', 
     labelMaxFileSizeExceeded: '檔案太大',
     labelMaxFileSize: '最大檔案大小為 {filesize}',
-    acceptedFileTypes: ['image/*'], // Restrict to image files
+    acceptedFileTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/tiff'], // 明確指定允許的圖片格式
     labelFileTypeNotAllowed: '檔案類型無效', // Message for invalid file type
-    fileValidateTypeLabelExpectedTypes: '請選擇圖片檔案', // Expected file type message
+    fileValidateTypeLabelExpectedTypes: '請選擇圖片檔案 (jpg, png, gif, webp)', // 更精確的說明
+    fileRenameFunction: (file) => {
+      // 確保檔案有正確的副檔名
+      if (!file.name.includes('.')) {
+        // 如果沒有副檔名，根據 MIME 類型添加
+        const mimeTypeMap = {
+          'image/jpeg': '.jpg',
+          'image/png': '.png',
+          'image/gif': '.gif',
+          'image/webp': '.webp',
+          'image/bmp': '.bmp',
+          'image/tiff': '.tiff'
+        };
+        const extension = mimeTypeMap[file.type] || '.jpg'; // 預設使用 jpg
+        return `${file.name}${extension}`;
+      }
+      return file.name;
+    }
+  });// Initialize intl-tel-input
+  const phoneInput = document.querySelector("#phone");
+  const iti = window.intlTelInput(phoneInput, {
+    initialCountry: "tw", // 預設為台灣
+    preferredCountries: ["tw", "cn", "hk", "mo", "sg", "my"], // 常用國家
+    separateDialCode: true, // 分離國碼顯示
+    nationalMode: false,
+    formatOnDisplay: true,
+    autoPlaceholder: "aggressive",
+    placeholderNumberType: "MOBILE",
+    utilsScript: "/static/assets/vendor/intl-tel-input/js/utils.min.js" // 使用正確的靜態檔案路徑
   });
 
   // Phone verification simulation with cooldown
@@ -66,10 +93,16 @@ $(function() {
       }
     }, 1000);
   }
-
   $('#verifyPhoneBtn').on('click', function() {
     const phone = $('#phone').val();
     const verificationMsg = $('#phone-verification-message');
+    
+    // 驗證電話號碼格式
+    if (!iti.isValidNumber()) {
+      verificationMsg.text('請輸入有效的電話號碼格式。').removeClass('text-success').addClass('text-danger');
+      return;
+    }
+    
     if (phone && !verifying) {
       // Simulate sending OTP
       verificationMsg.text('驗證碼已寄送至您的手機。').removeClass('text-danger').addClass('text-success');
@@ -137,14 +170,131 @@ $(function() {
       avatar: {
         accept: "請上傳圖片格式的檔案 (jpg, png, gif)"
       }
-    },
-    submitHandler: function(form) {
-      // form.submit(); // Replace with AJAX or actual form submission
-      Swal.fire({
-        title: '成功!',
-        text: '個人資料已儲存 (模擬)',
-        icon: 'success',
-        confirmButtonColor: 'var(--accent-color)'
+    },    submitHandler: function(form) {
+      // 準備要提交的資料
+      const formData = new FormData();
+      
+      // 取得表單欄位值
+      formData.append('real_name', $('#realname').val());
+      formData.append('nickname', $('#nickname').val());
+      formData.append('address', $('#address').val());
+      
+      // 使用 intl-tel-input 取得完整的國際電話號碼格式
+      const fullPhoneNumber = iti.getNumber();
+      formData.append('phone', fullPhoneNumber);
+      
+      // 處理頭像上傳
+      const avatarFiles = pond.getFiles();
+      if (avatarFiles.length > 0 && avatarFiles[0].file) {
+        formData.append('portrait', avatarFiles[0].file);
+      }
+      
+      // 發送 PUT 請求到 API
+      $.ajax({
+        url: '/api/v1/account/profile/',
+        type: 'PUT',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        },        success: function(response) {
+          Swal.fire({
+            title: '成功!',
+            text: '個人資料已成功更新',
+            icon: 'success',
+            confirmButtonColor: 'var(--accent-color)'
+          }).then(() => {
+            // 成功更新後重新獲取最新資料
+            $.ajax({
+              url: '/api/v1/account/profile/',
+              type: 'GET',
+              success: function(data) {
+                $('#realname').val(data.real_name || '');
+                $('#nickname').val(data.nickname || '');
+                $('#address').val(data.address || '');
+                
+                // 正確處理手機號碼 - 使用 intl-tel-input 設定值
+                if (data.phone && data.phone.trim() !== '') {
+                  // 先清除現有資料
+                  iti.setNumber('');
+                  // 設置號碼 (若為國際格式如 +886912345678 會自動處理格式)
+                  iti.setNumber(data.phone);
+                }
+                
+                // 若API有回傳email（預設Profile沒有，需後端補上）
+                if (data.email) $('#email').val(data.email);
+                
+                // 清除現有頭像並加載新頭像
+                pond.removeFiles();
+                
+                if (data.portrait && data.portrait.trim() !== '') {
+                  // 若 portrait 為相對路徑，補 /media/
+                  let portraitUrl = data.portrait.startsWith('http') ? data.portrait : ('/media/' + data.portrait.replace(/^\/+/, ''));
+                  
+                  // 從 URL 提取檔案名稱和副檔名
+                  const fileName = portraitUrl.split('/').pop();
+                  // 構建 File 物件所需資訊
+                  const fileExtension = fileName.split('.').pop().toLowerCase();
+                  const mimeType = getMimeType(fileExtension);
+                    
+                  // 先建立圖片元素測試是否可加載
+                  const testImage = new Image();
+                  testImage.onload = function() {
+                    // 圖片成功加載，使用 fetch 獲取圖片數據並創建文件
+                    fetch(portraitUrl)
+                      .then(response => response.blob())
+                      .then(blob => {
+                        // 創建有效的檔案物件
+                        const file = new File([blob], fileName, { type: mimeType });
+                        // 將檔案添加到 FilePond
+                        pond.addFile(file);
+                        console.log('頭像重新加載成功');
+                      })
+                      .catch(error => {
+                        console.warn('頭像檔案重新獲取失敗:', error);
+                      });
+                  };
+                  
+                  testImage.onerror = function() {
+                    console.warn('頭像重新載入失敗: 圖片無法加載');
+                  };
+                  
+                  // 設置圖片來源並開始加載
+                  testImage.src = portraitUrl;
+                }
+              },
+              error: function(xhr) {
+                console.warn('重新載入個人資料失敗', xhr);
+              }
+            });
+          });
+        },
+        error: function(xhr) {
+          let errorMessage = '更新失敗，請稍後再試';
+          
+          if (xhr.responseJSON) {
+            // 處理欄位驗證錯誤
+            if (xhr.responseJSON.real_name) {
+              errorMessage = '真實姓名: ' + xhr.responseJSON.real_name[0];
+            } else if (xhr.responseJSON.nickname) {
+              errorMessage = '暱稱: ' + xhr.responseJSON.nickname[0];
+            } else if (xhr.responseJSON.phone) {
+              errorMessage = '電話號碼: ' + xhr.responseJSON.phone[0];
+            } else if (xhr.responseJSON.portrait) {
+              errorMessage = '頭像: ' + xhr.responseJSON.portrait[0];
+            } else if (xhr.responseJSON.detail) {
+              errorMessage = xhr.responseJSON.detail;
+            }
+          }
+          
+          Swal.fire({
+            title: '錯誤',
+            text: errorMessage,
+            icon: 'error',
+            confirmButtonColor: 'var(--accent-color)'
+          });
+        }
       });
     }
   });
@@ -236,7 +386,20 @@ $(function() {
   $newPassword.on('input', updatePasswordHint);
   $newPassword.on('blur change', updatePasswordHint);
   // 初始狀態
-  updatePasswordHint();
+  updatePasswordHint();  // 根據副檔名獲取MIME類型的輔助函數
+  function getMimeType(extension) {
+    const mimeTypes = {
+      'jpg': 'image/jpeg',
+      'jpeg': 'image/jpeg',
+      'png': 'image/png',
+      'gif': 'image/gif',
+      'webp': 'image/webp',
+      'bmp': 'image/bmp',
+      'tiff': 'image/tiff',
+      'tif': 'image/tiff'
+    };
+    return mimeTypes[extension.toLowerCase()] || 'image/jpeg'; // 默認為 jpeg
+  }
 
   // 頁面載入時自動取得個人資料並填入表單
   $.ajax({
@@ -246,14 +409,50 @@ $(function() {
       $('#realname').val(data.real_name || '');
       $('#nickname').val(data.nickname || '');
       $('#address').val(data.address || '');
-      $('#phone').val(data.phone || '');
+      
+      // 正確處理手機號碼 - 使用 intl-tel-input 設定值
+      if (data.phone && data.phone.trim() !== '') {
+        // 先清除現有資料
+        iti.setNumber('');
+        // 設置號碼 (若為國際格式如 +886912345678 會自動處理格式)
+        iti.setNumber(data.phone);
+      }
+      
       // 若API有回傳email（預設Profile沒有，需後端補上）
-      if (data.email) $('#email').val(data.email);
-      // 頭像預覽
-      if (data.portrait) {
+      if (data.email) $('#email').val(data.email);if (data.portrait && data.portrait.trim() !== '') {
         // 若 portrait 為相對路徑，補 /media/
         let portraitUrl = data.portrait.startsWith('http') ? data.portrait : ('/media/' + data.portrait.replace(/^\/+/, ''));
-        pond.addFile(portraitUrl, { type: 'local' });
+        
+        // 從 URL 提取檔案名稱和副檔名
+        const fileName = portraitUrl.split('/').pop();
+        // 構建 File 物件所需資訊
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        const mimeType = getMimeType(fileExtension);
+          
+        // 先建立圖片元素測試是否可加載
+        const testImage = new Image();
+        testImage.onload = function() {
+          // 圖片成功加載，使用 fetch 獲取圖片數據並創建文件
+          fetch(portraitUrl)
+            .then(response => response.blob())
+            .then(blob => {
+              // 創建有效的檔案物件
+              const file = new File([blob], fileName, { type: mimeType });
+              // 將檔案添加到 FilePond
+              pond.addFile(file);
+              console.log('頭像加載成功');
+            })
+            .catch(error => {
+              console.warn('頭像檔案獲取失敗:', error);
+            });
+        };
+        
+        testImage.onerror = function() {
+          console.warn('頭像載入失敗: 圖片無法加載');
+        };
+        
+        // 設置圖片來源並開始加載
+        testImage.src = portraitUrl;
       }
     },
     error: function(xhr) {

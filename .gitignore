@@ -7,3 +7,4 @@ venv_laptop/
 db.sqlite3
 **/migrations/
 vedesktop_venv/
+media/

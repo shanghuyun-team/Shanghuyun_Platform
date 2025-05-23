@@ -28,41 +28,12 @@ $(document).ready(function() {
     success: function(label, element) {
       $("#form-non-field-errors").addClass("d-none").text("");
     },
-    submitHandler: function(form, event) {
-      event.preventDefault();
-      var $form = $(form);
-      var postData = $form.serialize();
-      // Get the CSRF token from the form
-      var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
-      $.ajax({
-        url: $form.attr('action'),
-        type: 'POST',
-        data: postData,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('X-CSRFToken', csrftoken);
-        },
-        success: function(data) {
-          if (data.success) {
-            window.location.href = data.redirect_url || '/';
-          } else if (data.error) {
-            $("#form-non-field-errors").removeClass("d-none").text("登入失敗，請檢查帳號或密碼");
-          } else {
-            window.location.reload();
-          }
-        },
-        error: function(xhr) {
-          $("#form-non-field-errors").removeClass("d-none").text("登入失敗，請檢查帳號或密碼");
-        }
-      });
-      return false;
-    }
   });
+});
 
-
-  var serverErrors = $(".nonfield, .errorlist.nonfield, .errorlist li").text();
+var serverErrors = $(".nonfield, .errorlist.nonfield, .errorlist li").text();
   if (serverErrors && serverErrors.length > 0) {
     $("#form-non-field-errors")
       .removeClass("d-none")
-      .text("登入失敗，請檢查帳號或密碼");
+      .text(serverErrors);
   }
-});

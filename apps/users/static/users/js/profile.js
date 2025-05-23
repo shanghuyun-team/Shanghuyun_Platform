@@ -1,3 +1,20 @@
+// 取得 CSRF Token 的通用函式
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 $(function() {
   // Register FilePond plugins
   FilePond.registerPlugin(
@@ -166,90 +183,82 @@ $(function() {
       }
     },
     submitHandler: function(form) {
-      // form.submit(); // Replace with AJAX or actual form submission
-      Swal.fire({
-        title: '成功!',
-        text: '密碼已更新 (模擬)',
-        icon: 'success',
-        confirmButtonColor: 'var(--accent-color)'
+      $.ajax({
+        url: '/api/v1/account/password/change/',
+        type: 'PUT', // 修正為 PUT
+        data: JSON.stringify({
+          old_password: $('#current-password').val(),
+          new_password: $('#new-password').val()
+        }),
+        contentType: 'application/json',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        success: function(res) {
+          Swal.fire({
+            title: '成功!',
+            text: '密碼已更新',
+            icon: 'success',
+            confirmButtonColor: 'var(--accent-color)'
+          });
+          form.reset();
+        },
+        error: function(xhr) {
+          Swal.fire({
+            title: '錯誤',
+            text: xhr.responseJSON?.old_password?.[0] || xhr.responseJSON?.detail || '密碼更新失敗',
+            icon: 'error',
+            confirmButtonColor: 'var(--accent-color)'
+          });
+        }
       });
-      form.reset();
     }
   });
 
-  // Activate tab from URL hash if present
-  var hash = window.location.hash;
-  if (hash) {
-    $('.profile-sidebar .nav-link[href="' + hash + '"]').tab('show');
+  // 新密碼長度提示動態變色，避免與驗證訊息重複
+  const $newPassword = $('#new-password');
+  const $passwordHint = $('#password-length-hint');
+  function updatePasswordHint() {
+    if ($newPassword.hasClass('is-invalid')) {
+      $passwordHint.hide();
+      return;
+    }
+    $passwordHint.show();
+    const val = $newPassword.val();
+    if (val.length === 0) {
+      $passwordHint.css('color', 'black');
+    } else if (val.length < 8) {
+      $passwordHint.css('color', 'red');
+    } else {
+      $passwordHint.css('color', 'green');
+    }
   }
+  $newPassword.on('input', updatePasswordHint);
+  $newPassword.on('blur change', updatePasswordHint);
+  // 初始狀態
+  updatePasswordHint();
 
-  // Update hash on tab change
-  $('.profile-sidebar .nav-link').on('shown.bs.tab', function (e) {
-    window.location.hash = e.target.hash;
-  });
-
-  // Account Deletion with SweetAlert2
-  $('#deleteAccountBtn').on('click', function() {
-    Swal.fire({
-      title: '確認刪除帳號',
-      text: "您確定要刪除您的帳號嗎？此操作無法復原。",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: '是的，刪除',
-      cancelButtonText: '取消'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: '再次確認刪除帳號',
-          text: "這真的是最後的機會了。一旦刪除，所有資料將永久消失。您確定要繼續嗎？",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#dc3545',
-          cancelButtonColor: '#6c757d',
-          confirmButtonText: '是的，我非常確定',
-          cancelButtonText: '取消'
-        }).then((result2) => {
-          if (result2.isConfirmed) {
-            Swal.fire({
-              title: '最終確認',
-              html: `
-                <p>為完成刪除程序，請在下方輸入框中輸入 "DELETE" (全大寫)。</p>
-                <input type="text" id="swal-input-delete" class="swal2-input" placeholder="DELETE">
-              `,
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#dc3545',
-              cancelButtonColor: '#6c757d',
-              confirmButtonText: '確認刪除',
-              cancelButtonText: '取消',
-              preConfirm: () => {
-                const inputValue = document.getElementById('swal-input-delete').value;
-                if (inputValue !== 'DELETE') {
-                  Swal.showValidationMessage('輸入不正確。請輸入 "DELETE"');
-                  return false;
-                }
-                return inputValue;
-              }
-            }).then((result3) => {
-              if (result3.isConfirmed && result3.value === 'DELETE') {
-                // Simulate account deletion
-                Swal.fire(
-                  '已刪除!',
-                  '您的帳號已成功刪除 (模擬)。您將被登出。',
-                  'success'
-                ).then(() => {
-                  // Here you would typically redirect to a logout page or homepage
-                  // window.location.href = "/logout";
-                  console.log("Account deletion process completed.");
-                });
-              }
-            });
-          }
-        });
+  // 頁面載入時自動取得個人資料並填入表單
+  $.ajax({
+    url: '/api/v1/account/profile/',
+    type: 'GET',
+    success: function(data) {
+      $('#realname').val(data.real_name || '');
+      $('#nickname').val(data.nickname || '');
+      $('#address').val(data.address || '');
+      $('#phone').val(data.phone || '');
+      // 若API有回傳email（預設Profile沒有，需後端補上）
+      if (data.email) $('#email').val(data.email);
+      // 頭像預覽
+      if (data.portrait) {
+        // 若 portrait 為相對路徑，補 /media/
+        let portraitUrl = data.portrait.startsWith('http') ? data.portrait : ('/media/' + data.portrait.replace(/^\/+/, ''));
+        pond.addFile(portraitUrl, { type: 'local' });
       }
-    });
+    },
+    error: function(xhr) {
+      // 可選：顯示錯誤訊息
+      console.warn('載入個人資料失敗', xhr);
+    }
   });
-
 });

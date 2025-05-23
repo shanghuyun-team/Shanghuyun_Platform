@@ -225,6 +225,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"#"optional"
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -246,7 +247,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'secret':        os.getenv('GOOGLE_CLIENT_SECRET'),
             'key':           ''
         },
-        'SCOPE': ['openid',],
+        'SCOPE': ['openid', 'email',],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }

@@ -38,20 +38,29 @@
             <div class="card-body p-4">
               <form method="post" action="{% url 'account_login' %}" id="login-form" novalidate>
                 {% csrf_token %}
-                <div id="form-non-field-errors" class="alert alert-danger d-none" role="alert"></div>
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger" role="alert">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
                 <div class="mb-3">
                   <label for="id_login" class="form-label">
                     <i class="fa fa-user me-2"></i>電子郵件
                   </label>
                   {{ form.login|add_class:'form-control'|attr:'placeholder:輸入電子郵件' }}
-                  {{ form.login.errors }}
+                  <div style="display:none;">
+                    {{ form.login.errors }}
+                  </div>
+
                 </div>
                 <div class="mb-3">
                   <label for="id_password" class="form-label">
                     <i class="fa fa-lock me-2"></i>密碼
                   </label>
                   {{ form.password|add_class:'form-control'|attr:'placeholder:輸入密碼' }}
-                  {{ form.password.errors }}
+                  <div style="display:none;">
+                    {{ form.password.errors }}
+                  </div>
                 </div>
                 <div class="form-check mb-3">
                   {{ form.remember|add_class:'form-check-input' }}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static widget_tweaks %}
 {% load i18n allauth account widget_tweaks %}
 
 {% block body_class %}starter-page-page{% endblock %}
@@ -19,12 +19,6 @@
     <div class="container position-relative">
       <h1>註冊新帳號</h1>
       <p>歡迎加入我們的平台。註冊後即可使用所有功能與服務。</p>
-      <nav class="breadcrumbs">
-        <ol>
-          <li><a href="/">首頁</a></li>
-          <li class="current">註冊</li>
-        </ol>
-      </nav>
     </div>
   </div>
   <section id="register" class="section bg-light text-dark" data-aos="fade-up">
@@ -38,8 +32,11 @@
             <div class="card-body p-4">
               <form method="post" action="{% url 'account_signup' %}" id="register-form" novalidate>
                 {% csrf_token %}
-                <div id="form-non-field-errors" class="alert alert-danger d-none" role="alert"></div>
-                {{ form.non_field_errors }}
+                {% if form.non_field_errors %}
+                  <div class="alert alert-danger" role="alert">
+                    {{ form.non_field_errors }}
+                  </div>
+                {% endif %}
                 {% for field in form.visible_fields %}
                   <div class="mb-3">
                     <label for="id_{{ field.name }}" class="form-label">
@@ -55,9 +52,9 @@
                       {% if field.field.required %}<span class="text-danger ms-1">*</span>{% endif %}
                     </label>
                     {{ field|add_class:'form-control' }}
-                  </div>
-                  <div style="display:none;">
-                    {{ field.errors }}
+                    {% if field.errors %}
+                      <div class="alert alert-danger mt-2">{{ field.errors }}</div>
+                    {% endif %}
                   </div>
                 {% endfor %}
                 <div class="d-grid mt-4">
@@ -67,7 +64,7 @@
                   <p class="text-muted">或使用以下方式註冊</p>
                 </div>
                 <div class="d-grid mb-3">
-                  <a href="{% url 'google_login' %}?process=login" class="btn btn-google btn-outline d-flex align-items-center justify-content-center google-auth-btn">
+                  <a href="{% provider_login_url 'google' process='login' %}" class="btn btn-google btn-outline d-flex align-items-center justify-content-center google-auth-btn">
                     <span class="google-icon-wrapper">
                       <img src="{% static 'img/google-logo.svg' %}" alt="Google" width="20" height="20" />
                     </span>
@@ -92,6 +89,28 @@
   <script src="{% static 'assets/vendor/jquery/js/jquery-3.6.0.min.js' %}"></script>
   <script src="{% static 'assets/vendor/jquery-validation/js/jquery.validate.min.js' %}"></script>
   <script src="{% static 'assets/vendor/jquery-validation/js/additional-methods.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/intl-tel-input/js/intlTelInput.min.js' %}"></script>
-  <script src="{% static 'js/signup.js' %}"></script>
+  <script>
+    $(function() {
+      $("#register-form").validate({
+        errorClass: "is-invalid",
+        validClass: "is-valid",
+        errorElement: "div",
+        onfocusout: function(elem) { this.element(elem); },
+        errorPlacement: function(error, element) {
+          error.addClass("invalid-feedback");
+          element.after(error);
+        },
+        rules: {
+          email: { required: true, email: true },
+          password1: { required: true, minlength: 8 },
+          password2: { required: true, minlength: 8, equalTo: "#id_password1" }
+        },
+        messages: {
+          email: { required: "請輸入電子郵件", email: "請輸入有效的電子郵件地址" },
+          password1: { required: "請輸入密碼", minlength: "密碼長度至少8個字元" },
+          password2: { required: "請再次輸入密碼", minlength: "密碼長度至少8個字元", equalTo: "兩次輸入的密碼不一致" }
+        }
+      });
+    });
+  </script>
 {% endblock %}

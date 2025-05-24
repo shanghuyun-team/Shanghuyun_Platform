@@ -3,10 +3,24 @@ from django.contrib.auth import authenticate
 from .models import Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
+    # 添加一個額外的非模型字段，用於標記是否刪除頭像
+    remove_portrait = serializers.BooleanField(required=False, write_only=True)
+    
     class Meta:
         model = Profile
-        fields = ['real_name', 'nickname', 'portrait', 'address', 'phone']
-    read_only_fields = ()
+        fields = ['real_name', 'nickname', 'portrait', 'address', 'phone', 'remove_portrait']
+        read_only_fields = ()
+        
+    def update(self, instance, validated_data):
+        # 檢查是否需要刪除頭像
+        remove_portrait = validated_data.pop('remove_portrait', False)
+        if remove_portrait and instance.portrait:
+            # 刪除頭像
+            instance.portrait.delete(save=False)
+            instance.portrait = None
+        
+        # 處理其他字段的更新
+        return super().update(instance, validated_data)
 """
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

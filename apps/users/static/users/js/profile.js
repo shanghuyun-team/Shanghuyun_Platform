@@ -58,28 +58,6 @@ $(function() {
       }
       return file.name;
     }
-  });
-  
-  // 監聽 FilePond 的移除檔案事件，當使用者點擊叉叉按鈕時觸發
-  pond.on('removefile', (error, file) => {
-    // 確認是使用者手動刪除而非程式碼呼叫 removeFile
-    if (file.origin === FilePond.FileOrigin.LOCAL) {
-      // 發送請求到後端刪除頭像
-      $.ajax({
-        url: '/api/v1/account/portrait/delete/',
-        type: 'DELETE',
-        headers: {
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        success: function(response) {
-          console.log('頭像已成功刪除');
-        },
-        error: function(xhr) {
-          console.warn('頭像刪除失敗', xhr);
-          // 不需要向使用者顯示錯誤，因為前端已經刪除了圖片
-        }
-      });
-    }
   });// Initialize intl-tel-input
   const phoneInput = document.querySelector("#phone");
   const iti = window.intlTelInput(phoneInput, {
@@ -194,8 +172,7 @@ $(function() {
     },    submitHandler: function(form) {
       // 準備要提交的資料
       const formData = new FormData();
-      
-      // 取得表單欄位值
+        // 取得表單欄位值
       formData.append('real_name', $('#realname').val());
       formData.append('nickname', $('#nickname').val());
       formData.append('address', $('#address').val());
@@ -206,8 +183,13 @@ $(function() {
       
       // 處理頭像上傳
       const avatarFiles = pond.getFiles();
+        // 檢查是否有頭像檔案
       if (avatarFiles.length > 0 && avatarFiles[0].file) {
         formData.append('portrait', avatarFiles[0].file);
+      } else {
+        // 如果沒有頭像檔案，代表用戶可能刪除了頭像
+        // 添加一個標記告知後端刪除現有頭像
+        formData.append('remove_portrait', 'true');
       }
       
       // 發送 PUT 請求到 API

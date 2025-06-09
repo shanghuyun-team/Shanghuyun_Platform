@@ -11,8 +11,27 @@ function getCookie(name) {
                 break;
             }
         }
+    }    return cookieValue;
+}
+
+// 更新 header 中的頭像
+function updateHeaderAvatar(portraitPath) {
+    const headerAvatars = document.querySelectorAll('.user-avatar-header');
+    
+    if (headerAvatars.length > 0) {
+        headerAvatars.forEach(avatar => {
+            if (portraitPath && portraitPath.trim() !== '') {
+                // 如果有新的頭像路徑，更新為用戶頭像
+                let portraitUrl = portraitPath.startsWith('http') ? portraitPath : ('/media/' + portraitPath.replace(/^\/+/, ''));
+                avatar.src = portraitUrl;
+                console.log('Header 頭像已更新為:', portraitUrl);
+            } else {
+                // 如果沒有頭像，使用默認圖片
+                avatar.src = '/static/assets/img/specials-1.png';
+                console.log('Header 頭像已重置為默認圖片');
+            }
+        });
     }
-    return cookieValue;
 }
 
 $(function() {
@@ -262,10 +281,12 @@ $(function() {
                   testImage.onerror = function() {
                     console.warn('頭像重新載入失敗: 圖片無法加載');
                   };
-                  
-                  // 設置圖片來源並開始加載
+                    // 設置圖片來源並開始加載
                   testImage.src = portraitUrl;
                 }
+                
+                // 更新 header 中的頭像
+                updateHeaderAvatar(data.portrait);
               },
               error: function(xhr) {
                 console.warn('重新載入個人資料失敗', xhr);
@@ -421,9 +442,11 @@ $(function() {
         // 設置號碼 (若為國際格式如 +886912345678 會自動處理格式)
         iti.setNumber(data.phone);
       }
+        // 若API有回傳email（預設Profile沒有，需後端補上）
+      if (data.email) $('#email').val(data.email);
       
-      // 若API有回傳email（預設Profile沒有，需後端補上）
-      if (data.email) $('#email').val(data.email);if (data.portrait && data.portrait.trim() !== '') {
+      // 更新 header 中的頭像 (初始載入時)
+      updateHeaderAvatar(data.portrait);if (data.portrait && data.portrait.trim() !== '') {
         // 若 portrait 為相對路徑，補 /media/
         let portraitUrl = data.portrait.startsWith('http') ? data.portrait : ('/media/' + data.portrait.replace(/^\/+/, ''));
         
@@ -434,8 +457,7 @@ $(function() {
         const mimeType = getMimeType(fileExtension);
           
         // 先建立圖片元素測試是否可加載
-        const testImage = new Image();
-        testImage.onload = function() {
+        const testImage = new Image();        testImage.onload = function() {
           // 圖片成功加載，使用 fetch 獲取圖片數據並創建文件
           fetch(portraitUrl)
             .then(response => response.blob())
@@ -463,5 +485,113 @@ $(function() {
       // 可選：顯示錯誤訊息
       console.warn('載入個人資料失敗', xhr);
     }
+  });
+  
+  // 刪除帳號功能
+  $('#deleteAccountBtn').on('click', function() {
+    Swal.fire({
+      title: '確認刪除帳號',
+      html: `
+        <div class="text-start">
+          <p class="text-danger mb-3">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>警告：此操作無法復原！</strong>
+          </p>
+          <p class="mb-3">刪除帳號後，以下資料將被永久移除：</p>
+          <ul class="text-start mb-3">
+            <li>個人資料和設定</li>
+            <li>上傳的頭像和檔案</li>
+            <li>所有相關的活動記錄</li>
+          </ul>
+          <div class="form-group">
+            <label for="delete-password" class="form-label">請輸入您的密碼以確認刪除：</label>
+            <input type="password" id="delete-password" class="form-control" placeholder="輸入密碼" />
+          </div>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: '確認刪除',
+      cancelButtonText: '取消',
+      reverseButtons: true,
+      focusConfirm: false,
+      preConfirm: () => {
+        const password = document.getElementById('delete-password').value;
+        if (!password) {
+          Swal.showValidationMessage('請輸入密碼');
+          return false;
+        }
+        return password;
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const password = result.value;
+        
+        // 顯示刪除中的提示
+        Swal.fire({
+          title: '刪除中...',
+          text: '正在處理您的請求，請稍候',
+          icon: 'info',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        // 調用刪除 API
+        $.ajax({
+          url: '/api/v1/account/account/delete/',
+          type: 'DELETE',
+          data: JSON.stringify({
+            password: password
+          }),
+          contentType: 'application/json',
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          success: function(response) {
+            Swal.fire({
+              title: '帳號已刪除',
+              text: '您的帳號已成功刪除。感謝您使用我們的服務。',
+              icon: 'success',
+              confirmButtonColor: '#28a745',
+              allowOutsideClick: false,
+              allowEscapeKey: false
+            }).then(() => {
+              // 重定向到首頁
+              window.location.href = '/';
+            });
+          },
+          error: function(xhr) {
+            let errorMessage = '刪除失敗，請稍後再試';
+            
+            if (xhr.status === 400 && xhr.responseJSON) {
+              if (xhr.responseJSON.password) {
+                errorMessage = '密碼錯誤：' + xhr.responseJSON.password[0];
+              } else if (xhr.responseJSON.detail) {
+                errorMessage = xhr.responseJSON.detail;
+              } else if (xhr.responseJSON.non_field_errors) {
+                errorMessage = xhr.responseJSON.non_field_errors[0];
+              }
+            } else if (xhr.status === 401) {
+              errorMessage = '請先登入再進行此操作';
+            } else if (xhr.status === 500) {
+              errorMessage = '伺服器錯誤，請聯繫客服';
+            }
+            
+            Swal.fire({
+              title: '刪除失敗',
+              text: errorMessage,
+              icon: 'error',
+              confirmButtonColor: '#dc3545'
+            });
+          }
+        });
+      }
+    });
   });
 });

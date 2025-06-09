@@ -350,7 +350,21 @@ h6 {
       border-radius: 50%;
       object-fit: cover;
       cursor: pointer;
-      border: 1px solid #ddd; /* Optional: adds a light border */
+      border: 2px solid #ddd; /* Optional: adds a light border */
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-avatar-header:hover {
+      transform: scale(1.1);
+      border-color: var(--accent-color);
+      box-shadow: 0 4px 8px rgba(205, 164, 94, 0.3);
+    }
+
+    .user-avatar-header:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(205, 164, 94, 0.2);
     }
 
     .user-profile-dropdown .dropdown-menu {
@@ -1748,5 +1762,5 @@ section,
 # Starter Section Section
 --------------------------------------------------------------*/
 .starter-section {
-  /* Add your styles here */
+  padding: 40px 0;
 }

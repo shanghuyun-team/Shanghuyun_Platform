@@ -56,13 +56,15 @@
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
 
-        {% comment %} <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a> {% endcomment %}
-
-        {% if user.is_authenticated %}
+        {% comment %} <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a> {% endcomment %}        {% if user.is_authenticated %}
         <!-- User Profile Dropdown -->
         <div class="user-profile-dropdown dropdown ms-2 ms-xl-3">
-          <a href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="d-flex align-items-center">
-            <img src="{% static 'assets/img/specials-1.png' %}" alt="User Avatar" class="user-avatar-header">
+          <a href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="d-flex align-items-center">            
+            {% if user.profile and user.profile.portrait %}
+              <img src="{{ user.profile.portrait.url }}" alt="User Avatar" class="user-avatar-header">
+            {% else %}
+              <img src="{% static 'assets/img/specials-1.png' %}" alt="User Avatar" class="user-avatar-header">
+            {% endif %}
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
             <li><h6 class="dropdown-header">{{ user.username }}</h6></li>

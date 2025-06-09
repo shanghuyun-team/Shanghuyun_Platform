@@ -52,4 +52,12 @@ class PasswordChangeSerializer(serializers.Serializer):
         user = self.context['request'].user
         user.set_password(self.validated_data['new_password'])
         user.save()
-        return user
+
+class AccountDeleteSerializer(serializers.Serializer):
+    password = serializers.CharField(required=True, write_only=True)
+    
+    def validate_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("密碼驗證失敗")
+        return value

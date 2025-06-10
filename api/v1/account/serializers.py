@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate
+import bleach
 from .models import Profile
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -11,15 +11,21 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['real_name', 'nickname', 'portrait', 'address', 'phone', 'remove_portrait']
         read_only_fields = ()
         
+    def validate_real_name(self, value):
+        return bleach.clean(value, tags=[], strip=True)
+
+    def validate_nickname(self, value):
+        return bleach.clean(value, tags=[], strip=True)
+
+    def validate_address(self, value):
+        return bleach.clean(value, tags=[], strip=True)
+
     def update(self, instance, validated_data):
-        # 檢查是否需要刪除頭像
         remove_portrait = validated_data.pop('remove_portrait', False)
         if remove_portrait and instance.portrait:
-            # 刪除頭像
             instance.portrait.delete(save=False)
             instance.portrait = None
         
-        # 處理其他字段的更新
         return super().update(instance, validated_data)
 """
 class UserSerializer(serializers.ModelSerializer):

@@ -4,7 +4,7 @@ from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialLogin, EmailAddress
 from rest_framework import generics, permissions, status
 from .models import Profile, User
-from .serializers import ProfileSerializer, PasswordChangeSerializer, AccountDeleteSerializer
+from .serializers import ProfileSerializer, PasswordChangeSerializer#, AccountDeleteSerializer
 from django.contrib.auth import login as auth_login, logout
 from rest_framework.response import Response
 from rest_framework import status

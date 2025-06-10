@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import ProfileRetrieveUpdateAPIView, social_choose, PasswordChangeAPIView, AccountDeleteAPIView
+from .views import ProfileRetrieveUpdateAPIView, social_choose, PasswordChangeAPIView#, AccountDeleteAPIView
 
 urlpatterns = [
     path('profile/', ProfileRetrieveUpdateAPIView.as_view(), name='api-profile'),

@@ -66,12 +66,8 @@ class PasswordChangeAPIView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'detail': '密碼已更新'}, status=status.HTTP_200_OK)
-
+"""
 class AccountDeleteAPIView(APIView):
-    """
-    刪除用戶帳號的API端點
-    需要用戶提供密碼確認身份
-    """
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request):
@@ -105,3 +101,4 @@ class AccountDeleteAPIView(APIView):
                 {'detail': '帳號刪除失敗，請稍後再試'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+"""

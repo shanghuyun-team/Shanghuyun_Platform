@@ -1,15 +1,39 @@
-{# templates/socialaccount/social_choose.html #}
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8">
-  <title>帳號已存在</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- 如果有自己的 CSS，就在這裡 link -->
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block body_class %}starter-page-page{% endblock %}
+
+{% block extra_css %}
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/Shanghuyun_Platform.css' %}" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    button { margin-right: 1rem; padding: .5rem 1rem; }
+    .warning-text {
+      font-size: 0.85rem;
+      color: #dc3545;
+    }
+    .help-section {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .help-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .help-item:last-child {
+      margin-bottom: 0;
+    }
+    .help-icon {
+      margin-right: 0.5rem;
+      margin-top: 0.1rem;
+      color: #6c757d;
+    }
   </style>
+<<<<<<< HEAD
 </head>
 <body>
   <h1>嗨，{{ existing_user.email }}</h1>
@@ -25,3 +49,201 @@
   </form>
 </body>
 </html>
+=======
+{% endblock %}
+
+{% block head_title %}
+    帳號已存在
+{% endblock head_title %}
+
+{% block content %}
+<main class="main">
+  <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
+    <div class="container position-relative">
+      <h1>帳號選擇</h1>
+      <p>此電子郵件已經註冊過帳號，請選擇您要進行的操作</p>
+    </div>
+  </div>
+  
+  <section id="social-choose" class="section bg-light text-dark" data-aos="fade-up">
+    <div class="container">
+      <div class="section-title text-center mb-4">
+        <h2 class="text-dark">帳號已存在</h2>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <div class="text-center mb-4">
+                <i class="fas fa-user-circle fa-3x text-primary mb-3"></i>
+                <h4 class="mb-3">嗨，{{ existing_user.email }}</h4>
+                <p class="text-muted">
+                  這個電子郵件地址已經註冊過帳號了，請選擇您要進行的操作：
+                </p>
+              </div>
+              
+              <form method="post" action="">
+                {% csrf_token %}
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="d-grid">
+                      <button name="choice" value="link" type="submit" class="btn btn-lg custom-btn">
+                        <i class="fas fa-link me-2"></i>
+                        連結到現有帳號
+                      </button>
+                    </div>
+                    <small class="text-muted d-block mt-2 text-center">
+                      將 Google 帳號連結到現有帳號
+                    </small>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-grid">
+                      <button name="choice" value="new" type="submit" class="btn btn-lg btn-outline-danger" id="newAccountBtn">
+                        <i class="fas fa-user-plus me-2"></i>
+                        創建新帳號
+                      </button>
+                    </div>
+                    <small class="text-muted d-block mt-2 text-center">
+                      使用當前的電子郵件註冊新帳號
+                    </small>
+                    <small class="warning-text d-block mt-1 text-center">
+                      <i class="fas fa-exclamation-triangle me-1"></i>
+                      將會刪除當前帳號的所有資料
+                    </small>
+                  </div>
+                </div>
+              </form>
+              
+              <div class="text-center mt-4 pt-3 border-top">
+                <p class="text-muted mb-3">
+                  <i class="fas fa-info-circle me-1"></i>
+                  需要幫助？
+                </p>
+                
+                <div class="help-section">
+                  <div class="help-item">
+                    <i class="fas fa-link help-icon"></i>
+                    <div>
+                      <strong>連結到現有帳號：</strong>
+                      <span class="text-muted">將您的 Google 帳號與現有的平台帳號連結，保留所有現有資料和設定。</span>
+                    </div>
+                  </div>
+                  <div class="help-item">
+                    <i class="fas fa-user-plus help-icon"></i>
+                    <div>
+                      <strong>創建新帳號：</strong>
+                      <span class="text-muted">使用相同的電子郵件創建一個全新的帳號，<strong class="text-danger">現有帳號的所有資料將被永久刪除</strong>。</span>
+                    </div>
+                  </div>
+                  <div class="help-item">
+                    <i class="fas fa-shield-alt help-icon"></i>
+                    <div>
+                      <strong>安全提醒：</strong>
+                      <span class="text-muted">我們建議選擇「連結到現有帳號」以保留您的資料。如果您忘記密碼，可以使用密碼重設功能。</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mt-3">
+                  <a href="{% url 'account_login' %}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left me-1"></i>返回登入
+                  </a>
+                  <a href="{% url 'account_reset_password' %}" class="btn btn-outline-info">
+                    <i class="fas fa-key me-1"></i>忘記密碼？
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const newAccountBtn = document.getElementById('newAccountBtn');
+    const form = newAccountBtn.closest('form');
+    
+    newAccountBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // 創建警告對話框
+        const confirmModal = document.createElement('div');
+        confirmModal.className = 'modal fade';
+        confirmModal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            重要警告
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-trash-alt me-2"></i>
+                                此操作將永久刪除資料
+                            </h6>
+                            <p class="mb-2">選擇「創建新帳號」將會：</p>
+                            <ul class="mb-2">
+                                <li>永久刪除帳號 <strong>${document.querySelector('h4').textContent.replace('嗨，', '').trim()}</strong> 的所有資料</li>
+                                <li>包括個人設定、訂單記錄、收藏清單等</li>
+                                <li>此操作無法復原</li>
+                            </ul>
+                            <hr>
+                            <p class="mb-0 text-center">
+                                <strong>建議：</strong>選擇「連結到現有帳號」以保留所有資料
+                            </p>
+                        </div>
+                        <p class="text-muted">請確認您真的要繼續此操作。</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>
+                            取消
+                        </button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">
+                            <i class="fas fa-check me-1"></i>
+                            確認刪除並創建新帳號
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(confirmModal);
+        
+        // 初始化 Bootstrap Modal
+        const modal = new bootstrap.Modal(confirmModal);
+        modal.show();
+        
+        // 處理確認按鈕點擊
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            modal.hide();
+            
+            // 創建隱藏的 input 來提交表單
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'choice';
+            hiddenInput.value = 'new';
+            form.appendChild(hiddenInput);
+            
+            // 提交表單
+            form.submit();
+        });
+        
+        // 清理 modal
+        confirmModal.addEventListener('hidden.bs.modal', function() {
+            document.body.removeChild(confirmModal);
+        });
+    });
+});
+</script>
+{% endblock %}
+>>>>>>> 0bfa3a31602a92994f0e4bbcf919b5a8f7dc8ac9

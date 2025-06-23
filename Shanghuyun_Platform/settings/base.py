@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     ######### API Apps #########
     'api.v1.account.apps.AccountConfig',
     'api.v1.vendor.apps.VendorConfig',
+    'api.v1.order.apps.OrderConfig',
+    'api.v1.payment.apps.PaymentConfig',
+    'api.v1.product.apps.ProductConfig',
 
     ######### Wagtail and Django Apps #########
     

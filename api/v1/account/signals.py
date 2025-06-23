@@ -1,21 +1,14 @@
 import os
 from django.conf import settings
+from django.apps import apps
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
+from django.db.models.signals import post_migrate
 from .models import User, Profile
 from django.contrib.auth.models import Permission, Group
+from django.db.models.signals import m2m_changed
 
-@receiver(post_save, sender=User)
-def grant_vendor_admin_access(sender, instance, created, **kwargs):
-    if instance.is_vendor:
-        vendor_group, _ = Group.objects.get_or_create(name='Vendor')
-        perm = Permission.objects.get(
-            content_type__app_label='wagtailadmin',
-            codename='access_admin'
-        )
-        vendor_group.permissions.add(perm)
-        # 直接加到群組，不需要再呼叫 instance.save()
-        instance.groups.add(vendor_group)
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_profile_for_new_user(sender, instance, created, **kwargs):

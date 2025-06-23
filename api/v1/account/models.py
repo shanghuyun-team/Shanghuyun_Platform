@@ -19,16 +19,10 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         return self.create_user(email, password=password, **extra_fields)
 
-    def create_vendor(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_vendor', True)
-        return self.create_user(email, password=password, **extra_fields)
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     email       = models.EmailField('電子郵件', unique=True)
     is_active   = models.BooleanField('是否啟用', default=True)
     is_staff    = models.BooleanField('是否員工', default=False)
-    is_vendor   = models.BooleanField('是否商家', default=False)
     date_joined = models.DateTimeField('加入時間', auto_now_add=True)
 
     objects = UserManager()

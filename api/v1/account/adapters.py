@@ -2,8 +2,10 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from allauth.account.utils import perform_login
 from .models import User
 from allauth.account.models import EmailAddress
+from django.conf import settings
 
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
@@ -19,6 +21,6 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         except User.DoesNotExist:
             return
 
-        # if find account
-        request.session['socialaccount_sociallogin'] = sociallogin.serialize()
-        raise ImmediateHttpResponse(redirect(reverse('social-choose', args=[existing.pk])))
+        sociallogin.connect(request, existing)
+        perform_login(request, existing, email_verification='optional')
+        raise ImmediateHttpResponse(redirect(settings.LOGIN_REDIRECT_URL))

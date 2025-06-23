@@ -80,17 +80,17 @@ $(function() {
   });  // Initialize intl-tel-input
   const phoneInput = document.querySelector("#phone");
   const iti = window.intlTelInput(phoneInput, {
-    initialCountry: "tw", // 預設為台灣
-    preferredCountries: ["tw", "cn", "hk", "mo", "sg", "my"], // 常用國家
-    separateDialCode: true, // 分離國碼顯示
-    nationalMode: true, // 改為 true，這樣會優先使用本地格式
+    initialCountry: "tw", // 固定為台灣
+    onlyCountries: ["tw"], // 只允許台灣
+    separateDialCode: false, // 不分離國碼，使用本地格式
+    nationalMode: true, // 使用本地格式
     formatOnDisplay: true,
     autoPlaceholder: "aggressive",
     placeholderNumberType: "MOBILE",
-    utilsScript: "/static/assets/vendor/intl-tel-input/js/utils.min.js", // 使用正確的靜態檔案路徑
+    utilsScript: "/static/assets/vendor/intl-tel-input/js/utils.min.js",
     // 添加驗證選項
-    strictMode: false, // 不要太嚴格
-    formatAsYouType: true // 即時格式化
+    strictMode: false,
+    formatAsYouType: true
   });
 
   // 添加電話號碼輸入事件監聽器，即時驗證
@@ -127,7 +127,7 @@ $(function() {
     const phone = $('#phone').val();
     const verificationMsg = $('#phone-verification-message');
     
-    console.log('開始驗證電話號碼:', phone);
+    console.log('開始驗證台灣電話號碼:', phone);
     
     // 檢查是否有輸入電話號碼
     if (!phone || phone.trim() === '') {
@@ -141,45 +141,38 @@ $(function() {
       return;
     }
     
-    // 簡化的驗證邏輯 - 如果 intl-tel-input 顯示綠色勾勾，就接受
+    // 只支援台灣手機號碼格式驗證
     let isValid = false;
     
-    try {
-      // 檢查 intl-tel-input 的驗證結果
-      if (typeof iti !== 'undefined' && iti && typeof iti.isValidNumber === 'function') {
-        isValid = iti.isValidNumber();
-        console.log('intl-tel-input 驗證結果:', isValid);
-        console.log('當前國家:', iti.getSelectedCountryData());
-        console.log('格式化後的號碼:', iti.getNumber());
-      }
+    // 清理電話號碼，移除空格、括號等符號
+    const cleanPhone = phone.replace(/\s+/g, '').replace(/[()-]/g, '');
+    console.log('清理後的號碼:', cleanPhone);
+    
+    // 台灣手機號碼規則：
+    // 1. 09 開頭 + 8位數字 (例如: 0912345678)
+    // 2. 總共10位數字
+    const taiwanMobileRegex = /^09\d{8}$/;
+    
+    if (taiwanMobileRegex.test(cleanPhone)) {
+      isValid = true;
+      console.log('台灣手機號碼格式驗證通過:', cleanPhone);
+    } else {
+      console.log('台灣手機號碼格式驗證失敗:', cleanPhone);
       
-      // 如果 intl-tel-input 驗證失敗，使用更寬鬆的本地驗證
-      if (!isValid) {
-        // 台灣手機號碼：09開頭 + 8位數字，或 +886 + 9位數字
-        const cleanPhone = phone.replace(/\s+/g, '').replace(/[()-]/g, '');
-        const taiwanMobileRegex = /^(09\d{8}|\+?886\d{9})$/;
-        
-        if (taiwanMobileRegex.test(cleanPhone)) {
-          isValid = true;
-          console.log('使用本地驗證通過:', cleanPhone);
-        }
+      // 檢查常見錯誤格式並提供具體提示
+      if (cleanPhone.length !== 10) {
+        verificationMsg.text(`電話號碼長度錯誤，應為10位數字，目前為${cleanPhone.length}位。`).removeClass('text-success').addClass('text-danger');
+      } else if (!cleanPhone.startsWith('09')) {
+        verificationMsg.text('台灣手機號碼必須以「09」開頭。').removeClass('text-success').addClass('text-danger');
+      } else if (!/^\d+$/.test(cleanPhone)) {
+        verificationMsg.text('電話號碼只能包含數字。').removeClass('text-success').addClass('text-danger');
+      } else {
+        verificationMsg.text('請輸入有效的台灣手機號碼格式（例如：0912345678）。').removeClass('text-success').addClass('text-danger');
       }
-    } catch (error) {
-      console.warn('電話號碼驗證錯誤:', error);
-      
-      // 最後的備用驗證
-      const cleanPhone = phone.replace(/\s+/g, '').replace(/[()-]/g, '');
-      const phoneRegex = /^(09\d{8}|\+?886\d{9})$/;
-      isValid = phoneRegex.test(cleanPhone);
-      console.log('備用驗證結果:', isValid);
+      return;
     }
     
     console.log('最終驗證結果:', isValid);
-    
-    if (!isValid) {
-      verificationMsg.text('請輸入有效的電話號碼格式（例如：0912345678）。').removeClass('text-success').addClass('text-danger');
-      return;
-    }
     
     // 驗證通過，發送驗證碼
     verificationMsg.text('驗證碼已寄送至您的手機。').removeClass('text-danger').addClass('text-success');
@@ -248,9 +241,21 @@ $(function() {
       formData.append('nickname', $('#nickname').val());
       formData.append('address', $('#address').val());
       
-      // 使用 intl-tel-input 取得完整的國際電話號碼格式
-      const fullPhoneNumber = iti.getNumber();
-      formData.append('phone', fullPhoneNumber);
+      // 只處理台灣手機號碼格式
+      const phoneValue = $('#phone').val();
+      const cleanPhone = phoneValue.replace(/\s+/g, '').replace(/[()-]/g, '');
+      
+      // 確保是台灣手機號碼格式，並轉換為國際格式發送給後端
+      if (cleanPhone.startsWith('09') && cleanPhone.length === 10) {
+        // 將 09xxxxxxxx 轉換為 +886xxxxxxxxx 格式
+        const internationalFormat = '+886' + cleanPhone.substring(1);
+        formData.append('phone', internationalFormat);
+        console.log('提交的電話號碼:', internationalFormat);
+      } else {
+        // 如果格式不對，直接使用原始值（讓後端處理錯誤）
+        formData.append('phone', phoneValue);
+        console.log('提交原始電話號碼值:', phoneValue);
+      }
       
       // 處理頭像上傳
       const avatarFiles = pond.getFiles();
@@ -287,13 +292,20 @@ $(function() {
                 $('#realname').val(data.real_name || '');
                 $('#nickname').val(data.nickname || '');
                 $('#address').val(data.address || '');
-                
-                // 正確處理手機號碼 - 使用 intl-tel-input 設定值
+                  // 正確處理台灣手機號碼
                 if (data.phone && data.phone.trim() !== '') {
-                  // 先清除現有資料
-                  iti.setNumber('');
-                  // 設置號碼 (若為國際格式如 +886912345678 會自動處理格式)
-                  iti.setNumber(data.phone);
+                  let phoneToDisplay = data.phone;
+                  
+                  // 如果是國際格式 (+886xxxxxxxxx)，轉換為台灣本地格式 (09xxxxxxxx)
+                  if (phoneToDisplay.startsWith('+886')) {
+                    phoneToDisplay = '0' + phoneToDisplay.substring(4);
+                  } else if (phoneToDisplay.startsWith('886')) {
+                    phoneToDisplay = '0' + phoneToDisplay.substring(3);
+                  }
+                  
+                  // 設置到輸入框
+                  $('#phone').val(phoneToDisplay);
+                  console.log('重新載入的電話號碼:', data.phone, '顯示為:', phoneToDisplay);
                 }
                 
                 // 若API有回傳email（預設Profile沒有，需後端補上）
@@ -486,13 +498,20 @@ $(function() {
       $('#realname').val(data.real_name || '');
       $('#nickname').val(data.nickname || '');
       $('#address').val(data.address || '');
-      
-      // 正確處理手機號碼 - 使用 intl-tel-input 設定值
+        // 正確處理台灣手機號碼
       if (data.phone && data.phone.trim() !== '') {
-        // 先清除現有資料
-        iti.setNumber('');
-        // 設置號碼 (若為國際格式如 +886912345678 會自動處理格式)
-        iti.setNumber(data.phone);
+        let phoneToDisplay = data.phone;
+        
+        // 如果是國際格式 (+886xxxxxxxxx)，轉換為台灣本地格式 (09xxxxxxxx)
+        if (phoneToDisplay.startsWith('+886')) {
+          phoneToDisplay = '0' + phoneToDisplay.substring(4);
+        } else if (phoneToDisplay.startsWith('886')) {
+          phoneToDisplay = '0' + phoneToDisplay.substring(3);
+        }
+        
+        // 設置到輸入框
+        $('#phone').val(phoneToDisplay);
+        console.log('載入的電話號碼:', data.phone, '顯示為:', phoneToDisplay);
       }
         // 若API有回傳email（預設Profile沒有，需後端補上）
       if (data.email) $('#email').val(data.email);

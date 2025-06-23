@@ -77,17 +77,30 @@ $(function() {
       }
       return file.name;
     }
-  });// Initialize intl-tel-input
+  });  // Initialize intl-tel-input
   const phoneInput = document.querySelector("#phone");
   const iti = window.intlTelInput(phoneInput, {
     initialCountry: "tw", // 預設為台灣
     preferredCountries: ["tw", "cn", "hk", "mo", "sg", "my"], // 常用國家
     separateDialCode: true, // 分離國碼顯示
-    nationalMode: false,
+    nationalMode: true, // 改為 true，這樣會優先使用本地格式
     formatOnDisplay: true,
     autoPlaceholder: "aggressive",
     placeholderNumberType: "MOBILE",
-    utilsScript: "/static/assets/vendor/intl-tel-input/js/utils.min.js" // 使用正確的靜態檔案路徑
+    utilsScript: "/static/assets/vendor/intl-tel-input/js/utils.min.js", // 使用正確的靜態檔案路徑
+    // 添加驗證選項
+    strictMode: false, // 不要太嚴格
+    formatAsYouType: true // 即時格式化
+  });
+
+  // 添加電話號碼輸入事件監聽器，即時驗證
+  phoneInput.addEventListener('input', function() {
+    const verificationMsg = $('#phone-verification-message');
+    verificationMsg.text(''); // 清除之前的訊息
+  });
+
+  phoneInput.addEventListener('countrychange', function() {
+    console.log('國家代碼已變更:', iti.getSelectedCountryData());
   });
 
   // Phone verification simulation with cooldown
@@ -110,29 +123,68 @@ $(function() {
         verifying = false;
       }
     }, 1000);
-  }
-  $('#verifyPhoneBtn').on('click', function() {
+  }  $('#verifyPhoneBtn').on('click', function() {
     const phone = $('#phone').val();
     const verificationMsg = $('#phone-verification-message');
     
-    // 驗證電話號碼格式
-    if (!iti.isValidNumber()) {
-      verificationMsg.text('請輸入有效的電話號碼格式。').removeClass('text-success').addClass('text-danger');
+    console.log('開始驗證電話號碼:', phone);
+    
+    // 檢查是否有輸入電話號碼
+    if (!phone || phone.trim() === '') {
+      verificationMsg.text('請先輸入手機號碼。').removeClass('text-success').addClass('text-danger');
       return;
     }
     
-    if (phone && !verifying) {
-      // Simulate sending OTP
-      verificationMsg.text('驗證碼已寄送至您的手機。').removeClass('text-danger').addClass('text-success');
-      $('#otp-input-group').slideDown();
-      startResendCooldown(); // Start cooldown immediately after clicking verify
-      // Here you would typically call a backend API to send SMS
-    } else if (verifying) {
-        verificationMsg.text('請稍後，驗證程序正在進行中。').removeClass('text-danger').removeClass('text-success');
+    // 檢查驗證是否正在進行中
+    if (verifying) {
+      verificationMsg.text('請稍後，驗證程序正在進行中。').removeClass('text-danger').removeClass('text-success');
+      return;
     }
-     else {
-      verificationMsg.text('請先輸入手機號碼。').removeClass('text-success').addClass('text-danger');
+    
+    // 簡化的驗證邏輯 - 如果 intl-tel-input 顯示綠色勾勾，就接受
+    let isValid = false;
+    
+    try {
+      // 檢查 intl-tel-input 的驗證結果
+      if (typeof iti !== 'undefined' && iti && typeof iti.isValidNumber === 'function') {
+        isValid = iti.isValidNumber();
+        console.log('intl-tel-input 驗證結果:', isValid);
+        console.log('當前國家:', iti.getSelectedCountryData());
+        console.log('格式化後的號碼:', iti.getNumber());
+      }
+      
+      // 如果 intl-tel-input 驗證失敗，使用更寬鬆的本地驗證
+      if (!isValid) {
+        // 台灣手機號碼：09開頭 + 8位數字，或 +886 + 9位數字
+        const cleanPhone = phone.replace(/\s+/g, '').replace(/[()-]/g, '');
+        const taiwanMobileRegex = /^(09\d{8}|\+?886\d{9})$/;
+        
+        if (taiwanMobileRegex.test(cleanPhone)) {
+          isValid = true;
+          console.log('使用本地驗證通過:', cleanPhone);
+        }
+      }
+    } catch (error) {
+      console.warn('電話號碼驗證錯誤:', error);
+      
+      // 最後的備用驗證
+      const cleanPhone = phone.replace(/\s+/g, '').replace(/[()-]/g, '');
+      const phoneRegex = /^(09\d{8}|\+?886\d{9})$/;
+      isValid = phoneRegex.test(cleanPhone);
+      console.log('備用驗證結果:', isValid);
     }
+    
+    console.log('最終驗證結果:', isValid);
+    
+    if (!isValid) {
+      verificationMsg.text('請輸入有效的電話號碼格式（例如：0912345678）。').removeClass('text-success').addClass('text-danger');
+      return;
+    }
+    
+    // 驗證通過，發送驗證碼
+    verificationMsg.text('驗證碼已寄送至您的手機。').removeClass('text-danger').addClass('text-success');
+    $('#otp-input-group').slideDown();
+    startResendCooldown();
   });
 
   $('#resendCodeBtn').on('click', function() {

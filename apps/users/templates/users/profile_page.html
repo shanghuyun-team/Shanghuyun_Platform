@@ -35,17 +35,15 @@
           </ol>
         </nav>
       </div>
-    </div><!-- End Page Title -->
-
-    <!-- Profile Section -->
+    </div><!-- End Page Title -->    <!-- Profile Section -->
     <section id="profile-section" class="profile-section section-bg">
-      <div class="container profile-container" data-aos="fade-up">
+      <div class="container-fluid profile-container" data-aos="fade-up">
 
         <aside class="profile-sidebar">
           <nav class="nav flex-column">
-            <a class="nav-link active" href="#profile-details" data-bs-toggle="tab" data-bs-target="#profile-details-tab"><i class="fas fa-user-circle me-2"></i>個人資料</a>
-            <a class="nav-link" href="#change-password" data-bs-toggle="tab" data-bs-target="#change-password-tab"><i class="fas fa-key me-2"></i>更改密碼</a>
-            <a class="nav-link" href="#account-management" data-bs-toggle="tab" data-bs-target="#account-management-tab"><i class="fas fa-cog me-2"></i>帳號管理</a>
+            <a class="nav-link active" href="#profile-details" data-bs-toggle="tab" data-bs-target="#profile-details-tab"><i class="fas fa-user-circle me-2"></i><span class="d-none d-sm-inline">個人資料</span><span class="d-sm-none">資料</span></a>
+            <a class="nav-link" href="#change-password" data-bs-toggle="tab" data-bs-target="#change-password-tab"><i class="fas fa-key me-2"></i><span class="d-none d-sm-inline">更改密碼</span><span class="d-sm-none">密碼</span></a>
+            <a class="nav-link" href="#account-management" data-bs-toggle="tab" data-bs-target="#account-management-tab"><i class="fas fa-cog me-2"></i><span class="d-none d-sm-inline">帳號管理</span><span class="d-sm-none">管理</span></a>
             <!-- Add more links here if needed -->
           </nav>
         </aside>
@@ -97,16 +95,14 @@
                       <i class="fa fa-map-marker-alt me-2"></i>通訊地址
                     </label>
                     <input id="address" type="text" name="address" class="form-control" placeholder="例如：台北市信義區市府路1號" value="台北市信義區市府路1號">
-                  </div>
-
-                  <!-- 電話號碼 -->
+                  </div>                  <!-- 電話號碼 -->
                   <div class="mb-3">
                     <label for="phone" class="form-label">
                       <i class="fa fa-phone me-2"></i>手機號碼
                     </label>
                     <div class="input-group phone-input-group">
                       <input id="phone" type="tel" name="phone" class="form-control" placeholder="請輸入手機號碼" value="0912345678" required>
-                      <button class="btn btn-outline-secondary" type="button" id="verifyPhoneBtn">驗證</button>
+                      <button class="btn btn-outline-secondary flex-shrink-0" type="button" id="verifyPhoneBtn">驗證</button>
                     </div>
                     <button class="btn btn-link btn-sm ps-0 mt-1 btn-resend-code" type="button" id="resendCodeBtn" style="display: none;">重新寄送驗證碼</button>
                     <div id="phone-verification-message" class="form-text mt-1"></div>
@@ -168,13 +164,14 @@
           <div class="tab-pane fade" id="account-management-tab" role="tabpanel" aria-labelledby="account-management-link">
             <div class="card shadow-sm">
               <div class="card-body p-4">
-                <h3 class="card-title mb-4">帳號管理</h3>
-                <div class="delete-account-section">
+                <h3 class="card-title mb-4">帳號管理</h3>                <div class="delete-account-section">
                   <h4 class="text-danger">刪除帳號</h4>
                   <p>刪除您的帳號是一個永久性的操作，無法復原。所有與您帳號相關的資料將會被移除。</p>
-                  <button type="button" class="btn btn-danger" id="deleteAccountBtn">
-                    <i class="fas fa-trash-alt me-2"></i>刪除我的帳號
-                  </button>
+                  <div class="d-grid">
+                    <button type="button" class="btn btn-danger" id="deleteAccountBtn">
+                      <i class="fas fa-trash-alt me-2"></i>刪除我的帳號
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -4,7 +4,7 @@ from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialLogin, EmailAddress
 from rest_framework import generics, permissions, status
 from .models import Profile, User
-from .serializers import ProfileSerializer, PasswordChangeSerializer#, AccountDeleteSerializer
+from .serializers import ProfileSerializer, PasswordChangeSerializer, AccountDeleteSerializer
 from django.contrib.auth import login as auth_login, logout
 from rest_framework.response import Response
 from rest_framework import status
@@ -66,7 +66,7 @@ class PasswordChangeAPIView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'detail': '密碼已更新'}, status=status.HTTP_200_OK)
-"""
+
 class AccountDeleteAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -101,4 +101,3 @@ class AccountDeleteAPIView(APIView):
                 {'detail': '帳號刪除失敗，請稍後再試'}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-"""

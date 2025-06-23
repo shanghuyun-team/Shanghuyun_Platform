@@ -23,9 +23,7 @@
           <!-- Uncomment the line below if you also wish to use an image logo -->
           <!-- <img src="assets/img/logo.png" alt=""> -->
           <h1 class="sitename">Restaurantly</h1>
-        </a>
-
-        <nav id="navmenu" class="navmenu">
+        </a>        <nav id="navmenu" class="navmenu">
           <ul>
             <li><a href="/">首頁<br></a></li>
             <li><a href="#about">關於我們</a></li>
@@ -52,13 +50,36 @@
               </ul>
             </li>
             <li><a href="#contact">Contact</a></li> {% endcomment %}
+            
+            <!-- Mobile User Menu Items -->
+            {% if user.is_authenticated %}
+              <li class="mobile-user-menu d-xl-none">
+                <a href="{% url "profile" %}"><i class="fas fa-user-circle me-2"></i>個人資料</a>
+              </li>
+              <li class="mobile-user-menu d-xl-none">
+                <a href="/profile/#account-management-tab"><i class="fas fa-cog me-2"></i>帳號管理</a>
+              </li>
+              <li class="mobile-user-menu d-xl-none">
+                <a href="{% url 'account_logout' %}?next=/" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();" class="text-danger">
+                  <i class="fas fa-sign-out-alt me-2"></i>登出
+                </a>
+              </li>
+            {% else %}
+              <li class="mobile-auth-menu d-xl-none">
+                <a href="{% url 'account_login' %}" class="mobile-login-btn">
+                  <i class="fas fa-sign-in-alt me-2"></i>登入 / 註冊
+                </a>
+              </li>
+            {% endif %}
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
 
-        {% comment %} <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a> {% endcomment %}        {% if user.is_authenticated %}
+        {% comment %} <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Book a Table</a> {% endcomment %}        
+        <!-- Desktop User Menu -->
+        {% if user.is_authenticated %}
         <!-- User Profile Dropdown -->
-        <div class="user-profile-dropdown dropdown ms-2 ms-xl-3">
+        <div class="user-profile-dropdown dropdown ms-2 ms-xl-3 d-none d-xl-block">
           <a href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" class="d-flex align-items-center">            
             {% if user.profile and user.profile.portrait %}
               <img src="{{ user.profile.portrait.url }}" alt="User Avatar" class="user-avatar-header">
@@ -78,13 +99,18 @@
           {% csrf_token %}
           <input type="hidden" name="next" value="/">
         </form>
+        <!-- Mobile logout form -->
+        <form id="logout-form-mobile" action="{% url 'account_logout' %}" method="post" style="display:none;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="/">
+        </form>
         {% else %}
-        <div class="d-flex ms-2 ms-xl-3">
+        <!-- Desktop Login Button -->
+        <div class="d-none d-xl-flex ms-2 ms-xl-3">
           <a href="{% url 'account_login' %}" class="btn login-signup-btn rounded-pill px-4 py-2 fw-bold shadow-sm">
             <i class="fas fa-sign-in-alt me-2"></i>登入 / 註冊
           </a>
-        </div>
-        <style>
+        </div>        <style>
         .login-signup-btn {
           background: linear-gradient(90deg, #cda45e 0%, #ffb03b 100%);
           color: #29261f !important;
@@ -101,6 +127,95 @@
           color: #fff !important;
           box-shadow: 0 4px 16px rgba(255, 176, 59, 0.18);
           text-decoration: none;
+        }
+          /* Mobile menu styles */
+        .mobile-login-btn {
+          background: linear-gradient(135deg, #cda45e 0%, #ffb03b 100%) !important;
+          color: #ffffff !important;
+          border-radius: 30px;
+          padding: 15px 25px !important;
+          font-weight: 700;
+          font-size: 1.1em;
+          text-decoration: none;
+          display: block;
+          margin: 15px auto;
+          max-width: 200px;
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(205, 164, 94, 0.4);
+          transition: all 0.3s ease;
+          border: 2px solid transparent;
+        }
+        
+        .mobile-login-btn:hover {
+          background: linear-gradient(135deg, #ffb03b 0%, #e09d4a 100%) !important;
+          color: #ffffff !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(255, 176, 59, 0.5);
+          border: 2px solid #cda45e;
+        }
+        
+        .mobile-user-menu a {
+          color: #ffffff !important;
+          font-weight: 600;
+          font-size: 1.05em;
+          padding: 15px 20px !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          display: block;
+          transition: all 0.3s ease;
+        }
+        
+        .mobile-user-menu a:hover {
+          color: #cda45e !important;
+          background-color: rgba(205, 164, 94, 0.1);
+          padding-left: 30px !important;
+        }
+        
+        .mobile-auth-menu a:not(.mobile-login-btn) {
+          color: #ffffff !important;
+          font-weight: 600;
+          font-size: 1.05em;
+          padding: 15px 20px !important;
+        }        
+        .mobile-user-menu a.text-danger {
+          color: #ff6b6b !important;
+          background-color: rgba(255, 107, 107, 0.1);
+          border-radius: 8px;
+          margin: 10px 0;
+        }
+        
+        .mobile-user-menu a.text-danger:hover {
+          color: #ffffff !important;
+          background-color: #ff6b6b;
+          transform: translateY(-1px);
+        }
+        
+        /* Add some spacing for mobile menu items */
+        @media (max-width: 1199.98px) {
+          .mobile-user-menu, .mobile-auth-menu {
+            border-top: 2px solid rgba(205, 164, 94, 0.3);
+            margin-top: 20px;
+            padding-top: 20px;
+          }
+          
+          .mobile-auth-menu {
+            text-align: center;
+            padding: 20px 15px;
+          }
+          
+          /* 調整選單項目間距 */
+          .mobile-user-menu li, .mobile-auth-menu li {
+            margin: 8px 0;
+          }
+          
+          /* 手機選單背景調整 */
+          .navmenu {
+            background-color: rgba(40, 38, 31, 0.98) !important;
+          }
+          
+          /* 選單項目文字陰影效果 */
+          .mobile-user-menu a, .mobile-auth-menu a {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          }
         }
         </style>
         {% endif %}

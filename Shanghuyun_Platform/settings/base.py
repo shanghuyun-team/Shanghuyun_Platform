@@ -26,8 +26,12 @@ load_dotenv(f'{BASE_DIR}/.env')
 # Application definition
 
 INSTALLED_APPS = [
+    ######### Hooks #########
+    'hooks.apps.HooksConfig',
+
     ######### API Apps #########
     'api.v1.account.apps.AccountConfig',
+    'api.v1.vendor.apps.VendorConfig',
 
     ######### Wagtail and Django Apps #########
     

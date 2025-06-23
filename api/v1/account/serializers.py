@@ -35,7 +35,6 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'is_active',
             'is_staff',
-            'is_vendor',
             'date_joined',
         )
         read_only_fields = (

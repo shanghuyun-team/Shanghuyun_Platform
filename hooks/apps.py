@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
-class OrderConfig(AppConfig):
+class HooksConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'api.v1.order'
+    name = 'hooks'

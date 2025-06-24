@@ -4,7 +4,7 @@ from allauth.socialaccount.helpers import complete_social_login
 from allauth.socialaccount.models import SocialLogin, EmailAddress
 from rest_framework import generics, permissions, status
 from .models import Profile, User
-from .serializers import ProfileSerializer, PasswordChangeSerializer, AccountDeleteSerializer
+from .serializers import ProfileSerializer, PasswordChangeSerializer
 from django.contrib.auth import login as auth_login, logout
 from rest_framework.response import Response
 from rest_framework import status
@@ -66,38 +66,3 @@ class PasswordChangeAPIView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'detail': '密碼已更新'}, status=status.HTTP_200_OK)
-
-class AccountDeleteAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def delete(self, request):
-        user = request.user
-        serializer = AccountDeleteSerializer(
-            data=request.data, 
-            context={'request': request}
-        )
-        
-        if not serializer.is_valid():
-            return Response(
-                serializer.errors, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        try:
-            with transaction.atomic():
-                # 登出用戶（清除session）
-                logout(request)
-                
-                # 刪除用戶會自動觸發級聯刪除相關的Profile等資料
-                # 透過signals.py中的處理器，頭像檔案也會被自動刪除
-                user.delete()
-                
-            return Response(
-                {'detail': '帳號已成功刪除'}, 
-                status=status.HTTP_200_OK
-            )
-        except Exception as e:
-            return Response(
-                {'detail': '帳號刪除失敗，請稍後再試'}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )

@@ -84,100 +84,12 @@
     max-width: 200px; /* Adjust as needed */
     margin: 0 auto; /* Center the Filepond input */
 }
-.delete-account-section .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-.delete-account-section .btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
 .custom-btn{
     background-color: var(--accent-color);
     border-color: var(--accent-color);
 }
 .custom-btn:hover {
     background-color: color-mix(in srgb, var(--accent-color), transparent 25%) !important;
-}
-
-/* 增強刪除帳號區段樣式 */
-.delete-account-section {
-    background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
-    border: 1px solid #fee2e2;
-    border-radius: 8px;
-    padding: 24px;
-    margin-top: 30px;
-    position: relative;
-}
-
-.delete-account-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #dc3545, #c82333);
-    border-radius: 8px 8px 0 0;
-}
-
-.delete-account-section h4 {
-    color: #dc3545;
-    font-weight: 600;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-}
-
-.delete-account-section h4::before {
-    content: '⚠️';
-    margin-right: 8px;
-    font-size: 1.2em;
-}
-
-.delete-account-section p {
-    color: #721c24;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-}
-
-.delete-account-section .btn-danger {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    border: none;
-    padding: 12px 24px;
-    font-weight: 500;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.delete-account-section .btn-danger::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.delete-account-section .btn-danger:hover {
-    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-}
-
-.delete-account-section .btn-danger:hover::before {
-    left: 100%;
-}
-
-.delete-account-section .btn-danger:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
 }
 
 /* SweetAlert2 自定義樣式 */
@@ -407,25 +319,6 @@
         width: 100%;
         margin-left: 0;
     }
-    
-    /* 刪除帳號區段調整 */
-    .delete-account-section {
-        padding: 20px;
-        margin-top: 20px;
-    }
-    
-    .delete-account-section h4 {
-        font-size: 1.1rem;
-    }
-    
-    .delete-account-section p {
-        font-size: 0.9rem;
-    }
-    
-    .delete-account-section .btn-danger {
-        width: 100%;
-        padding: 12px;
-    }
 }
 
 /* 極小螢幕 (575px 以下) */
@@ -537,28 +430,6 @@
         margin-left: 0;
         margin-top: 5px;
         font-size: 0.8rem;
-    }
-    
-    /* 刪除帳號區段調整 */
-    .delete-account-section {
-        padding: 15px;
-        margin-top: 15px;
-    }
-    
-    .delete-account-section h4 {
-        font-size: 1rem;
-        margin-bottom: 12px;
-    }
-    
-    .delete-account-section p {
-        font-size: 0.85rem;
-        margin-bottom: 15px;
-    }
-    
-    .delete-account-section .btn-danger {
-        width: 100%;
-        padding: 10px;
-        font-size: 0.9rem;
     }
     
     /* 頁面標題調整 */

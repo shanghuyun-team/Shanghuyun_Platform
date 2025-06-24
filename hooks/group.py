@@ -16,9 +16,6 @@ modeladmin_register(GroupModelAdmin)
 @hooks.register('construct_main_menu')
 def hide_menu_items(request, menu_items):
     names_to_hide = {'settings', 'reports', 'help'}
-    # 如果不屬於 Vendors 群組，就隱藏更多選單
-    if not request.user.groups.filter(name='Vendors').exists():
-        names_to_hide |= {'explorer', 'images', 'documents'}
     menu_items[:] = [
         item for item in menu_items
         if not (hasattr(item, 'name') and item.name in names_to_hide)

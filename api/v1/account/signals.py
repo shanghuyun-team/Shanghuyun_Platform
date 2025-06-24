@@ -8,6 +8,7 @@ from django.db.models.signals import post_migrate
 from .models import User, Profile
 from django.contrib.auth.models import Permission, Group
 from django.db.models.signals import m2m_changed
+from allauth.account.utils import send_email_confirmation
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

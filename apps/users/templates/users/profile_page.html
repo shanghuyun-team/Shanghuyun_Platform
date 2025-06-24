@@ -82,12 +82,12 @@
                   </div>
 
                   <!-- Email -->
-                  <div class="mb-3">
+                    <div class="mb-3">
                     <label for="email" class="form-label">
                       <i class="fa fa-envelope me-2"></i>Email
                     </label>
-                    <input id="email" type="email" name="email" class="form-control" placeholder="example@domain.com" value="example@domain.com" required>
-                  </div>
+                    <input id="email" type="email" name="email" class="form-control" placeholder="example@domain.com" value="{{user.email}}" readonly required>
+                    </div>
 
                   <!-- 通訊地址 -->
                   <div class="mb-3">
@@ -95,7 +95,8 @@
                       <i class="fa fa-map-marker-alt me-2"></i>通訊地址
                     </label>
                     <input id="address" type="text" name="address" class="form-control" placeholder="例如：台北市信義區市府路1號" value="台北市信義區市府路1號">
-                  </div>                  <!-- 電話號碼 -->
+                  </div>                  
+                  <!-- 電話號碼 -->
                   <div class="mb-3">
                     <label for="phone" class="form-label">
                       <i class="fa fa-phone me-2"></i>手機號碼

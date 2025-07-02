@@ -26,10 +26,10 @@ class UserAdmin(ModelAdmin):
     search_fields = ('email',)
     form_fields = [
         'username', 'email', 'is_active', 'is_staff', 
-        'groups',        # ← 讓管理者在 User 編輯時能選群組
-        'user_permissions',
     ]
-    form_fields_exclude = ['password']
+    form_fields_exclude = [
+        'password', 'groups', 'user_permissions',
+    ]
 
     def email_verified(self, obj):
         return EmailAddress.objects.filter(

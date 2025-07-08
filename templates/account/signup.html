@@ -10,6 +10,48 @@
   <link href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/intl-tel-input/css/intlTelInput.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/Shanghuyun_Platform.css' %}" rel="stylesheet">
+  
+  <style>
+    .form-check {
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-check:hover {
+      border-color: #007cba;
+    }
+    
+    .form-check-input:checked {
+      background-color: #007cba;
+      border-color: #007cba;
+    }
+    
+    .form-check-input:focus {
+      border-color: #007cba;
+      box-shadow: 0 0 0 0.2rem rgba(0, 124, 186, 0.25);
+    }
+    
+    .form-check-label {
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    
+    .form-check-label a {
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .form-check-label a:hover {
+      text-decoration: underline;
+    }
+    
+    .text-primary {
+      color: #007cba !important;
+    }
+  </style>
 {% endblock %}
 
 {% block head_title %}{% trans "Sign Up" %}{% endblock %}
@@ -58,6 +100,23 @@
                     {% endif %}
                   </div>
                 {% endfor %}
+                
+                <!-- 隱私權政策和服務條款同意 -->
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="agree_terms" name="agree_terms" required>
+                    <label class="form-check-label" for="agree_terms">
+                      <small>
+                        我已閱讀並同意
+                        <a href="{% url 'privacy_policy' %}" target="_blank" class="text-primary">隱私權政策</a>
+                        和
+                        <a href="{% url 'terms_of_service' %}" target="_blank" class="text-primary">服務條款</a>
+                        <span class="text-danger">*</span>
+                      </small>
+                    </label>
+                  </div>
+                </div>
+                
                 <div class="d-grid mt-4">
                   <button type="submit" class="btn btn-lg custom-btn">立即註冊</button>
                 </div>
@@ -104,12 +163,14 @@
         rules: {
           email: { required: true, email: true },
           password1: { required: true, minlength: 8 },
-          password2: { required: true, minlength: 8, equalTo: "#id_password1" }
+          password2: { required: true, minlength: 8, equalTo: "#id_password1" },
+          agree_terms: { required: true }
         },
         messages: {
           email: { required: "請輸入電子郵件", email: "請輸入有效的電子郵件地址" },
           password1: { required: "請輸入密碼", minlength: "密碼長度至少8個字元" },
-          password2: { required: "請再次輸入密碼", minlength: "密碼長度至少8個字元", equalTo: "兩次輸入的密碼不一致" }
+          password2: { required: "請再次輸入密碼", minlength: "密碼長度至少8個字元", equalTo: "兩次輸入的密碼不一致" },
+          agree_terms: { required: "請閱讀並同意隱私權政策和服務條款" }
         }
       });
     });

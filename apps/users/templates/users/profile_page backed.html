@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% load static wagtailsettings_tags wagtailcore_tags %}
+{% load static wagtailcore_tags %}
+
 
 {% block body_class %}starter-page-page{% endblock %}
 
@@ -29,19 +30,8 @@
     </div>
     <!-- End Page Title -->
 
-    {% if site_policy.content %}
     <!--  Section -->
-    <section id="privacy-policy" class="section bg-light text-dark">
-      <div class="container">
-        
-          {% for block in site_policy.content %}
-            {% include_block block %}          
-          {% endfor %}
-        
-      </div>
-    </section>
-    {% else %}
-      <section id="privacy-policy" class="section bg-light text-dark" data-aos="fade-up">
+    <section id="privacy-policy" class="section bg-light text-dark" data-aos="fade-up">
         <div class="container">
             <div class="section-title text-center mb-5">
                 <h2 class="text-dark">隱私權政策</h2>
@@ -239,7 +229,6 @@
             </div>
         </div>
     </section>
-    {% endif %}
 
     <style>
  

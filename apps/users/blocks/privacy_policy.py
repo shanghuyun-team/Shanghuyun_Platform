@@ -27,7 +27,7 @@ class AlertBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/alert_block.html"
+        template = "blocks/privacy_policy/alert_block.html"
         label = "警告區塊"
 
 ############# 前言區塊 #############
@@ -47,7 +47,7 @@ class IntroductionBlock(blocks.StructBlock):
     )
     
     class Meta:
-        template = "blocks/introduction.html"
+        template = "blocks/privacy_policy/introduction.html"
         label = "前言區塊"
 
 
@@ -92,7 +92,7 @@ class CollectedDataBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/collected_data_block.html"
+        template = "blocks/privacy_policy/collected_data_block.html"
         label = "收集的資料區塊"
 
 ############# 資料使用目的 #############
@@ -126,7 +126,7 @@ class DataUsageBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/data_usage_block.html"
+        template = "blocks/privacy_policy/data_usage_block.html"
         label = "資料使用目的區塊"
 
 ############## 資料分享區塊 #############
@@ -161,7 +161,7 @@ class DataShareBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/data_share_block.html"
+        template = "blocks/privacy_policy/data_share_block.html"
         label = "資料分享區塊"
 
 ############## 資料安全區塊 #############
@@ -196,7 +196,7 @@ class DataSecurityBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/data_security_block.html"
+        template = "blocks/privacy_policy/data_security_block.html"
         label = "資料安全區塊"
 
 ############## 您的權利區塊 #############
@@ -242,7 +242,7 @@ class RightsBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/rights_block.html"
+        template = "blocks/privacy_policy/rights_block.html"
         label = "您的權利區塊"
 
 ############## Cookie區塊 #############
@@ -269,7 +269,7 @@ class CookiePolicyBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/cookie_policy_block.html"
+        template = "blocks/privacy_policy/cookie_policy_block.html"
         label = "Cookie 政策區塊"
 
 ############## 聯絡我們區塊 ##############
@@ -321,5 +321,5 @@ class ContactBlock(blocks.StructBlock):
     )
 
     class Meta:
-        template = "blocks/contact_block.html"
+        template = "blocks/privacy_policy/contact_block.html"
         label = "聯絡我們區塊"

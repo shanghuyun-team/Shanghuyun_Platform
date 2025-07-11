@@ -4,6 +4,8 @@ from wagtail import blocks
 
 
 ############# 警告區塊 #############
+# apps/users/blocks/privacy_policy.py
+
 class AlertBlock(blocks.StructBlock):
     TYPES = [
         ("primary",   "主色（藍色）"),
@@ -16,19 +18,43 @@ class AlertBlock(blocks.StructBlock):
         ("dark",      "深色（黑色）"),
     ]
 
+    ICON_MAP = {
+        "primary":   "info-circle",
+        "secondary": "clipboard-list",
+        "success":   "check-circle",
+        "danger":    "times-circle",
+        "warning":   "exclamation-triangle",
+        "info":      "info-circle",
+        "light":     "sun",
+        "dark":      "moon",
+    }
+
+    alert_label = blocks.CharBlock(
+        required=True,
+        default="警告",
+        label="警告標題",
+        help_text="顯示在警告區塊的標題"
+    )
+
     alert_type = blocks.ChoiceBlock(
         choices=TYPES,
         default="warning",
         label="警告樣式",
         help_text="選擇 Bootstrap 的 alert 顏色",
     )
-    content = blocks.TextBlock(
-        label="內容",
-    )
+    content = blocks.TextBlock(label="內容")
 
     class Meta:
         template = "blocks/privacy_policy/alert_block.html"
         label = "警告區塊"
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context)
+        at = value.get("alert_type")
+        # 取得 icon
+        context["icon_name"] = self.ICON_MAP.get(at, "info-circle")
+        return context
+
 
 ############# 前言區塊 #############
 class IntroductionBlock(blocks.StructBlock):

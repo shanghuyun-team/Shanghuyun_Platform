@@ -1,4 +1,5 @@
 # models/terms_of_service.py
+from django.db import models
 from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel
@@ -34,6 +35,12 @@ class SiteTermsSetting(BaseGenericSetting):
             "introduction": {"max_num": 1},
             "contact": {"max_num": 1},
         },
+    )
+    
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="最後更新時間",
+        help_text="內容最後更新的時間"
     )
 
     panels = [

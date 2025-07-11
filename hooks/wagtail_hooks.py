@@ -9,6 +9,7 @@ from django.urls import reverse
 
 # 載入你的 Setting model
 from apps.users.models.privacy_policy import SitePolicySetting
+from apps.users.models.terms_of_service import SiteTermsSetting
 
 @hooks.register('construct_main_menu')
 def add_homepage_link(request, menu_items):
@@ -34,5 +35,19 @@ def register_privacy_policy_menu_item():
         '隱私權政策',           
         url,                   
         icon_name='doc-full-inverse',  
+        order=300              
+    )
+
+@hooks.register('register_admin_menu_item')
+def register_terms_of_service_menu_item():
+    # 取出正確的 app_label 跟 model_name
+    app_label  = SiteTermsSetting._meta.app_label      # -> "users"
+    model_name = SiteTermsSetting._meta.model_name     # -> "sitetermssetting"
+    url = reverse('wagtailsettings:edit', args=[app_label, model_name])
+
+    return MenuItem(
+        '服務條款',           
+        url,                   
+        icon_name='doc-full',  
         order=300              
     )

@@ -1,14 +1,13 @@
 {% extends "base.html" %}
-{% load static wagtailsettings_tags wagtailcore_tags %}
+{% load static wagtailcore_tags %}
 
-{% block body_class %}privacy-policy-page{% endblock %}
+{% block body_class %}terms-of-service-page{% endblock %}
 
 {% block extra_css %}
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   
-<link href="{% static 'users/css/privacy_policy.css' %}" rel="stylesheet">
-
+  <link href="{% static 'users/css/privacy_policy.css' %}" rel="stylesheet">
 {% endblock extra_css %}
 
 {% block content %}
@@ -17,33 +16,33 @@
     <!-- Page Title -->
     <div class="page-title position-relative" data-aos="fade" style="background-image: url(assets/img/page-title-bg.webp);">
       <div class="container position-relative">
-        <h1>隱私權政策 <br></h1>
-        <p>我們致力於保護您的個人資料安全與隱私，以下說明我們如何收集、使用和保護您的資訊。</p>
+        <h1>服務條款 <br></h1>
+        <p>使用本平台前，請仔細閱讀以下服務條款。使用本服務即表示您同意遵守這些條款。</p>
         <nav class="breadcrumbs">
           <ol>
             <li><a href="/">Home</a></li>
-            <li class="current">隱私權政策</li>
+            <li class="current">服務條款</li>
           </ol>
         </nav>
       </div>
     </div>
     <!-- End Page Title -->
 
-    <!-- 隱私權政策內容 Section -->
-    <section id="privacy-policy" class="section bg-light text-dark" data-aos="fade-up">
+    <!-- 服務條款內容 Section -->
+    <section id="terms-of-service" class="section bg-light text-dark" data-aos="fade-up">
         <div class="container">
             <!-- 前言 -->
             <div class="section-title text-center mb-5">
-            <h2 class="text-dark">隱私權政策</h2>
-            <p class="lead">在使用本平台以前，請先參閱《隱私權政策》</p>
+            <h2 class="text-dark">服務條款</h2>
+            <p class="lead">在使用本平台以前，請先參閱《服務條款》</p>
             </div>
 
             <div class="row justify-content-center">
             <div class="col-lg-10">
                 
-                {% if site_policy.content %}
+                {% if site_terms.content %}
                     <!-- 動態內容區塊 -->
-                    {% for block in site_policy.content %}
+                    {% for block in site_terms.content %}
                         {% include_block block %}
                     {% endfor %}
                 {% else %}
@@ -52,11 +51,11 @@
                         <div class="card-body p-4 text-center">
                             <h3 class="card-title mb-3"><i class="fas fa-exclamation-circle me-2 text-warning"></i>內容尚未設定</h3>
                             <p class="mb-3">
-                                隱私權政策內容尚未在後台設定。請聯絡管理員進行設定。
+                                服務條款內容尚未在後台設定。請聯絡管理員進行設定。
                             </p>
                             <div class="alert alert-info" role="alert">
                                 <strong><i class="fas fa-info-circle me-2"></i>管理員須知：</strong>
-                                請前往 Wagtail 後台的「設定」→「隱私權政策」進行內容設定。
+                                請前往 Wagtail 後台的「設定」→「服務條款」進行內容設定。
                             </div>
                         </div>
                     </div>
@@ -68,10 +67,10 @@
                         <p class="mb-0 text-muted">
                         <i class="fas fa-calendar-alt me-2"></i>
                         <strong>最後更新日期：</strong>
-                        {% if site_policy.updated_at %}
-                            {{ site_policy.updated_at|date:"Y年n月j日" }}
+                        {% if site_terms.updated_at %}
+                            {{ site_terms.updated_at|date:"Y年n月j日" }}
                         {% else %}
-                            2025年7月8日
+                            2025年7月11日
                         {% endif %}
                         </p>
                     </div>
@@ -101,4 +100,3 @@
     });
   </script>
 {% endblock extra_js %}
-

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+
+{% block body_class %}starter-page-page{% endblock %}
+
+{% block extra_css %}
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  
+<link href="{% static 'users/css/privacy_policy.css' %}" rel="stylesheet">
+
+{% endblock extra_css %}
+
+{% block content %}
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title position-relative" data-aos="fade" style="background-image: url(assets/img/page-title-bg.webp);">
+      <div class="container position-relative">
+        <h1>隱私權政策 <br></h1>
+        <p>我們致力於保護您的個人資料安全與隱私，以下說明我們如何收集、使用和保護您的資訊。</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">隱私權政策</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- End Page Title -->
+
+    <!--  Section -->
+    <section id="privacy-policy" class="section bg-light text-dark" data-aos="fade-up">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2 class="text-dark">隱私權政策</h2>
+                <p class="lead">在使用本平台以前，請先參閱《隱私權政策》</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    
+                    <!-- 前言 -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h3 class="card-title mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>前言</h3>
+                            <p class="mb-3">
+                            歡迎使用尚虎雲產銷平台（以下簡稱"本平台"）。我們深知個人資料保護的重要性，並承諾保護所有使用者的隱私權。
+                            本隱私權政策說明我們如何收集、使用、揭露、傳輸及儲存您的個人資料。
+                            </p>
+                        <div class="alert alert-warning" role="alert">
+                        <strong><i class="fas fa-exclamation-triangle me-2"></i>重要提醒：</strong>
+                        使用本平台即表示您同意本隱私權政策的內容。如您不同意，請勿使用本平台服務。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 資料收集 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-3"><i class="fas fa-database me-2 text-primary"></i>我們收集的資料</h3>
+                        
+                        <h5 class="mt-4 mb-3">1. 個人識別資料</h5>
+                        <ul class="mb-3">
+                        <li>姓名、電子郵件地址、電話號碼</li>
+                        <li>地址、郵遞區號</li>
+                        <li>身分證字號或其他身分識別文件（依法律要求）</li>
+                        <li>頭像照片（如您選擇上傳）</li>
+                        </ul>
+
+                        <h5 class="mt-4 mb-3">2. 商業資料</h5>
+                        <ul class="mb-3">
+                        <li>公司名稱、統一編號</li>
+                        <li>商業登記資料</li>
+                        <li>銀行帳戶資訊（用於金流服務）</li>
+                        <li>營業相關文件</li>
+                        </ul>
+
+                        <h5 class="mt-4 mb-3">3. 技術資料</h5>
+                        <ul class="mb-0">
+                        <li>IP 位址、瀏覽器類型與版本</li>
+                        <li>裝置識別碼、作業系統</li>
+                        <li>使用時間、頁面瀏覽記錄</li>
+                        <li>Cookie 和類似的追蹤技術資料</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 資料使用 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-3"><i class="fas fa-cogs me-2 text-primary"></i>資料使用目的</h3>
+                        
+                        <h5 class="mt-4 mb-3">我們使用您的個人資料於以下目的：</h5>
+                        <ol class="mb-0">
+                        <li><strong>服務提供：</strong>提供平台功能、處理訂單、客戶服務</li>
+                        <li><strong>身分驗證：</strong>確認使用者身分、防範詐欺</li>
+                        <li><strong>金流處理：</strong>處理付款、退款等金融交易</li>
+                        <li><strong>法律遵循：</strong>遵守相關法律法規要求</li>
+                        <li><strong>系統維護：</strong>平台安全、故障排除、系統優化</li>
+                        <li><strong>行銷推廣：</strong>發送相關優惠資訊（需您同意）</li>
+                        <li><strong>數據分析：</strong>改善服務品質、用戶體驗分析</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- 資料分享 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-3"><i class="fas fa-share-alt me-2 text-primary"></i>資料分享與揭露</h3>
+                        
+                        <h5 class="mt-4 mb-3">我們可能在以下情況分享您的資料：</h5>
+                        <ul class="mb-3">
+                        <li><strong>合作夥伴：</strong>與提供相關服務的合作夥伴分享必要資料</li>
+                        <li><strong>法律要求：</strong>應政府機關或司法單位合法要求</li>
+                        <li><strong>緊急情況：</strong>保護使用者或公眾安全的緊急情況</li>
+                        <li><strong>業務轉讓：</strong>公司合併、收購或業務轉讓時</li>
+                        </ul>
+
+                        <div class="alert alert-info" role="alert">
+                        <strong><i class="fas fa-shield-alt me-2"></i>承諾：</strong>
+                        我們絕不會將您的個人資料販售給第三方作為商業用途。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 資料安全 -->
+                <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-3"><i class="fas fa-lock me-2 text-primary"></i>資料安全措施</h3>
+                    
+                    <h5 class="mt-4 mb-3">我們採用多重安全措施保護您的資料：</h5>
+                    <div class="row">
+                    <div class="col-md-6">
+                        <ul class="mb-3">
+                        <li>SSL 加密傳輸技術</li>
+                        <li>資料庫加密儲存</li>
+                        <li>存取權限控制與監控</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="mb-3">
+                        <li>定期安全性檢測與更新</li>
+                        <li>員工資安教育訓練</li>
+                        <li>第三方安全認證</li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- 用戶權利 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-3"><i class="fas fa-user-shield me-2 text-primary"></i>您的權利</h3>
+                        
+                        <h5 class="mt-4 mb-3">根據個人資料保護法，您享有以下權利：</h5>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <ul class="mb-3">
+                            <li><strong>查詢權：</strong>查詢我們持有您的哪些個人資料</li>
+                            <li><strong>更正權：</strong>要求更正錯誤或不完整的資料</li>
+                            <li><strong>刪除權：</strong>要求刪除您的個人資料</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="mb-3">
+                            <li><strong>停止處理權：</strong>要求停止處理您的個人資料</li>
+                            <li><strong>資料可攜權：</strong>要求以結構化格式提供您的資料</li>
+                            <li><strong>反對權：</strong>反對我們處理您的個人資料</li>
+                            </ul>
+                        </div>
+                        </div>
+                        <p class="mb-0">如需行使上述權利，請透過以下聯絡方式與我們聯繫。</p>
+                    </div>
+                </div>
+
+                <!-- Cookie 政策 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-3"><i class="fas fa-cookie-bite me-2 text-primary"></i>Cookie 使用政策</h3>
+                        
+                        <h5 class="mt-4 mb-3">我們使用 Cookie 來：</h5>
+                        <ul class="mb-3">
+                        <li>記住您的登入狀態和偏好設定</li>
+                        <li>分析網站使用情況和效能</li>
+                        <li>提供個性化內容和廣告</li>
+                        <li>確保網站安全性</li>
+                        </ul>
+                        <p class="mb-0">您可以透過瀏覽器設定管理或停用 Cookie，但這可能影響部分網站功能。</p>
+                    </div>
+                </div>
+
+                <!-- 聯絡資訊 -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-3"><i class="fas fa-envelope me-2 text-primary"></i>聯絡我們</h3>
+                        <p class="mb-3">如您對本隱私權政策有任何疑問或建議，請透過以下方式聯絡我們：</p>
+                        
+                        <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="fas fa-envelope me-2 text-muted"></i><strong>電子郵件：</strong> privacy@shanghuyun.com</li>
+                            <li class="mb-2"><i class="fas fa-phone me-2 text-muted"></i><strong>客服電話：</strong> (02) 1234-5678</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="fas fa-clock me-2 text-muted"></i><strong>服務時間：</strong> 週一至週五 09:00-18:00</li>
+                            <li class="mb-2"><i class="fas fa-map-marker-alt me-2 text-muted"></i><strong>通訊地址：</strong> 台北市信義區市府路1號</li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最後更新 -->
+                <div class="card shadow-sm">
+                <div class="card-body p-4 text-center bg-light">
+                    <p class="mb-0 text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    <strong>最後更新日期：</strong>2025年7月8日
+                    </p>
+                </div>
+                </div>
+
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+ 
+</style>
+
+  </main>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+  <!-- privacy_policy JavaScript-->
+  <script src="{% static 'users/js/privacy_policy.js' %}"></script>
+
+{% endblock extra_js %}
+

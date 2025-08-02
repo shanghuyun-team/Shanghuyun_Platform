@@ -2,6 +2,7 @@ from .api_v1_account import *
 from .api_v1_vendor import *
 from .api_v1_product import *
 from .group import *
+from .page import *
 
 from wagtail.admin.menu import MenuItem
 from wagtail import hooks

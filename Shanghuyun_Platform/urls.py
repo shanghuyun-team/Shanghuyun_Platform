@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.urls import include, path, re_path
 from django.contrib import admin
+from django.views.generic import RedirectView
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -9,6 +10,12 @@ from wagtail.documents import urls as wagtaildocs_urls
 from search import views as search_views
 
 urlpatterns = [
+    re_path(
+        r'^admin/login/$',
+        RedirectView.as_view(url='/accounts/login/', permanent=False),
+        name='wagtail_admin_login_redirect'
+    ),
+
     #re_path(r'^admin/users/.*$', users_not_found),
     path("admin/", include(wagtailadmin_urls)),
     path("search/", search_views.search, name="search"),

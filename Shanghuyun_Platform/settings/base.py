@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     
 
     ######## Custome Apps ########
-    "home",
+    "apps.home.apps.HomeConfig",
     "search",
     "apps.users.apps.UsersConfig",
 

@@ -1,24 +1,41 @@
-{% load static %}
+{% load static site_settings_tags %}
 <footer id="footer" class="footer">
 
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-4 col-md-6 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span class="sitename">Restaurantly</span>
+          {% get_site_setting 'site_name' as site_name %}
+          {% get_site_setting 'site_logo' as site_logo %}
+          <a href="/" class="logo d-flex align-items-center">
+            {% if site_logo %}
+              <img src="{{ site_logo.file.url }}" alt="{{ site_name|default:'尚虎雲產銷平台' }}" style="max-height: 40px;">
+            {% else %}
+              <span class="sitename">{{ site_name|default:'尚虎雲產銷平台' }}</span>
+            {% endif %}
           </a>
           <div class="footer-contact pt-3">
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
-            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
+            {% get_site_setting 'contact_address' as contact_address %}
+            {% get_site_setting 'contact_phone' as contact_phone %}
+            {% get_site_setting 'contact_email' as contact_email %}
+            {% if contact_address %}
+              <p>{{ contact_address|linebreaksbr }}</p>
+            {% else %}
+              <p>台北市信義區信義路五段7號</p>
+            {% endif %}
+            <p class="mt-3"><strong>電話:</strong> <span>{{ contact_phone|default:'+886-2-1234-5678' }}</span></p>
+            <p><strong>信箱:</strong> <span>{{ contact_email|default:'contact@shanghuyun.com' }}</span></p>
           </div>
+          
+          {% get_social_links as social_links %}
+          {% if social_links %}
           <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+            {% for link in social_links %}
+              <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" title="{{ link.name }}">
+                <i class="{{ link.icon }}"></i>
+              </a>
+            {% endfor %}
           </div>
+          {% endif %}
         </div>
 
         <div class="col-lg-2 col-md-3 footer-links">

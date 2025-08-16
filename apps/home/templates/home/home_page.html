@@ -1,14 +1,16 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static wagtailcore_tags wagtailimages_tags site_settings_tags %}
 
-
-{% block body_class %}starter-page-page{% endblock %}
+{% block body_class %}home-page{% endblock %}
 
 {% block extra_css %}
-
+  {# 將網站基本設定套用到 <head>：標題/描述/Favicon/GA/GTM #}
+  {% render_meta_tags %}
 {% endblock extra_css %}
 
 {% block content %}
+{% get_site_setting 'site_name' as site_name %}
+{% get_site_setting 'site_tagline' as site_tagline %}
 
 <main class="main">
 
@@ -20,16 +22,17 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 d-flex flex-column align-items-center align-items-lg-start">
-            <h2 data-aos="fade-up" data-aos-delay="100">Welcome to <span>Restaurantly</span></h2>
-            <p data-aos="fade-up" data-aos-delay="200">Delivering great food for more than 18 years!</p>
+            
+            <h2 data-aos="fade-up" data-aos-delay="100">歡迎來到 <span>{{ site_name|default:"尚虎雲產銷平台" }}</span></h2>
+            <p data-aos="fade-up" data-aos-delay="200">{{ site_tagline|default:"連結生產者與消費者，打造智慧農業新生態！" }}</p>
             <div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="300">
-              <a href="#menu" class="cta-btn">Our Menu</a>
-              <a href="#book-a-table" class="cta-btn">Book a Table</a>
+              <a href="#products" class="cta-btn">瀏覽商品</a>
+              <a href="#join-platform" class="cta-btn">加入平台</a>
             </div>
           </div>
-          <div class="col-lg-4 d-flex align-items-center justify-content-center mt-5 mt-lg-0">
+          {% comment %} <div class="col-lg-4 d-flex align-items-center justify-content-center mt-5 mt-lg-0">
             <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn"></a>
-          </div>
+          </div> {% endcomment %}
         </div>
       </div>
 
@@ -45,19 +48,19 @@
             <img src="{% static 'assets/img/about.jpg' %}" class="img-fluid about-img" alt="">
           </div>
           <div class="col-lg-6 order-2 order-lg-1 content">
-            <h3>Voluptatem dignissimos provident</h3>
+            <h3>打造智慧農業生態系統</h3>
             <p class="fst-italic">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+              {% get_site_setting 'site_description' as site_description %}
+              {{ site_description|default:"尚虎雲產銷平台致力於連結農產品生產者與消費者，透過數位化科技建立透明、高效的農產品交易環境。"|striptags|truncatechars:100 }}
             </p>
             <ul>
-              <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
-              <li><i class="bi bi-check2-all"></i> <span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
-              <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</span></li>
+              <li><i class="bi bi-check2-all"></i> <span>提供安全可靠的農產品溯源機制，確保食品安全</span></li>
+              <li><i class="bi bi-check2-all"></i> <span>建立生產者與消費者直接對接的交易平台</span></li>
+              <li><i class="bi bi-check2-all"></i> <span>運用大數據分析，優化產銷流程，減少中間環節成本</span></li>
             </ul>
             <p>
-              Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident
+              我們相信透過科技的力量，能夠讓優質的農產品以更合理的價格直達消費者手中，
+              同時協助農民提升收益，創造雙贏的局面。
             </p>
           </div>
         </div>
@@ -71,8 +74,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>WHY US</h2>
-        <p>Why Choose Our Restaurant</p>
+        <h2>平台優勢</h2>
+        <p>為什麼選擇尚虎雲產銷平台</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -82,24 +85,24 @@
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card-item">
               <span>01</span>
-              <h4><a href="" class="stretched-link">Lorem Ipsum</a></h4>
-              <p>Ulamco laboris nisi ut aliquip ex ea commodo consequat. Et consectetur ducimus vero placeat</p>
+              <h4><a href="" class="stretched-link">產品溯源</a></h4>
+              <p>完整的生產履歷追蹤系統，從產地到餐桌全程透明化，保障食品安全與品質</p>
             </div>
           </div><!-- Card Item -->
 
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
             <div class="card-item">
               <span>02</span>
-              <h4><a href="" class="stretched-link">Repellat Nihil</a></h4>
-              <p>Dolorem est fugiat occaecati voluptate velit esse. Dicta veritatis dolor quod et vel dire leno para dest</p>
+              <h4><a href="" class="stretched-link">直接交易</a></h4>
+              <p>消除中間商環節，讓生產者獲得更合理價格，消費者享受更優惠的產品價格</p>
             </div>
           </div><!-- Card Item -->
 
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
             <div class="card-item">
               <span>03</span>
-              <h4><a href="" class="stretched-link">Ad ad velit qui</a></h4>
-              <p>Molestiae officiis omnis illo asperiores. Aut doloribus vitae sunt debitis quo vel nam quis</p>
+              <h4><a href="" class="stretched-link">智慧配送</a></h4>
+              <p>運用物聯網技術優化物流配送路線，確保農產品在最佳狀態下送達消費者手中</p>
             </div>
           </div><!-- Card Item -->
 
@@ -109,13 +112,13 @@
 
     </section><!-- /Why Us Section -->
 
-    <!-- Menu Section -->
-    <section id="menu" class="menu section">
+    <!-- Products Section -->
+    <section id="products" class="menu section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Menu</h2>
-        <p>Check Our Tasty Menu</p>
+        <h2>優質農產品</h2>
+        <p>精選在地新鮮農產品</p>
       </div><!-- End Section Title -->
 
       <div class="container isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
@@ -123,103 +126,103 @@
         <div class="row" data-aos="fade-up" data-aos-delay="100">
           <div class="col-lg-12 d-flex justify-content-center">
             <ul class="menu-filters isotope-filters">
-              <li data-filter="*" class="filter-active">All</li>
-              <li data-filter=".filter-starters">Starters</li>
-              <li data-filter=".filter-salads">Salads</li>
-              <li data-filter=".filter-specialty">Specialty</li>
+              <li data-filter="*" class="filter-active">全部</li>
+              <li data-filter=".filter-vegetables">蔬菜類</li>
+              <li data-filter=".filter-fruits">水果類</li>
+              <li data-filter=".filter-grains">穀物類</li>
             </ul>
           </div>
         </div><!-- Menu Filters -->
 
         <div class="row isotope-container" data-aos="fade-up" data-aos-delay="200">
 
-          <div class="col-lg-6 menu-item isotope-item filter-starters">
+          <div class="col-lg-6 menu-item isotope-item filter-vegetables">
             <img src="{% static 'assets/img/menu/lobster-bisque.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Lobster Bisque</a><span>$5.95</span>
+              <a href="#">有機小白菜</a><span>$80/斤</span>
             </div>
             <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
+              無農藥栽培，產地：雲林，生產者：王農夫
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-specialty">
+          <div class="col-lg-6 menu-item isotope-item filter-grains">
             <img src="{% static 'assets/img/menu/bread-barrel.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Bread Barrel</a><span>$6.95</span>
+              <a href="#">台灣好米</a><span>$120/公斤</span>
             </div>
             <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
+              池上優質稻米，香Q甘甜，產地：台東池上
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-starters">
+          <div class="col-lg-6 menu-item isotope-item filter-fruits">
             <img src="{% static 'assets/img/menu/cake.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Crab Cake</a><span>$7.95</span>
+              <a href="#">愛文芒果</a><span>$200/公斤</span>
             </div>
             <div class="menu-ingredients">
-              A delicate crab cake served on a toasted roll with lettuce and tartar sauce
+              台南玉井特產，香甜多汁，口感絕佳的頂級芒果
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-salads">
+          <div class="col-lg-6 menu-item isotope-item filter-vegetables">
             <img src="{% static 'assets/img/menu/caesar.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Caesar Selections</a><span>$8.95</span>
+              <a href="#">有機蘿蔔</a><span>$60/公斤</span>
             </div>
             <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
+              自然農法栽培，清脆香甜，產地：彰化
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-specialty">
+          <div class="col-lg-6 menu-item isotope-item filter-fruits">
             <img src="{% static 'assets/img/menu/tuscan-grilled.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Tuscan Grilled</a><span>$9.95</span>
+              <a href="#">巨峰葡萄</a><span>$300/公斤</span>
             </div>
             <div class="menu-ingredients">
-              Grilled chicken with provolone, artichoke hearts, and roasted red pesto
+              彰化二林精品葡萄，粒粒飽滿，甜度極佳
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-starters">
+          <div class="col-lg-6 menu-item isotope-item filter-vegetables">
             <img src="{% static 'assets/img/menu/mozzarella.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Mozzarella Stick</a><span>$4.95</span>
+              <a href="#">溫室番茄</a><span>$150/公斤</span>
             </div>
             <div class="menu-ingredients">
-              Lorem, deren, trataro, filede, nerada
+              溫室栽培，無毒安全，產地：南投
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-salads">
+          <div class="col-lg-6 menu-item isotope-item filter-vegetables">
             <img src="{% static 'assets/img/menu/greek-salad.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Greek Salad</a><span>$9.95</span>
+              <a href="#">有機高麗菜</a><span>$100/顆</span>
             </div>
             <div class="menu-ingredients">
-              Fresh spinach, crisp romaine, tomatoes, and Greek olives
+              新鮮採收，葉片厚實，營養豐富
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-salads">
+          <div class="col-lg-6 menu-item isotope-item filter-fruits">
             <img src="{% static 'assets/img/menu/spinach-salad.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Spinach Salad</a><span>$9.95</span>
+              <a href="#">屏東蓮霧</a><span>$250/公斤</span>
             </div>
             <div class="menu-ingredients">
-              Fresh spinach with mushrooms, hard boiled egg, and warm bacon vinaigrette
+              黑珍珠蓮霧，水分充足，清脆香甜
             </div>
           </div><!-- Menu Item -->
 
-          <div class="col-lg-6 menu-item isotope-item filter-specialty">
+          <div class="col-lg-6 menu-item isotope-item filter-grains">
             <img src="{% static 'assets/img/menu/lobster-roll.jpg' %}" class="menu-img" alt="">
             <div class="menu-content">
-              <a href="#">Lobster Roll</a><span>$12.95</span>
+              <a href="#">有機燕麥</a><span>$180/公斤</span>
             </div>
             <div class="menu-ingredients">
-              Plump lobster meat, mayo and crisp lettuce on a toasted bulky roll
+              高纖維營養穀物，健康美味，產地：台中
             </div>
           </div><!-- Menu Item -->
 
@@ -229,13 +232,13 @@
 
     </section><!-- /Menu Section -->
 
-    <!-- Specials Section -->
-    <section id="specials" class="specials section">
+    <!-- Platform Services Section -->
+    <section id="services" class="specials section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Specials</h2>
-        <p>Check Our Specials</p>
+        <h2>平台服務</h2>
+        <p>完整的產銷解決方案</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -244,19 +247,19 @@
           <div class="col-lg-3">
             <ul class="nav nav-tabs flex-column">
               <li class="nav-item">
-                <a class="nav-link active show" data-bs-toggle="tab" href="#specials-tab-1">Modi sit est</a>
+                <a class="nav-link active show" data-bs-toggle="tab" href="#specials-tab-1">產品溯源系統</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-2">Unde praesentium sed</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-2">智慧物流配送</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-3">Pariatur explicabo vel</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-3">品質認證服務</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-4">Nostrum qui quasi</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-4">數據分析平台</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-5">Iusto ut expedita aut</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#specials-tab-5">金流支付系統</a>
               </li>
             </ul>
           </div>
@@ -265,9 +268,9 @@
               <div class="tab-pane active show" id="specials-tab-1">
                 <div class="row">
                   <div class="col-lg-8 details order-2 order-lg-1">
-                    <h3>Architecto ut aperiam autem id</h3>
-                    <p class="fst-italic">Qui laudantium consequatur laborum sit qui ad sapiente dila parde sonata raqer a videna mareta paulona marka</p>
-                    <p>Et nobis maiores eius. Voluptatibus ut enim blanditiis atque harum sint. Laborum eos ipsum ipsa odit magni. Incidunt hic ut molestiae aut qui. Est repellat minima eveniet eius et quis magni nihil. Consequatur dolorem quaerat quos qui similique accusamus nostrum rem vero</p>
+                    <h3>完整的產品履歷追蹤</h3>
+                    <p class="fst-italic">運用區塊鏈技術建立不可篡改的產品履歷，讓消費者了解農產品從種植到收成的每個環節</p>
+                    <p>透過 QR Code 掃描即可查看產品的完整生產過程，包括種植地點、使用的肥料、採收時間、檢驗報告等詳細資訊，確保食品安全與品質保證。我們的溯源系統獲得政府認證，是消費者信賴的品質保障。</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
                     <img src="{% static 'assets/img/specials-1.png' %}" alt="" class="img-fluid">
@@ -533,7 +536,7 @@
           <div class="swiper-wrapper">
 
             <div class="swiper-slide">
-              <div class="testimonial-item" "="">
+                <div class="testimonial-item">
             <p>
               <i class=" bi bi-quote quote-icon-left"></i>
                 <span>Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.</span>
@@ -783,33 +786,51 @@
               <i class="bi bi-geo-alt flex-shrink-0"></i>
               <div>
                 <h3>Location</h3>
-                <p>A108 Adam Street, New York, NY 535022</p>
+                <p>{% get_site_setting 'contact_address' as contact_address %}{{ contact_address|default:"台北市信義區信義路五段7號" }}</p>
+              </div>
+            </div><!-- End Info Item -->
+
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+              <i class="bi bi-clock flex-shrink-0"></i>
+              <div>
+                <h3>營業時間</h3>
+                <p>{% get_site_setting 'business_hours' as business_hours %}{{ business_hours|default:"週一至週五: 09:00-18:00\n週六: 09:00-17:00"|linebreaksbr }}</p>
               </div>
             </div><!-- End Info Item -->
 
             <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
               <i class="bi bi-telephone flex-shrink-0"></i>
               <div>
-                <h3>Open Hours</h3>
-                <p>Monday-Saturday:<br>11:00 AM - 2300 PM</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-              <i class="bi bi-telephone flex-shrink-0"></i>
-              <div>
-                <h3>Call Us</h3>
-                <p>+1 5589 55488 55</p>
+                <h3>聯絡電話</h3>
+                <p>{% get_site_setting 'contact_phone' as contact_phone %}{{ contact_phone|default:"+886-2-1234-5678" }}</p>
               </div>
             </div><!-- End Info Item -->
 
             <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
-                <h3>Email Us</h3>
-                <p>info@example.com</p>
+                <h3>聯絡信箱</h3>
+                <p>{% get_site_setting 'contact_email' as contact_email %}{{ contact_email|default:"contact@shanghuyun.com" }}</p>
               </div>
             </div><!-- End Info Item -->
+
+            {# 社群連結：若有設定就顯示 #}
+            {% get_social_links as social_links %}
+            {% if social_links %}
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="600">
+              <i class="bi bi-people flex-shrink-0"></i>
+              <div>
+                <h3>追蹤我們</h3>
+                <p>
+                  {% for link in social_links %}
+                    <a href="{{ link.url }}" class="me-2" target="_blank" rel="noopener noreferrer" title="{{ link.name }}">
+                      <i class="{{ link.icon }}"></i>
+                    </a>
+                  {% endfor %}
+                </p>
+              </div>
+            </div>
+            {% endif %}
 
           </div>
 

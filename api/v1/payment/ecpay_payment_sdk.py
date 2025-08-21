@@ -848,6 +848,7 @@ a = [CreateOrder, OrderSearch,
 
 
 class ECPayPaymentSdk(*a):
+
     def __init__(self, MerchantID='', HashKey='', HashIV=''):
         self.MerchantID = MerchantID
         self.HashKey = HashKey

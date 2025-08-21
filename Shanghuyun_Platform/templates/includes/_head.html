@@ -3,7 +3,7 @@
 
 <meta charset="utf-8" />
 
-{% if page %}
+{% if page.seo_title or page.title %}
   {% render_meta_tags title=page.seo_title|default:page.title %}
 {% else %}
   {% render_meta_tags %}

@@ -22,6 +22,8 @@ urlpatterns = [
 
     ############## API URLS ##############
     path("api/v1/account/", include("api.v1.account.urls")),
+    path("api/v1/order/", include("api.v1.order.urls")),
+    path("api/v1/payment/", include("api.v1.payment.urls")),
 
     ############## APP URLS ##############
     path('users/', include('apps.users.urls')),

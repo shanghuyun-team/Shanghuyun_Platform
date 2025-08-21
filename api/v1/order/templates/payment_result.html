@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>付款結果</title>
+</head>
+<body>
+    {% if order %}
+        {% if order.status == "paid" %}
+            <h1>付款成功 ✅</h1>
+            <p>感謝您的訂購，訂單編號：{{ order.id }}</p>
+            <p>金額：{{ order.total_amount }}</p>
+        {% else %}
+            <h1>付款尚未完成 ⚠️</h1>
+            <p>您的訂單編號：{{ order.id }}</p>
+            <p>目前狀態：{{ order.status }}</p>
+        {% endif %}
+    {% else %}
+        <h1>找不到訂單 ❌</h1>
+    {% endif %}
+</body>
+</html>

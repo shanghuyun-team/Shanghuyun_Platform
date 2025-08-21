@@ -7,6 +7,7 @@ class ProductConfig(AppConfig):
     name = 'api.v1.product'
 
     def ready(self):
+        import api.v1.product.signals
         # 在 migration 完成後呼叫 assign_group_permissions
         post_migrate.connect(assign_group_permissions)
 

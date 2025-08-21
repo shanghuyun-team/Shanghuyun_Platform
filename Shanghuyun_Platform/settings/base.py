@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "apps.home.apps.HomeConfig",
     "search",
     "apps.users.apps.UsersConfig",
+    "apps.news.apps.NewsConfig",
 
     ######### Third Party Apps #########
     'wagtail_modeladmin',

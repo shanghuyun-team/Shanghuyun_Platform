@@ -30,9 +30,6 @@
           {% get_site_setting 'site_name' as site_name %}
           {% if site_logo %}
             <img src="{{ site_logo.file.url }}" alt="{{ site_name|default:'尚虎雲產銷平台' }}">
-          {% else %}
-            <!-- Uncomment the line below if you also wish to use an image logo -->
-            <!-- <img src="assets/img/logo.png" alt=""> -->
             <h1 class="sitename">{{ site_name|default:'尚虎雲產銷平台' }}</h1>
           {% endif %}
         </a>        

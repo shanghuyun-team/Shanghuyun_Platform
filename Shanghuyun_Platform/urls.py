@@ -27,11 +27,12 @@ urlpatterns = [
 
     ############## APP URLS ##############
     path('users/', include('apps.users.urls')),
+    path('news/', include('apps.news.urls')),
 
 
     ############## THIRD-PARTY URLS ##############
     path('accounts/', include('allauth.urls')),
-    #path("documents/", include(wagtaildocs_urls)),
+    path("documents/", include(wagtaildocs_urls)),
     #path("django-admin/", admin.site.urls),
 
 ]

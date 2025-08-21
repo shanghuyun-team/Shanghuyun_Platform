@@ -6,6 +6,182 @@
 {% block extra_css %}
   {# 將網站基本設定套用到 <head>：標題/描述/Favicon/GA/GTM #}
   {% render_meta_tags %}
+  
+  <style>
+    /* 最新消息區域樣式 */
+    .news.section {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+    
+    .news-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: 100%;
+    }
+    
+    .news-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: #cda45e;
+    }
+    
+    .news-img {
+      position: relative;
+      overflow: hidden;
+      height: 250px;
+    }
+    
+    .news-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .news-item:hover .news-img img {
+      transform: scale(1.1);
+    }
+    
+    .news-date {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, #cda45e, #b8935a);
+      color: white;
+      border-radius: 10px;
+      padding: 8px 12px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .news-date .day {
+      display: block;
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    
+    .news-date .month {
+      display: block;
+      font-size: 0.8rem;
+      line-height: 1;
+      opacity: 0.9;
+    }
+    
+    .news-content {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 250px);
+    }
+    
+    .news-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 0.85rem;
+    }
+    
+    .news-meta .category {
+      background: rgba(205, 164, 94, 0.2);
+      color: #cda45e;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-weight: 500;
+    }
+    
+    .news-meta .date {
+      color: #999;
+    }
+    
+    .news-content h3 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      flex-grow: 0;
+    }
+    
+    .news-content h3 a {
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .news-content h3 a:hover {
+      color: #cda45e;
+    }
+    
+    .news-content p {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      font-size: 0.95rem;
+    }
+    
+    .news-author {
+      display: flex;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .news-author .author-img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+    
+    .news-author .author-name {
+      color: #cda45e;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .btn-more-news {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #cda45e, #b8935a);
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(205, 164, 94, 0.3);
+    }
+    
+    .btn-more-news:hover {
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(205, 164, 94, 0.4);
+      background: linear-gradient(135deg, #b8935a, #cda45e);
+    }
+    
+    /* 響應式設計 */
+    @media (max-width: 768px) {
+      .news-content {
+        padding: 20px;
+      }
+      
+      .news-content h3 {
+        font-size: 1.1rem;
+      }
+      
+      .news-img {
+        height: 200px;
+      }
+      
+      .news-content {
+        height: calc(100% - 200px);
+      }
+    }
+  </style>
 {% endblock extra_css %}
 
 {% block content %}
@@ -447,62 +623,181 @@
 
     </section><!-- /Events Section -->
 
-    <!-- Book A Table Section -->
-    <section id="book-a-table" class="book-a-table section">
+    <!-- News Section -->
+    <section id="news" class="news section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>RESERVATION</h2>
-        <p>Book a Table</p>
+        <h2>最新消息</h2>
+        <p>掌握平台動態與農業新知</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <form action="forms/book-a-table.php" method="post" role="form" class="php-email-form">
-          <div class="row gy-4">
-            <div class="col-lg-4 col-md-6">
-              <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required="">
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <input type="text" class="form-control" name="phone" id="phone" placeholder="Your Phone" required="">
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <input type="date" name="date" class="form-control" id="date" placeholder="Date" required="">
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <input type="time" class="form-control" name="time" id="time" placeholder="Time" required="">
-            </div>
-            <div class="col-lg-4 col-md-6">
-              <input type="number" class="form-control" name="people" id="people" placeholder="# of people" required="">
-            </div>
-          </div>
+        <div class="row gy-4">
 
-          <div class="form-group mt-3">
-            <textarea class="form-control" name="message" rows="5" placeholder="Message"></textarea>
-          </div>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <article class="news-item">
+              <div class="news-img">
+                <img src="{% static 'assets/img/blog/blog-1.jpg' %}" alt="" class="img-fluid">
+                <div class="news-date">
+                  <span class="day">22</span>
+                  <span class="month">八月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="category">平台公告</span>
+                  <span class="date">2024/08/22</span>
+                </div>
+                <h3><a href="#">平台系統維護升級通知</a></h3>
+                <p>為提供更好的服務品質，我們將於 8/25 凌晨進行系統維護升級，預計影響時間為 2-4 小時，造成不便敬請見諒...</p>
+                <div class="news-author">
+                  <img src="{% static 'assets/img/testimonials/testimonials-1.jpg' %}" alt="" class="author-img">
+                  <span class="author-name">尚虎雲團隊</span>
+                </div>
+              </div>
+            </article>
+          </div><!-- End News Item -->
 
-          <div class="text-center mt-3">
-            <div class="loading">Loading</div>
-            <div class="error-message"></div>
-            <div class="sent-message">Your booking request was sent. We will call back or send an Email to confirm your reservation. Thank you!</div>
-            <button type="submit">Book a Table</button>
-          </div>
-        </form><!-- End Reservation Form -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <article class="news-item">
+              <div class="news-img">
+                <img src="{% static 'assets/img/blog/blog-2.jpg' %}" alt="" class="img-fluid">
+                <div class="news-date">
+                  <span class="day">20</span>
+                  <span class="month">八月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="category">農業新知</span>
+                  <span class="date">2024/08/20</span>
+                </div>
+                <h3><a href="#">智慧農業技術應用趨勢</a></h3>
+                <p>隨著物聯網、大數據等技術日趨成熟，智慧農業正在改變傳統農業的面貌。從精準施肥到自動化監控，科技為農業帶來新契機...</p>
+                <div class="news-author">
+                  <img src="{% static 'assets/img/testimonials/testimonials-2.jpg' %}" alt="" class="author-img">
+                  <span class="author-name">農業專家 李博士</span>
+                </div>
+              </div>
+            </article>
+          </div><!-- End News Item -->
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <article class="news-item">
+              <div class="news-img">
+                <img src="{% static 'assets/img/blog/blog-3.jpg' %}" alt="" class="img-fluid">
+                <div class="news-date">
+                  <span class="day">18</span>
+                  <span class="month">八月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="category">成功案例</span>
+                  <span class="date">2024/08/18</span>
+                </div>
+                <h3><a href="#">小農王大哥的有機蔬菜成功故事</a></h3>
+                <p>透過尚虎雲平台，王大哥的有機蔬菜銷量提升了 300%，從傳統市場走向全台各地，實現了從小農到品牌農夫的華麗轉身...</p>
+                <div class="news-author">
+                  <img src="{% static 'assets/img/testimonials/testimonials-3.jpg' %}" alt="" class="author-img">
+                  <span class="author-name">王大哥</span>
+                </div>
+              </div>
+            </article>
+          </div><!-- End News Item -->
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+            <article class="news-item">
+              <div class="news-img">
+                <img src="{% static 'assets/img/events-slider/events-slider-1.jpg' %}" alt="" class="img-fluid">
+                <div class="news-date">
+                  <span class="day">15</span>
+                  <span class="month">八月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="category">活動資訊</span>
+                  <span class="date">2024/08/15</span>
+                </div>
+                <h3><a href="#">2024 台灣農業科技展參展邀請</a></h3>
+                <p>尚虎雲將參與 2024 台灣農業科技展，現場將展示最新的產銷平台功能，歡迎農友及消費者前來參觀交流...</p>
+                <div class="news-author">
+                  <img src="{% static 'assets/img/testimonials/testimonials-4.jpg' %}" alt="" class="author-img">
+                  <span class="author-name">行銷部</span>
+                </div>
+              </div>
+            </article>
+          </div><!-- End News Item -->
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="500">
+            <article class="news-item">
+              <div class="news-img">
+                <img src="{% static 'assets/img/specials-1.png' %}" alt="" class="img-fluid">
+                <div class="news-date">
+                  <span class="day">12</span>
+                  <span class="month">八月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="category">產品資訊</span>
+                  <span class="date">2024/08/12</span>
+                </div>
+                <h3><a href="#">新增產品溯源 QR Code 功能</a></h3>
+                <p>為了讓消費者更加安心，我們新增了產品溯源 QR Code 功能，只要用手機掃描即可查看完整的生產履歷...</p>
+                <div class="news-author">
+                  <img src="{% static 'assets/img/testimonials/testimonials-5.jpg' %}" alt="" class="author-img">
+                  <span class="author-name">技術部</span>
+                </div>
+              </div>
+            </article>
+          </div><!-- End News Item -->
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="600">
+            <article class="news-item">
+              <div class="news-img">
+                <img src="{% static 'assets/img/menu/lobster-bisque.jpg' %}" alt="" class="img-fluid">
+                <div class="news-date">
+                  <span class="day">10</span>
+                  <span class="month">八月</span>
+                </div>
+              </div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="category">市場動態</span>
+                  <span class="date">2024/08/10</span>
+                </div>
+                <h3><a href="#">有機蔬菜市場需求持續成長</a></h3>
+                <p>根據最新市場調查顯示，消費者對有機蔬菜的需求持續成長，預計今年銷量將比去年增加 25%，為有機農友帶來新商機...</p>
+                <div class="news-author">
+                  <img src="{% static 'assets/img/chefs/chefs-1.jpg' %}" alt="" class="author-img">
+                  <span class="author-name">市場分析師</span>
+                </div>
+              </div>
+            </article>
+          </div><!-- End News Item -->
+
+        </div>
+
+        <!-- 查看更多按鈕 -->
+        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="700">
+          <a href="#" class="btn-more-news">查看更多消息</a>
+        </div>
 
       </div>
 
-    </section><!-- /Book A Table Section -->
+    </section><!-- /News Section -->
 
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Testimonials</h2>
-        <p>What they're saying about us</p>
+        <h2>用戶見證</h2>
+        <p>聽聽農友與消費者怎麼說</p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -539,12 +834,12 @@
                 <div class="testimonial-item">
             <p>
               <i class=" bi bi-quote quote-icon-left"></i>
-                <span>Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.</span>
+                <span>自從使用尚虎雲平台後，我的有機蔬菜銷量增加了 200%，直接和消費者對接讓我獲得更合理的收入，平台的溯源系統也讓消費者更信任我的產品。</span>
                 <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="{% static 'assets/img/testimonials/testimonials-1.jpg' %}" class="testimonial-img" alt="">
-                <h3>Saul Goodman</h3>
-                <h4>Ceo &amp; Founder</h4>
+                <h3>陳志明</h3>
+                <h4>有機農夫 - 彰化</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -552,12 +847,12 @@
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.</span>
+                  <span>平台上的農產品都有完整的生產履歷，我可以清楚知道食材的來源和品質，價格也比傳統通路便宜，真的很棒！現在全家的蔬果都在這裡採購。</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="{% static 'assets/img/testimonials/testimonials-2.jpg' %}" class="testimonial-img" alt="">
-                <h3>Sara Wilsson</h3>
-                <h4>Designer</h4>
+                <h3>林美香</h3>
+                <h4>消費者 - 台北</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -565,12 +860,12 @@
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.</span>
+                  <span>透過尚虎雲的智慧物流系統，我們的水果能在最短時間內送達消費者手中，保持最佳的新鮮度。系統化的管理讓我們的效率提升了很多。</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="{% static 'assets/img/testimonials/testimonials-3.jpg' %}" class="testimonial-img" alt="">
-                <h3>Jena Karlis</h3>
-                <h4>Store Owner</h4>
+                <h3>王建華</h3>
+                <h4>果農合作社理事長 - 台南</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -578,12 +873,12 @@
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.</span>
+                  <span>平台的數據分析功能幫助我了解市場需求，調整種植品種和數量。現在我的農場產銷更加精準，減少了很多損失，收益穩定成長。</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="{% static 'assets/img/testimonials/testimonials-4.jpg' %}" class="testimonial-img" alt="">
-                <h3>Matt Brandon</h3>
-                <h4>Freelancer</h4>
+                <h3>黃雅玲</h3>
+                <h4>智慧農場經營者 - 雲林</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -591,12 +886,12 @@
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.</span>
+                  <span>作為餐廳業者，我需要穩定且優質的食材供應。尚虎雲平台讓我能直接和農友合作，確保食材品質的同時也支持了在地農業。</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="{% static 'assets/img/testimonials/testimonials-5.jpg' %}" class="testimonial-img" alt="">
-                <h3>John Larson</h3>
-                <h4>Entrepreneur</h4>
+                <h3>張世傑</h3>
+                <h4>餐廳經營者 - 高雄</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -613,8 +908,8 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Gallery</h2>
-        <p>Some photos from Our Restaurant</p>
+        <h2>農場風光</h2>
+        <p>見證台灣農業的美好</p>
       </div><!-- End Section Title -->
 
       <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
@@ -623,64 +918,64 @@
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-1.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-1.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-1.jpg' %}" class="glightbox" data-gallery="images-gallery" title="有機蔬菜農場">
+                <img src="{% static 'assets/img/gallery/gallery-1.jpg' %}" alt="有機蔬菜農場" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-2.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-2.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-2.jpg' %}" class="glightbox" data-gallery="images-gallery" title="新鮮採收的番茄">
+                <img src="{% static 'assets/img/gallery/gallery-2.jpg' %}" alt="新鮮採收的番茄" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-3.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-3.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-3.jpg' %}" class="glightbox" data-gallery="images-gallery" title="稻田豐收景象">
+                <img src="{% static 'assets/img/gallery/gallery-3.jpg' %}" alt="稻田豐收景象" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-4.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-4.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-4.jpg' %}" class="glightbox" data-gallery="images-gallery" title="果園管理作業">
+                <img src="{% static 'assets/img/gallery/gallery-4.jpg' %}" alt="果園管理作業" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-5.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-5.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-5.jpg' %}" class="glightbox" data-gallery="images-gallery" title="溫室栽培技術">
+                <img src="{% static 'assets/img/gallery/gallery-5.jpg' %}" alt="溫室栽培技術" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-6.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-6.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-6.jpg' %}" class="glightbox" data-gallery="images-gallery" title="農產品包裝作業">
+                <img src="{% static 'assets/img/gallery/gallery-6.jpg' %}" alt="農產品包裝作業" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-7.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-7.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-7.jpg' %}" class="glightbox" data-gallery="images-gallery" title="智慧農業監控系統">
+                <img src="{% static 'assets/img/gallery/gallery-7.jpg' %}" alt="智慧農業監控系統" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'assets/img/gallery/gallery-8.jpg' %}" class="glightbox" data-gallery="images-gallery">
-                <img src="{% static 'assets/img/gallery/gallery-8.jpg' %}" alt="" class="img-fluid">
+              <a href="{% static 'assets/img/gallery/gallery-8.jpg' %}" class="glightbox" data-gallery="images-gallery" title="消費者農場體驗">
+                <img src="{% static 'assets/img/gallery/gallery-8.jpg' %}" alt="消費者農場體驗" class="img-fluid">
               </a>
             </div>
           </div><!-- End Gallery Item -->
@@ -691,13 +986,13 @@
 
     </section><!-- /Gallery Section -->
 
-    <!-- Chefs Section -->
-    <section id="chefs" class="chefs section">
+    <!-- Team Section -->
+    <section id="team" class="chefs section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Team</h2>
-        <p>Necessitatibus eius consequatur</p>
+        <h2>專業團隊</h2>
+        <p>致力於農業科技創新的專家們</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -709,8 +1004,8 @@
               <img src="{% static 'assets/img/chefs/chefs-1.jpg' %}" class="img-fluid" alt="">
               <div class="member-info">
                 <div class="member-info-content">
-                  <h4>Walter White</h4>
-                  <span>Master Chef</span>
+                  <h4>陳建志</h4>
+                  <span>農業技術總監</span>
                 </div>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -727,8 +1022,8 @@
               <img src="{% static 'assets/img/chefs/chefs-2.jpg' %}" class="img-fluid" alt="">
               <div class="member-info">
                 <div class="member-info-content">
-                  <h4>Sarah Jhonson</h4>
-                  <span>Patissier</span>
+                  <h4>林雅婷</h4>
+                  <span>產品經理</span>
                 </div>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -745,8 +1040,8 @@
               <img src="{% static 'assets/img/chefs/chefs-3.jpg' %}" class="img-fluid" alt="">
               <div class="member-info">
                 <div class="member-info-content">
-                  <h4>William Anderson</h4>
-                  <span>Cook</span>
+                  <h4>王志明</h4>
+                  <span>客戶服務經理</span>
                 </div>
                 <div class="social">
                   <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -762,7 +1057,7 @@
 
       </div>
 
-    </section><!-- /Chefs Section -->
+    </section><!-- /Team Section -->
 
     <!-- Contact Section -->
     <section id="contact" class="contact section">

@@ -27,5 +27,16 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # 更新商品銷售統計
+        self.product.update_sales_count()
+
+    def delete(self, *args, **kwargs):
+        product = self.product
+        super().delete(*args, **kwargs)
+        # 更新商品銷售統計
+        product.update_sales_count()
+
     def __str__(self):
         return f"{self.product.name} x {self.quantity}"

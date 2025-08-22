@@ -28,6 +28,8 @@ urlpatterns = [
     ############## APP URLS ##############
     path('users/', include('apps.users.urls')),
     path('news/', include('apps.news.urls')),
+    path('home/', include('apps.home.urls')),
+    path('cart/', include('apps.cart.urls')),
 
 
     ############## THIRD-PARTY URLS ##############

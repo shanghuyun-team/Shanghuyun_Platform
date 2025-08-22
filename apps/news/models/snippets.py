@@ -40,8 +40,8 @@ class NewsCategory(models.Model):
     ]
 
     class Meta:
-        verbose_name = "新聞分類"
-        verbose_name_plural = "新聞分類"
+        verbose_name = "最新消息區域-分類"
+        verbose_name_plural = "最新消息區域-分類"
         ordering = ['sort_order', 'name']
 
     def save(self, *args, **kwargs):
@@ -136,8 +136,8 @@ class NewsTag(models.Model):
     ]
 
     class Meta:
-        verbose_name = "新聞標籤"
-        verbose_name_plural = "新聞標籤"
+        verbose_name = "最新消息-標籤"
+        verbose_name_plural = "最新消息-標籤"
         ordering = ['name']
 
     def save(self, *args, **kwargs):
@@ -245,8 +245,8 @@ class NewsAuthor(models.Model):
     ]
 
     class Meta:
-        verbose_name = "新聞作者"
-        verbose_name_plural = "新聞作者"
+        verbose_name = "最新消息-發布者"
+        verbose_name_plural = "最新消息-發布者"
         ordering = ['name']
 
     def __str__(self):

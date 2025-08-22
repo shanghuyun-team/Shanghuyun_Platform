@@ -37,7 +37,7 @@
           <ul>
             <li><a href="/">首頁<br></a></li>
             <li><a href="{% url 'news:list' %}">最新消息</a></li>
-            <li><a href="#menu">合作夥伴</a></li>
+            <li><a href="{% url 'home:cooperative_farmers' %}">合作夥伴</a></li>
             {% comment %} <li><a href="#specials">Specials</a></li>
             <li><a href="#events">Events</a></li>
             <li><a href="#chefs">Chefs</a></li>
@@ -65,6 +65,12 @@
             {% if user.is_authenticated %}
               <li class="mobile-user-menu d-xl-none">
                 <a href="{% url "profile" %}"><i class="fas fa-user-circle me-2"></i>個人資料</a>
+              </li>
+              <li class="mobile-user-menu d-xl-none">
+                <a href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart me-2"></i>購物車</a>
+              </li>
+              <li class="mobile-user-menu d-xl-none">
+                <a href="/api/v1/order/history/"><i class="fas fa-receipt me-2"></i>訂單紀錄</a>
               </li>
               <li class="mobile-user-menu d-xl-none">
                 <a href="/profile/#account-management-tab"><i class="fas fa-cog me-2"></i>帳號管理</a>
@@ -100,7 +106,8 @@
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
             <li><h6 class="dropdown-header">{{ user.username }}</h6></li>
             <li><a class="dropdown-item" href="{% url "profile" %}"><i class="fas fa-user-circle"></i>個人資料</a></li>
-            <li><a class="dropdown-item" href="/profile/#account-management-tab"><i class="fas fa-cog"></i>帳號管理</a></li>
+            <li><a class="dropdown-item" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>購物車</a></li>
+            <li><a class="dropdown-item" href="/api/v1/order/history/"><i class="fas fa-receipt"></i>訂單紀錄</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}?next=/" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i>登出</a></li>
           </ul>

@@ -39,9 +39,9 @@
               </div>
               <div class="col-lg-6 pt-4 pt-lg-0 content">
                 <h3>{{ event.title }}</h3>
-                {% if event.price %}
+                {% if event.subtitle %}
                   <div class="price">
-                    <p><span>{{ event.price }}</span></p>
+                    <p><span>{{ event.subtitle }}</span></p>
                   </div>
                 {% endif %}
                 {{ event.description|richtext }}

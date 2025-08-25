@@ -61,34 +61,34 @@ class FeatureBlock(blocks.StructBlock):
         label = '功能特色'
 
 
-class ProductShowcaseBlock(blocks.StructBlock):
-    """產品展示區塊"""
-    title = blocks.CharBlock(required=True, max_length=255, label="區塊標題")
-    subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
-    products = blocks.ListBlock(
-        blocks.StructBlock([
-            ('name', blocks.CharBlock(max_length=255, label="產品名稱")),
-            ('price', blocks.CharBlock(max_length=50, label="價格")),
-            ('description', blocks.TextBlock(label="產品描述")),
-            ('image', ImageChooserBlock(label="產品圖片")),
-            ('category', blocks.ChoiceBlock(
-                choices=[
-                    ('vegetables', '蔬菜類'),
-                    ('fruits', '水果類'),
-                    ('grains', '穀物類'),
-                ],
-                label="產品分類"
-            )),
-        ]),
-        label="產品列表",
-        min_num=1,
-        max_num=12
-    )
+# class ProductShowcaseBlock(blocks.StructBlock):
+#     """產品展示區塊"""
+#     title = blocks.CharBlock(required=True, max_length=255, label="區塊標題")
+#     subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
+#     products = blocks.ListBlock(
+#         blocks.StructBlock([
+#             ('name', blocks.CharBlock(max_length=255, label="產品名稱")),
+#             ('price', blocks.CharBlock(max_length=50, label="價格")),
+#             ('description', blocks.TextBlock(label="產品描述")),
+#             ('image', ImageChooserBlock(label="產品圖片")),
+#             ('category', blocks.ChoiceBlock(
+#                 choices=[
+#                     ('vegetables', '蔬菜類'),
+#                     ('fruits', '水果類'),
+#                     ('grains', '穀物類'),
+#                 ],
+#                 label="產品分類"
+#             )),
+#         ]),
+#         label="產品列表",
+#         min_num=1,
+#         max_num=12
+#     )
     
-    class Meta:
-        template = 'home/blocks/product_showcase_block.html'
-        icon = 'pick'
-        label = '產品展示'
+#     class Meta:
+#         template = 'home/blocks/product_showcase_block.html'
+#         icon = 'pick'
+#         label = '產品展示'
 
 
 class ServiceTabsBlock(blocks.StructBlock):
@@ -119,7 +119,7 @@ class EventSliderBlock(blocks.StructBlock):
     events = blocks.ListBlock(
         blocks.StructBlock([
             ('title', blocks.CharBlock(max_length=255, label="活動標題")),
-            ('price', blocks.CharBlock(max_length=50, label="價格", required=False)),
+            ('subtitle', blocks.CharBlock(max_length=50, label="副標題", required=False)),
             ('description', blocks.RichTextBlock(label="活動描述")),
             ('image', ImageChooserBlock(label="活動圖片")),
             ('features', blocks.ListBlock(
@@ -140,46 +140,46 @@ class EventSliderBlock(blocks.StructBlock):
         label = '活動輪播'
 
 
-class NewsPreviewBlock(blocks.StructBlock):
-    """最新消息預覽區塊"""
-    title = blocks.CharBlock(required=True, max_length=255, label="區塊標題")
-    subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
-    news_count = blocks.IntegerBlock(
-        default=6,
-        min_value=3,
-        max_value=12,
-        label="顯示消息數量"
-    )
-    show_more_button = blocks.BooleanBlock(
-        default=True,
-        required=False,
-        label="顯示更多按鈕"
-    )
-    more_button_text = blocks.CharBlock(
-        default="查看更多消息",
-        max_length=50,
-        label="更多按鈕文字"
-    )
-    more_button_url = blocks.URLBlock(required=False, label="更多按鈕連結")
+# class NewsPreviewBlock(blocks.StructBlock):
+#     """最新消息預覽區塊"""
+#     title = blocks.CharBlock(required=True, max_length=255, label="區塊標題")
+#     subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
+#     news_count = blocks.IntegerBlock(
+#         default=6,
+#         min_value=3,
+#         max_value=12,
+#         label="顯示消息數量"
+#     )
+#     show_more_button = blocks.BooleanBlock(
+#         default=True,
+#         required=False,
+#         label="顯示更多按鈕"
+#     )
+#     more_button_text = blocks.CharBlock(
+#         default="查看更多消息",
+#         max_length=50,
+#         label="更多按鈕文字"
+#     )
+#     more_button_url = blocks.URLBlock(required=False, label="更多按鈕連結")
     
-    class Meta:
-        template = 'home/blocks/news_preview_block.html'
-        icon = 'doc-full'
-        label = '最新消息預覽'
+#     class Meta:
+#         template = 'home/blocks/news_preview_block.html'
+#         icon = 'doc-full'
+#         label = '最新消息預覽'
 
 
 class TestimonialBlock(blocks.StructBlock):
-    """用戶見證區塊"""
+    """合作單位區塊"""
     title = blocks.CharBlock(required=True, max_length=255, label="區塊標題")
     subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
     testimonials = blocks.ListBlock(
         blocks.StructBlock([
-            ('quote', blocks.TextBlock(label="見證內容")),
-            ('name', blocks.CharBlock(max_length=255, label="見證者姓名")),
-            ('title', blocks.CharBlock(max_length=255, label="見證者職稱")),
-            ('avatar', ImageChooserBlock(label="見證者頭像")),
+            ('quote', blocks.TextBlock(label="內容")),
+            ('name', blocks.CharBlock(max_length=255, label="合作單位")),
+            ('title', blocks.CharBlock(max_length=255, label="合作單位標題")),
+            ('avatar', ImageChooserBlock(label="合作單位圖片")),
         ]),
-        label="見證列表",
+        label="合作單位列表",
         min_num=1,
         max_num=10
     )
@@ -187,7 +187,7 @@ class TestimonialBlock(blocks.StructBlock):
     class Meta:
         template = 'home/blocks/testimonial_block.html'
         icon = 'openquote'
-        label = '用戶見證'
+        label = '合作單位'
 
 
 class GalleryBlock(blocks.StructBlock):
@@ -242,11 +242,6 @@ class ContactBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=True, max_length=255, label="區塊標題")
     subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
     map_embed_url = blocks.URLBlock(required=False, label="地圖嵌入網址")
-    show_contact_form = blocks.BooleanBlock(
-        default=True,
-        required=False,
-        label="顯示聯絡表單"
-    )
     contact_info = blocks.ListBlock(
         blocks.StructBlock([
             ('icon', blocks.CharBlock(
@@ -281,17 +276,6 @@ class TextImageBlock(blocks.StructBlock):
         default='right',
         label="圖片位置"
     )
-    background_color = blocks.ChoiceBlock(
-        choices=[
-            ('', '預設'),
-            ('bg-light', '淺色背景'),
-            ('bg-dark', '深色背景'),
-            ('bg-primary', '主色背景'),
-        ],
-        default='',
-        required=False,
-        label="背景顏色"
-    )
     
     class Meta:
         template = 'home/blocks/text_image_block.html'
@@ -299,60 +283,60 @@ class TextImageBlock(blocks.StructBlock):
         label = '文字圖片'
 
 
-class CallToActionBlock(blocks.StructBlock):
-    """呼籲行動區塊"""
-    title = blocks.CharBlock(required=True, max_length=255, label="標題")
-    subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
-    description = blocks.TextBlock(required=False, label="描述")
-    button_text = blocks.CharBlock(required=True, max_length=50, label="按鈕文字")
-    button_url = blocks.URLBlock(required=True, label="按鈕連結")
-    button_style = blocks.ChoiceBlock(
-        choices=[
-            ('btn-primary', '主要'),
-            ('btn-secondary', '次要'),
-            ('btn-success', '成功'),
-            ('btn-warning', '警告'),
-            ('btn-danger', '危險'),
-        ],
-        default='btn-primary',
-        label="按鈕樣式"
-    )
-    background_color = blocks.ChoiceBlock(
-        choices=[
-            ('', '預設'),
-            ('bg-light', '淺色背景'),
-            ('bg-dark', '深色背景'),
-            ('bg-primary', '主色背景'),
-        ],
-        default='bg-light',
-        label="背景顏色"
-    )
+# class CallToActionBlock(blocks.StructBlock):
+#     """呼籲行動區塊"""
+#     title = blocks.CharBlock(required=True, max_length=255, label="標題")
+#     subtitle = blocks.CharBlock(required=False, max_length=255, label="副標題")
+#     description = blocks.TextBlock(required=False, label="描述")
+#     button_text = blocks.CharBlock(required=True, max_length=50, label="按鈕文字")
+#     button_url = blocks.URLBlock(required=True, label="按鈕連結")
+#     button_style = blocks.ChoiceBlock(
+#         choices=[
+#             ('btn-primary', '主要'),
+#             ('btn-secondary', '次要'),
+#             ('btn-success', '成功'),
+#             ('btn-warning', '警告'),
+#             ('btn-danger', '危險'),
+#         ],
+#         default='btn-primary',
+#         label="按鈕樣式"
+#     )
+#     background_color = blocks.ChoiceBlock(
+#         choices=[
+#             ('', '預設'),
+#             ('bg-light', '淺色背景'),
+#             ('bg-dark', '深色背景'),
+#             ('bg-primary', '主色背景'),
+#         ],
+#         default='bg-light',
+#         label="背景顏色"
+#     )
     
-    class Meta:
-        template = 'home/blocks/cta_block.html'
-        icon = 'pick'
-        label = '呼籲行動'
+#     class Meta:
+#         template = 'home/blocks/cta_block.html'
+#         icon = 'pick'
+#         label = '呼籲行動'
 
 
-class CustomHTMLBlock(blocks.StructBlock):
-    """自訂 HTML 區塊"""
-    title = blocks.CharBlock(required=False, max_length=255, label="區塊標題")
-    html_content = blocks.TextBlock(
-        required=True,
-        label="HTML 內容",
-        help_text="請輸入自訂的 HTML 代碼"
-    )
-    css_classes = blocks.CharBlock(
-        required=False,
-        max_length=255,
-        label="CSS 類別",
-        help_text="額外的 CSS 類別名稱"
-    )
+# class CustomHTMLBlock(blocks.StructBlock):
+#     """自訂 HTML 區塊"""
+#     title = blocks.CharBlock(required=False, max_length=255, label="區塊標題")
+#     html_content = blocks.TextBlock(
+#         required=True,
+#         label="HTML 內容",
+#         help_text="請輸入自訂的 HTML 代碼"
+#     )
+#     css_classes = blocks.CharBlock(
+#         required=False,
+#         max_length=255,
+#         label="CSS 類別",
+#         help_text="額外的 CSS 類別名稱"
+#     )
     
-    class Meta:
-        template = 'home/blocks/custom_html_block.html'
-        icon = 'code'
-        label = '自訂 HTML'
+#     class Meta:
+#         template = 'home/blocks/custom_html_block.html'
+#         icon = 'code'
+#         label = '自訂 HTML'
 
 
 class HomePageStreamBlock(blocks.StreamBlock):
@@ -360,17 +344,17 @@ class HomePageStreamBlock(blocks.StreamBlock):
     hero = HeroBlock()
     about = AboutBlock()
     features = FeatureBlock()
-    products = ProductShowcaseBlock()
+    # products = ProductShowcaseBlock()
     services = ServiceTabsBlock()
     events = EventSliderBlock()
-    news = NewsPreviewBlock()
+    # news = NewsPreviewBlock()
     testimonials = TestimonialBlock()
     gallery = GalleryBlock()
     team = TeamBlock()
     contact = ContactBlock()
     text_image = TextImageBlock()
-    cta = CallToActionBlock()
-    custom_html = CustomHTMLBlock()
+    # cta = CallToActionBlock()
+    # custom_html = CustomHTMLBlock()
     
     class Meta:
         block_counts = {

@@ -202,8 +202,8 @@
                         <h2 data-aos="fade-up" data-aos-delay="100">歡迎來到 <span>{{ site_name|default:"尚虎雲產銷平台" }}</span></h2>
                         <p data-aos="fade-up" data-aos-delay="200">{{ site_tagline|default:"連結生產者與消費者，打造智慧農業新生態！" }}</p>
                         <div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="300">
-                            <a href="#products" class="cta-btn">瀏覽商品</a>
-                            <a href="#join-platform" class="cta-btn">加入平台</a>
+                            <a href="{% url 'home:cooperative_farmers' %}" class="cta-btn">瀏覽商品</a>
+                            <a href="{% url 'account_login' %}" class="cta-btn">加入平台</a>
                         </div>
                     </div>
                 </div>

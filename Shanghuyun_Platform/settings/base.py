@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "wagtail.snippets",
     "wagtail.documents",
     "wagtail.images",
-    "wagtail.search",
+    # "wagtail.search",
     "wagtail.admin",
     "wagtail",
     "modelcluster",
@@ -64,9 +64,9 @@ INSTALLED_APPS = [
     ######## Custome Apps ########
     "apps.home.apps.HomeConfig",
     "apps.cart.apps.CartConfig",
-    "search",
     "apps.users.apps.UsersConfig",
     "apps.news.apps.NewsConfig",
+    "search",
 
 
     ######### Third Party Apps #########

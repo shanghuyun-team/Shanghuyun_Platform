@@ -3,6 +3,7 @@ from wagtail import hooks
 from django.urls import reverse
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import PermissionDenied
 
 # 載入網站基本設定模型
 from apps.home.models import SiteBasicSetting
@@ -31,44 +32,44 @@ def register_site_basic_setting_menu_item():
     )
 
 
-@hooks.register('register_admin_menu_item')
-def register_privacy_policy_menu_item():
-    """
-    註冊隱私權政策設定選單項目
-    只有超級管理員可以看到此選單
-    """
-    app_label = SitePolicySetting._meta.app_label      # -> "users"
-    model_name = SitePolicySetting._meta.model_name    # -> "sitepolicysetting"
-    url = reverse('wagtailsettings:edit', args=[app_label, model_name])
+# @hooks.register('register_admin_menu_item')
+# def register_privacy_policy_menu_item():
+#     """
+#     註冊隱私權政策設定選單項目
+#     只有超級管理員可以看到此選單
+#     """
+#     app_label = SitePolicySetting._meta.app_label      # -> "users"
+#     model_name = SitePolicySetting._meta.model_name    # -> "sitepolicysetting"
+#     url = reverse('wagtailsettings:edit', args=[app_label, model_name])
 
-    return MenuItem(
-        '隱私權政策設定',           
-        url,                   
-        icon_name='privacy',  
-        order=101,              
-        classname='icon icon-privacy',
-        attrs={'title': '僅限超級管理員'}
-    )
+#     return MenuItem(
+#         '隱私權政策設定',           
+#         url,                   
+#         icon_name='privacy',  
+#         order=101,              
+#         classname='icon icon-privacy',
+#         attrs={'title': '僅限超級管理員'}
+#     )
 
 
-@hooks.register('register_admin_menu_item')
-def register_terms_of_service_menu_item():
-    """
-    註冊服務條款設定選單項目
-    只有超級管理員可以看到此選單
-    """
-    app_label = SiteTermsSetting._meta.app_label      # -> "users"
-    model_name = SiteTermsSetting._meta.model_name    # -> "sitetermssetting"
-    url = reverse('wagtailsettings:edit', args=[app_label, model_name])
+# @hooks.register('register_admin_menu_item')
+# def register_terms_of_service_menu_item():
+#     """
+#     註冊服務條款設定選單項目
+#     只有超級管理員可以看到此選單
+#     """
+#     app_label = SiteTermsSetting._meta.app_label      # -> "users"
+#     model_name = SiteTermsSetting._meta.model_name    # -> "sitetermssetting"
+#     url = reverse('wagtailsettings:edit', args=[app_label, model_name])
 
-    return MenuItem(
-        '服務條款',           
-        url,                   
-        icon_name='doc-full',  
-        order=102,              
-        classname='icon icon-doc-full',
-        attrs={'title': '僅限超級管理員'}
-    )
+#     return MenuItem(
+#         '服務條款',           
+#         url,                   
+#         icon_name='doc-full',  
+#         order=102,              
+#         classname='icon icon-doc-full',
+#         attrs={'title': '僅限超級管理員'}
+#     )
 
 
 @hooks.register('construct_main_menu')
@@ -142,3 +143,57 @@ def register_site_settings_permissions():
     ))
     
     return permissions
+
+
+def is_vendor_user(user):
+    """檢查使用者是否為商家"""
+    return hasattr(user, 'vendor_profile') or getattr(user, 'is_vendor', False)
+
+
+@hooks.register('before_edit_page')
+def check_vendor_page_edit_permissions(request, page):
+    """
+    限制商家用戶編輯頁面
+    商家只能新增商品，不能修改頁面
+    """
+    if is_vendor_user(request.user) and not request.user.is_superuser:
+        raise PermissionDenied("商家用戶不能編輯頁面，請使用商品管理功能")
+
+
+@hooks.register('before_create_page')
+def check_vendor_page_create_permissions(request, parent_page, page_class):
+    """
+    限制商家用戶創建頁面
+    商家只能新增商品，不能創建頁面
+    """
+    if is_vendor_user(request.user) and not request.user.is_superuser:
+        raise PermissionDenied("商家用戶不能創建頁面，請使用商品管理功能新增商品")
+
+
+@hooks.register('before_delete_page')
+def check_vendor_page_delete_permissions(request, page):
+    """
+    限制商家用戶刪除頁面
+    """
+    if is_vendor_user(request.user) and not request.user.is_superuser:
+        raise PermissionDenied("商家用戶不能刪除頁面")
+
+
+@hooks.register('construct_main_menu')
+def hide_pages_menu_for_vendors(request, menu_items):
+    """
+    為商家用戶隱藏頁面相關選單項目
+    """
+    if is_vendor_user(request.user) and not request.user.is_superuser:
+        # 需要隱藏的選單項目名稱
+        items_to_hide = ['pages', 'images', 'documents', 'snippets', 'forms']
+        
+        menu_items_to_remove = []
+        for item in menu_items:
+            if hasattr(item, 'name') and item.name in items_to_hide:
+                menu_items_to_remove.append(item)
+            elif hasattr(item, 'label') and ('頁面' in item.label or '圖片' in item.label or '文件' in item.label):
+                menu_items_to_remove.append(item)
+        
+        for item in menu_items_to_remove:
+            menu_items.remove(item)

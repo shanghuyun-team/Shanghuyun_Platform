@@ -54,3 +54,13 @@ def register_terms_of_service_menu_item():
         icon_name='doc-full',  
         order=300              
     )
+
+
+@hooks.register('construct_main_menu')
+def rename_snippets_menu(request, menu_items):
+    """將 Snippets 選單名稱改為 '分類'"""
+    for item in menu_items:
+        if hasattr(item, 'name') and item.name == 'snippets':
+            item.label = '分類'
+        elif hasattr(item, 'label') and item.label == 'Snippets':
+            item.label = '分類'

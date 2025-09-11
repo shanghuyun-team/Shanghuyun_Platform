@@ -72,9 +72,23 @@
               <li class="mobile-user-menu d-xl-none">
                 <a href="/api/v1/order/history/"><i class="fas fa-receipt me-2"></i>訂單紀錄</a>
               </li>
-              <li class="mobile-user-menu d-xl-none">
-                <a href="/profile/#account-management-tab"><i class="fas fa-cog me-2"></i>帳號管理</a>
-              </li>
+              
+              {% comment %} 行動版管理功能選項 - 根據使用者身分顯示 {% endcomment %}
+              {% if user.is_superuser or user.is_staff %}
+                <li class="mobile-user-menu d-xl-none">
+                  <a href="/admin/"><i class="fas fa-cogs me-2"></i>後臺管理</a>
+                </li>
+                {% if user.is_superuser %}
+                  <li class="mobile-user-menu d-xl-none">
+                    <a href="/admin/product/product/"><i class="fas fa-box me-2"></i>商品管理</a>
+                  </li>
+                {% endif %}
+              {% elif user.vendor_profile %}
+                <li class="mobile-user-menu d-xl-none">
+                  <a href="/admin/product/product/"><i class="fas fa-box me-2"></i>商品管理</a>
+                </li>
+              {% endif %}
+              
               <li class="mobile-user-menu d-xl-none">
                 <a href="{% url 'account_logout' %}?next=/" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();" class="text-danger">
                   <i class="fas fa-sign-out-alt me-2"></i>登出
@@ -108,6 +122,23 @@
             <li><a class="dropdown-item" href="{% url "profile" %}"><i class="fas fa-user-circle"></i>個人資料</a></li>
             <li><a class="dropdown-item" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>購物車</a></li>
             <li><a class="dropdown-item" href="/api/v1/order/history/"><i class="fas fa-receipt"></i>訂單紀錄</a></li>
+            
+            {% comment %} 管理功能選項 - 根據使用者身分顯示 {% endcomment %}
+            {% if user.is_superuser or user.is_staff %}
+              <li><hr class="dropdown-divider"></li>
+              <li><h6 class="dropdown-header text-muted">管理功能</h6></li>
+              {% if user.is_superuser or user.is_staff %}
+                <li><a class="dropdown-item" href="/admin/"><i class="fas fa-cogs"></i>後臺管理</a></li>
+              {% endif %}
+              {% if user.is_superuser %}
+                <li><a class="dropdown-item" href="/admin/product/product/"><i class="fas fa-box"></i>商品管理</a></li>
+              {% endif %}
+            {% elif user.vendor_profile %}
+              <li><hr class="dropdown-divider"></li>
+              <li><h6 class="dropdown-header text-muted">商家功能</h6></li>
+              <li><a class="dropdown-item" href="/admin/product/product/"><i class="fas fa-box"></i>商品管理</a></li>
+            {% endif %}
+            
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}?next=/" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i>登出</a></li>
           </ul>
@@ -127,7 +158,8 @@
           <a href="{% url 'account_login' %}" class="btn login-signup-btn rounded-pill px-4 py-2 fw-bold shadow-sm">
             <i class="fas fa-sign-in-alt me-2"></i>登入 / 註冊
           </a>
-        </div>        <style>
+        </div>        
+        <style>
         .login-signup-btn {
           background: linear-gradient(90deg, #cda45e 0%, #ffb03b 100%);
           color: #29261f !important;

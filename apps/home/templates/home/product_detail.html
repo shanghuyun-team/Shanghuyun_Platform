@@ -485,21 +485,11 @@
                   <button class="btn btn-warning btn-add-cart" id="addToCartBtn">
                     <i class="bi bi-cart-plus"></i> 加入購物車
                   </button>
-                  {% if vendor.phone %}
-                  <a href="tel:{{ vendor.phone }}" class="btn-contact-vendor">
-                    <i class="bi bi-telephone"></i> 聯絡小農
-                  </a>
-                  {% endif %}
                 </div>
               </div>
               {% else %}
               <div class="purchase-options text-center">
                 <p class="text-light mb-3">此商品目前缺貨，請聯絡小農了解補貨時間</p>
-                {% if vendor.phone %}
-                <a href="tel:{{ vendor.phone }}" class="btn-contact-vendor">
-                  <i class="bi bi-telephone"></i> 聯絡小農
-                </a>
-                {% endif %}
               </div>
               {% endif %}
             </div>

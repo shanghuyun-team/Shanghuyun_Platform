@@ -158,7 +158,6 @@ class SiteBasicSetting(BaseGenericSetting, RevisionMixin):
         help_text="客戶服務專用信箱"
     )
     
-    # （維護設定已移除）
     
     # 時間戳記
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="建立時間")

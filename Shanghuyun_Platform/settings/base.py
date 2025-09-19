@@ -283,3 +283,10 @@ SECURE_BROWSER_XSS_FILTER = True
 MERCHANT_ID = os.getenv('ECPAY_MERCHANT_ID')
 HASH_KEY = os.getenv('ECPAY_HASH_KEY')
 HASH_IV = os.getenv('ECPAY_HASH_IV')
+
+# temp
+CSRF_TRUSTED_ORIGINS = [
+    "https://fe4b298f585f.ngrok-free.app",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+]

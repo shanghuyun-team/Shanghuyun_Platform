@@ -49,6 +49,8 @@ def ecpay_checkout(request, order_id):
         #action_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' # 正式環境
 
         html = ecpay_payment_sdk.gen_html_post_form(action_url, final_order_params)
+        order.status = Order.STATUS_FAILED
+        order.save()
         return HttpResponse(html)
 
     except Exception as exc:
@@ -93,6 +95,7 @@ def ecpay_notify_url(request):
         logger.info("Order %s payment failed: %s", order.id, rtn_msg)
         return HttpResponse("0|Fail", status=200)
 
+@csrf_exempt
 def ecpay_order_result(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Only POST")
@@ -101,5 +104,41 @@ def ecpay_order_result(request):
     if not verify_check_mac_value(data, settings.HASH_KEY, settings.HASH_IV):
         logger.warning("ECPay order result: checkmac validation failed.")
         return HttpResponse("CheckMacValue error", status=400)
+    
+    merchant_trade_no = data.get("MerchantTradeNo")
 
-    return HttpResponse("支付處理完成，請回到訂單頁查看付款狀態。")
+    try:
+        order = get_object_or_404(Order, merchant_trade_no=merchant_trade_no)
+    except Exception:
+        logger.exception("ECPay notify: 訂單找不到 MerchantTradeNo=%s", merchant_trade_no)
+        return HttpResponse("Order not found", status=404)
+
+    order_id = order.id
+    rtn_code = data.get("RtnCode")
+    rtn_msg = data.get("RtnMsg", "交易結果未知")
+
+    # 要跳轉的目標頁面
+    redirect_url = request.build_absolute_uri(
+        reverse("api.v1.order:order_result") + f"?order_id={order_id}"
+    )
+
+    if rtn_code == "1":
+        status_text = "付款成功"
+    else:
+        status_text = "付款失敗"
+
+    html = f"""
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta http-equiv="refresh" content="1;url={redirect_url}" />
+      </head>
+      <body>
+        <h2>{status_text}</h2>
+        <p>訊息：{rtn_msg}</p>
+        <p>訂單編號：{order_id}</p>
+        <p>1 秒後將自動跳轉，如果沒有跳轉 <a href="{redirect_url}">點此返回</a></p>
+      </body>
+    </html>
+    """
+    return HttpResponse(html)

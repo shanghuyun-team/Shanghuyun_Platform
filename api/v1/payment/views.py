@@ -49,8 +49,6 @@ def ecpay_checkout(request, order_id):
         #action_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' # 正式環境
 
         html = ecpay_payment_sdk.gen_html_post_form(action_url, final_order_params)
-        order.status = Order.STATUS_FAILED
-        order.save()
         return HttpResponse(html)
 
     except Exception as exc:

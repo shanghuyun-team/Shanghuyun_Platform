@@ -8,6 +8,7 @@ import pprint
 from decimal import Decimal
 from urllib.parse import quote_plus, parse_qsl, parse_qs
 
+
 """
 付款方式
 """
@@ -853,3 +854,21 @@ class ECPayPaymentSdk(*a):
         self.MerchantID = MerchantID
         self.HashKey = HashKey
         self.HashIV = HashIV
+
+def generate_check_mac_value(params: dict, hash_key: str, hash_iv: str) -> str:
+    sorted_items = sorted(params.items(), key=lambda k: k[0].lower())
+    joined = "&".join(f"{k}={v}" for k, v in sorted_items)
+    raw = f"HashKey={hash_key}&{joined}&HashIV={hash_iv}"
+    safe_characters = '-_.!*()'
+    encoded = quote_plus(raw, safe=safe_characters).lower()
+    sha = hashlib.sha256(encoded.encode('utf-8')).hexdigest()
+    check_mac_value = sha.upper()
+    return check_mac_value
+
+def verify_check_mac_value(received_params: dict, hash_key: str, hash_iv: str) -> bool:
+    received_check = received_params.get("CheckMacValue")
+    if not received_check:
+        return False
+    params = {k: v for k, v in received_params.items() if k != "CheckMacValue"}
+    calculated = generate_check_mac_value(params, hash_key, hash_iv)
+    return calculated == received_check.upper()

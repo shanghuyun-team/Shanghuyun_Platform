@@ -280,6 +280,6 @@ DEFAULT_FROM_EMAIL  = os.getenv('DEFAULT_FROM_EMAIL')
 SECURE_BROWSER_XSS_FILTER = True
 
 # ECPay Payment Settings
-MERCHANT_ID = os.getenv('ECPAY_MERCHANT_ID', '3002607')  # 測試商店代號
-HASH_KEY = os.getenv('ECPAY_HASH_KEY', 'pwFHCqoQDkhnLLVSGxYB8OhDcpBzCaTszz6A3CStMzq')  # 測試 HashKey
-HASH_IV = os.getenv('ECPAY_HASH_IV', 'HNAP2Lkd5zGTbKrBYRgvN8ACLPyaXyLT')  # 測試 HashIV
+MERCHANT_ID = os.getenv('ECPAY_MERCHANT_ID')
+HASH_KEY = os.getenv('ECPAY_HASH_KEY')
+HASH_IV = os.getenv('ECPAY_HASH_IV')

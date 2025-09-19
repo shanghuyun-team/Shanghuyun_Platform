@@ -70,7 +70,7 @@ def create_order(request):
         )
 
         # Assign merchant_trade_no automatically
-        order.merchant_trade_no = f"EC{order.id}{uuid.uuid4().hex[:6].upper()}"
+        order.merchant_trade_no = f"{order.id}{uuid.uuid4().hex[:6].upper()}"
         order.save()
 
         # Create order items and update stock

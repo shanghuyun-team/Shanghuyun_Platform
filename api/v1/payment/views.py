@@ -86,10 +86,9 @@ def ecpay_notify_url(request):
         order.paid_at = timezone.now()
         order.save()
         logger.info("Order %s marked as paid via ECPay", order.id)
-        # 綠界要看到成功回應訊息 (範例: "1|OK" 或 "SUCCESS"，依官方文件而定)
         return HttpResponse("1|OK")
     else:
-        order.status = Order.STATUS_PAYMENT_FAILED
+        order.status = Order.STATUS_FAILED
         order.save()
         logger.info("Order %s payment failed: %s", order.id, rtn_msg)
         return HttpResponse("0|Fail", status=200)
@@ -97,5 +96,10 @@ def ecpay_notify_url(request):
 def ecpay_order_result(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Only POST")
-    # 顯示一個簡單的結果頁
+    
+    data = request.POST.dict()
+    if not verify_check_mac_value(data, settings.HASH_KEY, settings.HASH_IV):
+        logger.warning("ECPay order result: checkmac validation failed.")
+        return HttpResponse("CheckMacValue error", status=400)
+
     return HttpResponse("支付處理完成，請回到訂單頁查看付款狀態。")

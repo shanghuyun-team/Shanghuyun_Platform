@@ -44,10 +44,6 @@ def ecpay_checkout(request, order_id):
 
     try:
         final_order_params = ecpay_payment_sdk.create_order(order_params)
-        ok = verify_check_mac_value(final_order_params, ecpay_payment_sdk.HashKey, ecpay_payment_sdk.HashIV)
-        print('==================================')
-        print(final_order_params)
-        print('==================================')
 
         action_url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5' # 測試環境
         #action_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' # 正式環境
@@ -99,6 +95,7 @@ def ecpay_notify_url(request):
         return HttpResponse("0|Fail", status=200)
 
 def ecpay_order_result(request):
-    print(request)
+    if request.method != "POST":
+        return HttpResponseBadRequest("Only POST")
     # 顯示一個簡單的結果頁
     return HttpResponse("支付處理完成，請回到訂單頁查看付款狀態。")

@@ -45,9 +45,11 @@ def ecpay_checkout(request, order_id):
     try:
         final_order_params = ecpay_payment_sdk.create_order(order_params)
 
-        action_url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5' # 測試環境
-        #action_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' # 正式環境
-
+        if settings.DEBUG:
+            action_url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5' # 測試環境
+        else:
+            action_url = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5' # 正式環境
+        
         html = ecpay_payment_sdk.gen_html_post_form(action_url, final_order_params)
         return HttpResponse(html)
 

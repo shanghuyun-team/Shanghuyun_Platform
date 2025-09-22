@@ -525,11 +525,14 @@
             <a href="/api/v1/order/result/?order_id={{ order.id }}" class="btn-action">
               <i class="bi bi-eye"></i> 查看詳情
             </a>
+            {% comment %}
+            <!-- 移除立即付款功能，因為綠界同筆訂單編號只能下單一次 -->
             {% if order.status == 'pending' %}
               <a href="/api/v1/payment/checkout/{{ order.id }}/" class="btn-action btn-payment">
                 <i class="bi bi-credit-card"></i> 立即付款
               </a>
             {% endif %}
+            {% endcomment %}
           </div>
         </div>
         {% endfor %}

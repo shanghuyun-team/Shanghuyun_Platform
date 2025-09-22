@@ -42,6 +42,19 @@
       color: white;
       font-size: 2.5rem;
       margin-right: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .vendor-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .vendor-avatar:hover img {
+      transform: scale(1.05);
     }
 
     /* 商品卡片設計 */
@@ -307,7 +320,14 @@
         <div class="vendor-info-card" data-aos="fade-up">
           <div class="d-flex align-items-center">
             <div class="vendor-avatar">
-              <i class="bi bi-person-circle"></i>
+              {% if vendor.user.profile.portrait %}
+                <img src="{{ vendor.user.profile.portrait.url }}" 
+                     alt="{{ vendor.name }}"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <i class="bi bi-person-circle" style="display: none;"></i>
+              {% else %}
+                <i class="bi bi-person-circle"></i>
+              {% endif %}
             </div>
             <div class="flex-grow-1">
               <h3 class="text-light">{{ vendor.name }}</h3>

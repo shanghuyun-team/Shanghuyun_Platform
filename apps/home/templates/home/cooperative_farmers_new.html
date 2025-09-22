@@ -47,6 +47,20 @@
       background: linear-gradient(135deg, #cda45e, #b8935a);
       color: white;
       font-size: 4rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .farmer-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .farmer-avatar:hover img {
+      transform: scale(1.05);
     }
 
     .farmer-info {
@@ -407,7 +421,13 @@
                   
                   <div class="text-center mt-4">
                     <div class="farmer-avatar">
-                      <i class="bi bi-person-circle"></i>
+                      {% if vendor.user.profile and vendor.user.profile.portrait %}
+                        <img src="{{ vendor.user.profile.portrait.url }}" 
+                             alt="{{ vendor.name }}"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'bi bi-person-circle\'></i>';">
+                      {% else %}
+                        <i class="bi bi-person-circle"></i>
+                      {% endif %}
                     </div>
                   </div>
                   

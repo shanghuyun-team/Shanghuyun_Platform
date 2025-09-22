@@ -65,17 +65,3 @@ def _limit_image_chooser_to_own_uploads(images, request):
     if user.is_superuser or user.is_staff:
         return images
     return images.filter(uploaded_by_user=user)
-
-
-@hooks.register("construct_image_index_queryset")
-def _limit_image_index_to_own_uploads(images, request):
-    """
-    非超級管理員/非員工：圖片列表只顯示自己上傳的圖片
-    超管/員工：不受限
-    """
-    user = getattr(request, "user", None)
-    if not user or not user.is_authenticated:
-        return images
-    if user.is_superuser or user.is_staff:
-        return images
-    return images.filter(uploaded_by_user=user)

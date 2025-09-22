@@ -307,7 +307,7 @@
         <nav class="breadcrumbs">
           <ol>
             <li><a href="/">首頁</a></li>
-            <li><a href="{% url 'home:cooperative_farmers' %}">合作小農</a></li>
+            <li><a href="{% url 'home:cooperative_farmers' %}">合作夥伴</a></li>
             <li class="current">{{ vendor.name }}</li>
           </ol>
         </nav>
@@ -414,7 +414,7 @@
               
               <div class="product-image">
                 {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% image product.image width-300 %}
                 {% else %}
                 <div class="no-image">
                   <i class="bi bi-image"></i>

@@ -108,13 +108,9 @@ def hide_images_menu_for_non_superusers(request, menu_items):
         
         for item in menu_items_to_remove:
             menu_items.remove(item)
-
-
+"""
 @hooks.register('register_admin_urls')
 def restrict_images_admin_urls():
-    """
-    限制非超級管理員存取 /admin/images/ 路由
-    """
     def images_permission_denied(request, *args, **kwargs):
         if not request.user.is_superuser:
             return HttpResponseForbidden("只有超級管理員可以存取圖片管理")
@@ -130,7 +126,7 @@ def restrict_images_admin_urls():
             name="restrict_wagtail_images"
         ),
     ]
-
+"""
 
 @hooks.register('before_edit_snippet')
 def check_site_settings_permissions(request, instance):

@@ -3,6 +3,7 @@ from wagtail_modeladmin.views import CreateView, EditView
 from wagtail.admin.panels import FieldPanel
 from api.v1.product.models import Product
 from api.v1.vendor.models import Vendor
+from wagtail import hooks
 
 class ProductCreateView(CreateView):
     def form_valid(self, form):
@@ -50,3 +51,31 @@ class ProductAdmin(ModelAdmin):
         return qs if request.user.is_superuser else qs.filter(vendor__user=request.user)
 
 modeladmin_register(ProductAdmin)
+
+
+@hooks.register("construct_image_chooser_queryset")
+def _limit_image_chooser_to_own_uploads(images, request):
+    """
+    非超級管理員/非員工：圖片挑選器只顯示自己上傳的圖片
+    超管/員工：不受限
+    """
+    user = getattr(request, "user", None)
+    if not user or not user.is_authenticated:
+        return images
+    if user.is_superuser or user.is_staff:
+        return images
+    return images.filter(uploaded_by_user=user)
+
+
+@hooks.register("construct_image_index_queryset")
+def _limit_image_index_to_own_uploads(images, request):
+    """
+    非超級管理員/非員工：圖片列表只顯示自己上傳的圖片
+    超管/員工：不受限
+    """
+    user = getattr(request, "user", None)
+    if not user or not user.is_authenticated:
+        return images
+    if user.is_superuser or user.is_staff:
+        return images
+    return images.filter(uploaded_by_user=user)

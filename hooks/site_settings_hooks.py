@@ -1,11 +1,9 @@
 from wagtail.admin.menu import MenuItem
 from wagtail import hooks
-from django.urls import reverse, re_path
+from django.urls import reverse
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
-from django.template.response import TemplateResponse
-from django.http import HttpResponseForbidden
 
 # 載入網站基本設定模型
 from apps.home.models import SiteBasicSetting
@@ -225,14 +223,14 @@ def hide_pages_menu_for_vendors(request, menu_items):
     為商家用戶隱藏頁面相關選單項目
     """
     if is_vendor_user(request.user) and not request.user.is_superuser:
-        # 需要隱藏的選單項目名稱 (移除 images，因為已有專門的權限控制)
-        items_to_hide = ['pages', 'documents', 'snippets', 'forms']
+        # 需要隱藏的選單項目名稱
+        items_to_hide = ['pages', 'images', 'documents', 'snippets', 'forms']
         
         menu_items_to_remove = []
         for item in menu_items:
             if hasattr(item, 'name') and item.name in items_to_hide:
                 menu_items_to_remove.append(item)
-            elif hasattr(item, 'label') and ('頁面' in item.label or '文件' in item.label):
+            elif hasattr(item, 'label') and ('頁面' in item.label or '圖片' in item.label or '文件' in item.label):
                 menu_items_to_remove.append(item)
         
         for item in menu_items_to_remove:

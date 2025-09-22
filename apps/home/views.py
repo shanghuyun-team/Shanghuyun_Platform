@@ -12,7 +12,11 @@ def cooperative_farmers(request):
         to_attr='top_products'
     )
     
-    vendors = Vendor.objects.all().select_related('category', 'user').prefetch_related(
+    vendors = Vendor.objects.all().select_related(
+        'category', 
+        'user', 
+        'user__profile'
+    ).prefetch_related(
         top_products_prefetch
     )
     
@@ -37,7 +41,7 @@ def cooperative_farmers(request):
 
 def vendor_products(request, vendor_id):
     """小農商品列表頁面"""
-    vendor = get_object_or_404(Vendor, id=vendor_id)
+    vendor = get_object_or_404(Vendor.objects.select_related('user__profile'), id=vendor_id)
     
     # 獲取該小農的所有商品
     products = Product.objects.filter(vendor=vendor, is_active=True).order_by('-sales_count', '-created_at')

@@ -30,14 +30,15 @@ class Product(models.Model):
 
     @property
     def total_sales(self):
-        """計算總銷售量"""
-        from api.v1.order.models import OrderItem
-        return OrderItem.objects.filter(product=self).aggregate(
-            total=Sum('quantity')
-        )['total'] or 0
+        """計算總銷售量 - 只計算已付款的訂單"""
+        from api.v1.order.models import OrderItem, Order
+        return OrderItem.objects.filter(
+            product=self,
+            order__status=Order.STATUS_PAID  # 只計算已付款的訂單
+        ).aggregate(total=Sum('quantity'))['total'] or 0
 
     def update_sales_count(self):
-        """更新銷售數量"""
+        """更新銷售數量 - 只計算已付款的訂單"""
         self.sales_count = self.total_sales
         self.save(update_fields=['sales_count'])
 

@@ -4,7 +4,7 @@ from api.v1.vendor.models import Vendor, VendorCategory
 from api.v1.product.models import Product
 
 def cooperative_farmers(request):
-    """合作小農頁面"""
+    """合作夥伴頁面"""
     # 獲取所有商家，並預先載入相關的商品（前4個熱銷商品）
     top_products_prefetch = Prefetch(
         'products',

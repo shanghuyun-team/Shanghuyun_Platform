@@ -489,7 +489,7 @@
                             <div class="product-mini-card">
                               <div class="product-image">
                                 {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+                                {% image product.image width-200 class="img-fluid" %}
                                 {% else %}
                                 <div class="no-image">
                                   <i class="bi bi-image"></i>

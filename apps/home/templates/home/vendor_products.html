@@ -414,7 +414,7 @@
               
               <div class="product-image">
                 {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% image product.image width-300 %}
                 {% else %}
                 <div class="no-image">
                   <i class="bi bi-image"></i>

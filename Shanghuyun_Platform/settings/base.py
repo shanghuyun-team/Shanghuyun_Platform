@@ -10,6 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+# 允許的 Host（支援所有 ngrok-free 子網域）
+ALLOWED_HOSTS = [
+    "localhost", "127.0.0.1", "[::1]",
+    ".ngrok-free.app",
+]
+
+# Django 4.0+ 需要「含 scheme」的 CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+    "https://localhost",
+    "https://127.0.0.1",
+]
+
+# 若透過 ngrok 的 HTTPS 轉到本機 HTTP，請加上這兩個，避免 Django 誤判協定
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# 你用 https（ngrok）時，建議一併開啟
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from dotenv import load_dotenv

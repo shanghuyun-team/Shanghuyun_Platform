@@ -1,11 +1,9 @@
 from wagtail.admin.menu import MenuItem
 from wagtail import hooks
-from django.urls import reverse, re_path
+from django.urls import reverse
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
-from django.template.response import TemplateResponse
-from django.http import HttpResponseForbidden
 
 # 載入網站基本設定模型
 from apps.home.models import SiteBasicSetting
@@ -88,48 +86,6 @@ def hide_site_settings_for_non_superusers(request, menu_items):
         
         for item in menu_items_to_remove:
             menu_items.remove(item)
-
-
-@hooks.register('construct_main_menu')
-def hide_images_menu_for_non_superusers(request, menu_items):
-    """
-    為非超級管理員隱藏圖片選單項目
-    """
-    if not request.user.is_superuser:
-        # 需要隱藏的選單項目名稱
-        items_to_hide = ['images']
-        
-        menu_items_to_remove = []
-        for item in menu_items:
-            if hasattr(item, 'name') and item.name in items_to_hide:
-                menu_items_to_remove.append(item)
-            elif hasattr(item, 'label') and '圖片' in item.label:
-                menu_items_to_remove.append(item)
-        
-        for item in menu_items_to_remove:
-            menu_items.remove(item)
-
-
-@hooks.register('register_admin_urls')
-def restrict_images_admin_urls():
-    """
-    限制非超級管理員存取 /admin/images/ 路由
-    """
-    def images_permission_denied(request, *args, **kwargs):
-        if not request.user.is_superuser:
-            return HttpResponseForbidden("只有超級管理員可以存取圖片管理")
-        # 如果是超級管理員，讓請求繼續到正常的 wagtail images 處理
-        from django.http import Http404
-        raise Http404()  # 這會讓 Django 繼續嘗試下一個 URL 模式
-
-    return [
-        # 限制所有 /admin/images/ 路由
-        re_path(
-            r"^images/.*$",
-            images_permission_denied,
-            name="restrict_wagtail_images"
-        ),
-    ]
 
 
 @hooks.register('before_edit_snippet')
@@ -229,14 +185,14 @@ def hide_pages_menu_for_vendors(request, menu_items):
     為商家用戶隱藏頁面相關選單項目
     """
     if is_vendor_user(request.user) and not request.user.is_superuser:
-        # 需要隱藏的選單項目名稱 (移除 images，因為已有專門的權限控制)
-        items_to_hide = ['pages', 'documents', 'snippets', 'forms']
+        # 需要隱藏的選單項目名稱
+        items_to_hide = ['pages', 'images', 'documents', 'snippets', 'forms']
         
         menu_items_to_remove = []
         for item in menu_items:
             if hasattr(item, 'name') and item.name in items_to_hide:
                 menu_items_to_remove.append(item)
-            elif hasattr(item, 'label') and ('頁面' in item.label or '文件' in item.label):
+            elif hasattr(item, 'label') and ('頁面' in item.label or '圖片' in item.label or '文件' in item.label):
                 menu_items_to_remove.append(item)
         
         for item in menu_items_to_remove:

@@ -46,27 +46,27 @@ def hide_site_settings_for_non_superusers(request, menu_items):
         for item in menu_items_to_remove:
             menu_items.remove(item)
 
-@hooks.register('register_admin_urls')
-def restrict_images_admin_urls():
-    """
-    限制只有超級管理員可以訪問 Images 管理後台 (非選擇器)
-    但允許一般用戶使用圖片選擇器 (chooser)
-    """
-    from django.urls import re_path
+# @hooks.register('register_admin_urls')
+# def restrict_images_admin_urls():
+#     """
+#     限制只有超級管理員可以訪問 Images 管理後台 (非選擇器)
+#     但允許一般用戶使用圖片選擇器 (chooser)
+#     """
+#     from django.urls import re_path
     
-    def check_superuser_permission(request, *args, **kwargs):
-        if not request.user.is_superuser:
-            raise PermissionDenied("只有超級管理員可以訪問圖片管理功能")
-        return None
+#     def check_superuser_permission(request, *args, **kwargs):
+#         if not request.user.is_superuser:
+#             raise PermissionDenied("只有超級管理員可以訪問圖片管理功能")
+#         return None
 
-    return [
-        # 只限制管理界面，不限制選擇器
-        re_path(
-            r"^images/(?!chooser/).*$",  # 不匹配 chooser/ 路徑
-            check_superuser_permission,
-            name="restrict_wagtail_images_admin"
-        ),
-    ]
+#     return [
+#         # 只限制管理界面，不限制選擇器
+#         re_path(
+#             r"^images/(?!chooser/).*$",  # 不匹配 chooser/ 路徑
+#             check_superuser_permission,
+#             name="restrict_wagtail_images_admin"
+#         ),
+#     ]
 
 @hooks.register('before_edit_snippet')
 def check_site_settings_permissions(request, instance):

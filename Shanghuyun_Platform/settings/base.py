@@ -96,6 +96,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "Shanghuyun_Platform.middleware.restrict_wagtail_images.RestrictWagtailImagesAdminMiddleware",
 ]
 
 ROOT_URLCONF = "Shanghuyun_Platform.urls"

@@ -31,47 +31,6 @@ def register_site_basic_setting_menu_item():
     attrs={'title': '僅限超級管理員'}
     )
 
-
-# @hooks.register('register_admin_menu_item')
-# def register_privacy_policy_menu_item():
-#     """
-#     註冊隱私權政策設定選單項目
-#     只有超級管理員可以看到此選單
-#     """
-#     app_label = SitePolicySetting._meta.app_label      # -> "users"
-#     model_name = SitePolicySetting._meta.model_name    # -> "sitepolicysetting"
-#     url = reverse('wagtailsettings:edit', args=[app_label, model_name])
-
-#     return MenuItem(
-#         '隱私權政策設定',           
-#         url,                   
-#         icon_name='privacy',  
-#         order=101,              
-#         classname='icon icon-privacy',
-#         attrs={'title': '僅限超級管理員'}
-#     )
-
-
-# @hooks.register('register_admin_menu_item')
-# def register_terms_of_service_menu_item():
-#     """
-#     註冊服務條款設定選單項目
-#     只有超級管理員可以看到此選單
-#     """
-#     app_label = SiteTermsSetting._meta.app_label      # -> "users"
-#     model_name = SiteTermsSetting._meta.model_name    # -> "sitetermssetting"
-#     url = reverse('wagtailsettings:edit', args=[app_label, model_name])
-
-#     return MenuItem(
-#         '服務條款',           
-#         url,                   
-#         icon_name='doc-full',  
-#         order=102,              
-#         classname='icon icon-doc-full',
-#         attrs={'title': '僅限超級管理員'}
-#     )
-
-
 @hooks.register('construct_main_menu')
 def hide_site_settings_for_non_superusers(request, menu_items):
     """
@@ -87,44 +46,26 @@ def hide_site_settings_for_non_superusers(request, menu_items):
         for item in menu_items_to_remove:
             menu_items.remove(item)
 
-
-@hooks.register('construct_main_menu')
-def hide_images_menu_for_non_superusers(request, menu_items):
-    """
-    為非超級管理員隱藏圖片選單項目
-    """
-    if not request.user.is_superuser:
-        # 需要隱藏的選單項目名稱
-        items_to_hide = ['images']
-        
-        menu_items_to_remove = []
-        for item in menu_items:
-            if hasattr(item, 'name') and item.name in items_to_hide:
-                menu_items_to_remove.append(item)
-            elif hasattr(item, 'label') and '圖片' in item.label:
-                menu_items_to_remove.append(item)
-        
-        for item in menu_items_to_remove:
-            menu_items.remove(item)
-"""
 @hooks.register('register_admin_urls')
 def restrict_images_admin_urls():
-    def images_permission_denied(request, *args, **kwargs):
+    """
+    限制只有超級管理員可以訪問 Images 管理相關的 URL
+    """
+    from django.urls import re_path
+    
+    def check_superuser_permission(request, *args, **kwargs):
         if not request.user.is_superuser:
-            return HttpResponseForbidden("只有超級管理員可以存取圖片管理")
-        # 如果是超級管理員，讓請求繼續到正常的 wagtail images 處理
-        from django.http import Http404
-        raise Http404()  # 這會讓 Django 繼續嘗試下一個 URL 模式
+            raise PermissionDenied("只有超級管理員可以訪問圖片管理功能")
+        return None
 
     return [
         # 限制所有 /admin/images/ 路由
         re_path(
             r"^images/.*$",
-            images_permission_denied,
+            check_superuser_permission,
             name="restrict_wagtail_images"
         ),
     ]
-"""
 
 @hooks.register('before_edit_snippet')
 def check_site_settings_permissions(request, instance):

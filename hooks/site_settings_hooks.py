@@ -49,7 +49,8 @@ def hide_site_settings_for_non_superusers(request, menu_items):
 @hooks.register('register_admin_urls')
 def restrict_images_admin_urls():
     """
-    限制只有超級管理員可以訪問 Images 管理相關的 URL
+    限制只有超級管理員可以訪問 Images 管理後台 (非選擇器)
+    但允許一般用戶使用圖片選擇器 (chooser)
     """
     from django.urls import re_path
     
@@ -59,11 +60,11 @@ def restrict_images_admin_urls():
         return None
 
     return [
-        # 限制所有 /admin/images/ 路由
+        # 只限制管理界面，不限制選擇器
         re_path(
-            r"^images/.*$",
+            r"^images/(?!chooser/).*$",  # 不匹配 chooser/ 路徑
             check_superuser_permission,
-            name="restrict_wagtail_images"
+            name="restrict_wagtail_images_admin"
         ),
     ]
 
@@ -162,16 +163,20 @@ def check_vendor_page_delete_permissions(request, page):
 def hide_pages_menu_for_vendors(request, menu_items):
     """
     為商家用戶隱藏頁面相關選單項目
+    但允許使用圖片選擇器功能
     """
     if is_vendor_user(request.user) and not request.user.is_superuser:
-        # 需要隱藏的選單項目名稱
-        items_to_hide = ['pages', 'images', 'documents', 'snippets', 'forms']
+        # 需要隱藏的選單項目名稱 (移除 'images' 以允許圖片選擇器功能)
+        items_to_hide = ['pages', 'documents', 'snippets', 'forms']
         
         menu_items_to_remove = []
         for item in menu_items:
             if hasattr(item, 'name') and item.name in items_to_hide:
                 menu_items_to_remove.append(item)
-            elif hasattr(item, 'label') and ('頁面' in item.label or '圖片' in item.label or '文件' in item.label):
+            elif hasattr(item, 'label') and ('頁面' in item.label or '文件' in item.label):
+                menu_items_to_remove.append(item)
+            # 隱藏圖片管理選單項目，但不阻止圖片選擇器功能
+            elif hasattr(item, 'name') and item.name == 'images':
                 menu_items_to_remove.append(item)
         
         for item in menu_items_to_remove:

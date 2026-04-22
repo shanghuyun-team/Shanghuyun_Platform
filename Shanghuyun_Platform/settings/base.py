@@ -306,3 +306,8 @@ SECURE_BROWSER_XSS_FILTER = True
 MERCHANT_ID = os.getenv('ECPAY_MERCHANT_ID')
 HASH_KEY = os.getenv('ECPAY_HASH_KEY')
 HASH_IV = os.getenv('ECPAY_HASH_IV')
+
+# -------- OpenAI Settings --------
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o')
+OPENAI_TIMEOUT = int(os.getenv('OPENAI_TIMEOUT', '30'))

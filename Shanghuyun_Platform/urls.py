@@ -8,6 +8,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
+from api.v1.product.ai_views import ai_recognize_view
 
 urlpatterns = [
     re_path(
@@ -15,6 +16,9 @@ urlpatterns = [
         RedirectView.as_view(url='/accounts/login/', permanent=False),
         name='wagtail_admin_login_redirect'
     ),
+
+    # AI 商品圖片辨識 endpoint（必須在 wagtail admin 之前）
+    path("admin/product/ai-recognize/", ai_recognize_view, name="product_ai_recognize"),
 
     #re_path(r'^admin/users/.*$', users_not_found),
     path("admin/", include(wagtailadmin_urls)),

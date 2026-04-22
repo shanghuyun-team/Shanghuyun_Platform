@@ -9,6 +9,8 @@ from .site_settings_hooks import *
 from wagtail.admin.menu import MenuItem
 from wagtail import hooks
 from django.urls import reverse
+from django.templatetags.static import static
+from django.utils.html import format_html
 
 # 載入你的 Setting model
 from apps.users.models.privacy_policy import SitePolicySetting
@@ -64,3 +66,10 @@ def rename_snippets_menu(request, menu_items):
             item.label = '分類'
         elif hasattr(item, 'label') and item.label == 'Snippets':
             item.label = '分類'
+
+
+@hooks.register('insert_global_admin_js')
+def insert_ai_product_recognize_js():
+    """注入 AI 商品辨識前端腳本到 Wagtail admin"""
+    js_url = static('js/ai_product_recognize.js')
+    return format_html('<script src="{}"></script>', js_url)

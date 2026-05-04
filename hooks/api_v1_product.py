@@ -112,11 +112,11 @@ class ProductAdmin(ModelAdmin):
 
     panels = [
         FieldPanel('vendor', permission='superuser'),
+        FieldPanel('image'),
         FieldPanel('name'),
         FieldPanel('description'),
         FieldPanel('price'),
         FieldPanel('stock'),
-        FieldPanel('image'),
     ]
 
     def is_shown(self, request):

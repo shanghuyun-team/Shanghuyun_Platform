@@ -48,7 +48,7 @@ class ProfileAdmin(ModelAdmin):
     menu_icon = 'form'
     permission_helper_class = SuperuserOnlyPermissionHelper
     list_display = ('user', 'portrait', 'real_name', 'nickname', 'address', 'phone')
-    search_fields = ('user__username', 'email', 'real_name')
+    search_fields = ('user__email', 'real_name', 'nickname')
 modeladmin_register(ProfileAdmin)
 
 @hooks.register('register_admin_urls')

@@ -1,29 +1,38 @@
 import json
-from django.test import RequestFactory
-from api.v1.account.models import User
+from django.test import TestCase, RequestFactory
+from django.contrib.auth import get_user_model
 from api.v1.order.views import create_order
-from api.v1.product.models import Product
 
-# Get the first user
-user = User.objects.first()
-
-payload = {
-    "items": [
-        {"product_id": 1, "quantity": 2},
-        {"product_id": 2, "quantity": 1}
-    ]
-}
+User = get_user_model()
 
 
-# Create POST request
-factory = RequestFactory()
-request = factory.post('/create_order/', data=json.dumps(payload), content_type='application/json')
+class CreateOrderTestCase(TestCase):
+    """建立訂單功能測試"""
 
-# Authenticate request with first user
-request.user = user
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            email='test@example.com',
+            password='testpassword123',
+        )
 
-# Call the view
-response = create_order(request)
+    def test_create_order_requires_post(self):
+        """GET 請求應回傳 400"""
+        request = self.factory.get('/api/v1/order/create/')
+        request.user = self.user
+        response = create_order(request)
+        self.assertEqual(response.status_code, 400)
 
-# Print the result
-print(response.content.decode())
+    def test_create_order_requires_items(self):
+        """空的 items 應回傳 400"""
+        payload = {"items": []}
+        request = self.factory.post(
+            '/api/v1/order/create/',
+            data=json.dumps(payload),
+            content_type='application/json',
+        )
+        request.user = self.user
+        response = create_order(request)
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+        self.assertIn('error', data)

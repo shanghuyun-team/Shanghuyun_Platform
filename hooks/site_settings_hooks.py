@@ -26,9 +26,8 @@ def register_site_basic_setting_menu_item():
         '網站基本設定',           
         url,                   
         icon_name='cogs',  
-        order=100,              # 設定較高的優先級
-        classname='icon icon-cogs',
-    attrs={'title': '僅限超級管理員'}
+        order=100,
+        attrs={'title': '僅限超級管理員'}
     )
 
 @hooks.register('construct_main_menu')

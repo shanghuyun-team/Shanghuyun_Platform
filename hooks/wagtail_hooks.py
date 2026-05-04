@@ -72,4 +72,11 @@ def rename_snippets_menu(request, menu_items):
 def insert_ai_product_recognize_js():
     """注入 AI 商品辨識前端腳本到 Wagtail admin"""
     js_url = static('js/ai_product_recognize.js')
-    return format_html('<script src="{}"></script>', js_url)
+    return format_html('<script src="{}?v=2"></script>', js_url)
+
+
+@hooks.register('insert_global_admin_css')
+def insert_ai_product_recognize_css():
+    """注入 AI 商品辨識樣式到 Wagtail admin"""
+    css_url = static('css/ai_product_recognize.css')
+    return format_html('<link rel="stylesheet" href="{}?v=2">', css_url)

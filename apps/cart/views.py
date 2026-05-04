@@ -9,6 +9,11 @@ from .models import Cart, SessionCart
 import json
 
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def get_cart(request):
     """獲取用戶購物車"""
     if request.user.is_authenticated:
@@ -172,7 +177,7 @@ def clear_cart(request):
         })
         
     except Exception as e:
-        print(f"清空購物車錯誤: {str(e)}")  # 用於調試
+        logger.error("清空購物車錯誤: %s", e)
         return JsonResponse({
             'success': False,
             'message': f'清空失敗: {str(e)}'

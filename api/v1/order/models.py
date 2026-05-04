@@ -3,6 +3,7 @@ from api.v1.product.models import Product
 from api.v1.account.models import User
 import uuid
 
+
 class Order(models.Model):
     STATUS_PENDING = "pending"
     STATUS_PAID = "paid"
@@ -15,65 +16,58 @@ class Order(models.Model):
     paid_at = models.DateTimeField(null=True, blank=True)  # 付款時間
     merchant_trade_no = models.CharField(max_length=20, blank=True, unique=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 暫存原始狀態，避免 save() 中再查一次 DB
+        self._original_status = self.status
+
     def get_total_items_count(self):
         """獲取訂單中商品總數量"""
         return sum(item.quantity for item in self.items.all())
-    
+
     def recalculate_total(self):
         """重新計算訂單總金額"""
         total = sum(item.get_total() for item in self.items.all())
         self.total_amount = total
         return total
 
-    def update_status(self, new_status):
-        """更新訂單狀態並處理相關邏輯"""
-        old_status = self.status
-        self.status = new_status
-        
-        # 如果從未付款狀態變為已付款，更新商品銷售統計
-        if old_status != self.STATUS_PAID and new_status == self.STATUS_PAID:
-            for item in self.items.all():
-                item.product.update_sales_count()
-        
-        # 如果從已付款狀態變為其他狀態，需要重新計算銷售統計
-        elif old_status == self.STATUS_PAID and new_status != self.STATUS_PAID:
-            for item in self.items.all():
-                item.product.update_sales_count()
-        
-        self.save()
-
     def save(self, *args, **kwargs):
-        # 檢查狀態是否有變更
-        if self.pk:  # 如果是更新現有訂單
-            old_order = Order.objects.filter(pk=self.pk).first()
-            if old_order and old_order.status != self.status:
-                # 狀態有變更，處理銷售統計
-                if old_order.status != self.STATUS_PAID and self.status == self.STATUS_PAID:
-                    # 從未付款變為已付款，設置付款時間並增加銷售統計
-                    from django.utils import timezone
-                    if not self.paid_at:
-                        self.paid_at = timezone.now()
-                    super().save(*args, **kwargs)  # 先保存訂單狀態
-                    for item in self.items.all():
-                        item.product.update_sales_count()
-                    return
-                elif old_order.status == self.STATUS_PAID and self.status != self.STATUS_PAID:
-                    # 從已付款變為其他狀態，清除付款時間並重新計算銷售統計
-                    self.paid_at = None
-                    super().save(*args, **kwargs)
-                    for item in self.items.all():
-                        item.product.update_sales_count()
-                    return
-        
-        # 如果還沒有 merchant_trade_no，先存一次產生 id
-        if not self.merchant_trade_no:
-            super().save(*args, **kwargs)  # 先存一次，產生 self.id
+        is_new = self.pk is None
+
+        # 新訂單：先存一次產生 ID，再生成 merchant_trade_no
+        if is_new and not self.merchant_trade_no:
+            super().save(*args, **kwargs)
             self.merchant_trade_no = f"{self.id}{uuid.uuid4().hex[:6].upper()}"
-            kwargs['force_insert'] = False  # 避免重複插入
-        super().save(*args, **kwargs)  # 再存一次更新 merchant_trade_no
-        
+            kwargs['force_insert'] = False
+            # 繼續往下走，會在末尾再 save 一次
+
+        # 狀態變更處理（僅更新時）
+        if not is_new and self._original_status != self.status:
+            from django.utils import timezone
+
+            if self._original_status != self.STATUS_PAID and self.status == self.STATUS_PAID:
+                # 從未付款 → 已付款
+                if not self.paid_at:
+                    self.paid_at = timezone.now()
+            elif self._original_status == self.STATUS_PAID and self.status != self.STATUS_PAID:
+                # 從已付款 → 其他狀態
+                self.paid_at = None
+
+        super().save(*args, **kwargs)
+
+        # 狀態變更後更新銷售統計
+        if not is_new and self._original_status != self.status:
+            if (self._original_status != self.STATUS_PAID and self.status == self.STATUS_PAID) or \
+               (self._original_status == self.STATUS_PAID and self.status != self.STATUS_PAID):
+                for item in self.items.all():
+                    item.product.update_sales_count()
+
+        # 更新暫存狀態
+        self._original_status = self.status
+
     def __str__(self):
         return f"Order {self.id} by {self.user.email}"
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)

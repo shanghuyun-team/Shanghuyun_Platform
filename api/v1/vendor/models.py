@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.db import models
 from django.utils.text import slugify
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.models import register_snippet

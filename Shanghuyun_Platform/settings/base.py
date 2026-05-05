@@ -272,6 +272,7 @@ REST_FRAMEWORK = {
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_ADAPTER = "api.v1.account.adapters.MyAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "api.v1.account.adapters.MySocialAccountAdapter"
 LOGIN_REDIRECT_URL = '/users/profile'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/users/profile'

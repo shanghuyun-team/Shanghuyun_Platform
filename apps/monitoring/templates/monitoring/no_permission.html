@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}<link href="{% static 'monitoring/css/monitoring.css' %}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+<main class="main">
+  <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
+    <div class="container position-relative">
+      <h1>無存取權限</h1>
+      <nav class="breadcrumbs"><ol>
+        <li><a href="/">首頁</a></li>
+        <li class="current">生產監控</li>
+      </ol></nav>
+    </div>
+  </div>
+
+  <section class="monitoring-section section-bg">
+    <div class="container" data-aos="fade-up">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+          <div class="monitoring-card">
+            <div class="card-body-custom py-5">
+              <i class="bi bi-shield-lock" style="font-size:5rem;color:#cda45e;"></i>
+              <h3 class="mt-4 text-light">您尚未取得生產監控權限</h3>
+              <p class="text-muted mt-2">請聯繫管理員開通此功能的使用權限。</p>
+              <a href="/" class="btn-monitoring-primary mt-3"><i class="bi bi-house me-2"></i>回到首頁</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock content %}

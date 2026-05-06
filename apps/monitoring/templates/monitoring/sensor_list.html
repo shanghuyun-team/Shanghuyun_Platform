@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}monitoring-sensor-list{% endblock %}
+
+{% block extra_css %}
+  <link href="{% static 'monitoring/css/monitoring.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block content %}
+<main class="main">
+
+  <!-- Page Title -->
+  <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
+    <div class="container position-relative">
+      <h1>感測器管理</h1>
+      <p>管理您的所有感測器。</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">首頁</a></li>
+          <li><a href="{% url 'monitoring:dashboard' %}">生產監控</a></li>
+          <li class="current">感測器列表</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section class="monitoring-section section-bg">
+    <div class="container" data-aos="fade-up">
+
+      <!-- 操作列 -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h2 class="section-heading mb-0">我的感測器</h2>
+        <a href="{% url 'monitoring:sensor_create' %}" class="btn-monitoring-primary">
+          <i class="bi bi-plus-circle me-2"></i>新增感測器
+        </a>
+      </div>
+
+      {% if sensors %}
+      <div class="row g-4">
+        {% for sensor in sensors %}
+        <div class="col-lg-4 col-md-6">
+          <div class="sensor-card">
+            <div class="sensor-card-header">
+              <div class="sensor-type-icon">
+                {% if sensor.sensor_type == 'temperature' %}
+                  <i class="bi bi-thermometer-half"></i>
+                {% elif sensor.sensor_type == 'humidity' %}
+                  <i class="bi bi-droplet"></i>
+                {% elif sensor.sensor_type == 'soil_moisture' %}
+                  <i class="bi bi-moisture"></i>
+                {% elif sensor.sensor_type == 'light' %}
+                  <i class="bi bi-brightness-high"></i>
+                {% elif sensor.sensor_type == 'ph' %}
+                  <i class="bi bi-water"></i>
+                {% elif sensor.sensor_type == 'ec' %}
+                  <i class="bi bi-lightning"></i>
+                {% else %}
+                  <i class="bi bi-cpu"></i>
+                {% endif %}
+              </div>
+              <span class="status-badge {% if sensor.is_active %}active{% else %}inactive{% endif %}">
+                {{ sensor.is_active|yesno:"啟用,停用" }}
+              </span>
+            </div>
+            <div class="sensor-card-body">
+              <h4 class="sensor-name">{{ sensor.name }}</h4>
+              <p class="sensor-meta">
+                <span class="type-badge">{{ sensor.get_sensor_type_display }}</span>
+                {% if sensor.location %}
+                <span class="location-text"><i class="bi bi-geo-alt"></i> {{ sensor.location|truncatechars:20 }}</span>
+                {% endif %}
+              </p>
+              {% with reading=sensor.latest_reading %}
+              {% if reading %}
+              <div class="latest-reading">
+                <span class="reading-label">最新數值</span>
+                <span class="reading-value">{{ reading.value }} {{ sensor.unit }}</span>
+                <span class="reading-time">{{ reading.recorded_at|date:"m/d H:i" }}</span>
+              </div>
+              {% else %}
+              <div class="latest-reading no-data">
+                <span class="reading-label">尚無數據</span>
+              </div>
+              {% endif %}
+              {% endwith %}
+            </div>
+            <div class="sensor-card-footer">
+              <a href="{% url 'monitoring:sensor_detail' sensor.pk %}" class="btn-sensor-action" title="詳情">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="{% url 'monitoring:sensor_edit' sensor.pk %}" class="btn-sensor-action" title="編輯">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <a href="{% url 'monitoring:sensor_delete' sensor.pk %}" class="btn-sensor-action btn-danger-action" title="刪除">
+                <i class="bi bi-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <i class="bi bi-cpu" style="font-size: 4rem;"></i>
+        <h4>尚未建立任何感測器</h4>
+        <p>建立感測器後即可開始監控您的農場數據。</p>
+        <a href="{% url 'monitoring:sensor_create' %}" class="btn-monitoring-primary mt-3">
+          <i class="bi bi-plus-circle me-2"></i>新增第一個感測器
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+</main>
+{% endblock content %}

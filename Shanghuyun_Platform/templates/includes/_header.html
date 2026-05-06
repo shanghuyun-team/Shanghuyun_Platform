@@ -1,4 +1,5 @@
-{% load static site_settings_tags %}
+{% load static site_settings_tags monitoring_tags %}
+{% has_monitoring_permission user as can_monitor %}
 <header id="header" class="header fixed-top">
 
     <div class="topbar d-flex align-items-center">
@@ -13,12 +14,6 @@
             <span>{{ contact_phone|default:'+886-2-1234-5678' }}</span>
           </i>
         </div>
-        {% comment %} <div class="languages d-none d-md-flex align-items-center">
-          <ul>
-            <li>En</li>
-            <li><a href="#">De</a></li>
-          </ul>
-        </div> {% endcomment %}
       </div>
     </div><!-- End Top Bar -->
 
@@ -38,28 +33,6 @@
             <li><a href="/">首頁<br></a></li>
             <li><a href="{% url 'news:list' %}">最新消息</a></li>
             <li><a href="{% url 'home:cooperative_farmers' %}">合作夥伴</a></li>
-            {% comment %} <li><a href="#specials">Specials</a></li>
-            <li><a href="#events">Events</a></li>
-            <li><a href="#chefs">Chefs</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="#">Dropdown 1</a></li>
-                <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                  <ul>
-                    <li><a href="#">Deep Dropdown 1</a></li>
-                    <li><a href="#">Deep Dropdown 2</a></li>
-                    <li><a href="#">Deep Dropdown 3</a></li>
-                    <li><a href="#">Deep Dropdown 4</a></li>
-                    <li><a href="#">Deep Dropdown 5</a></li>
-                  </ul>
-                </li>
-                <li><a href="#">Dropdown 2</a></li>
-                <li><a href="#">Dropdown 3</a></li>
-                <li><a href="#">Dropdown 4</a></li>
-              </ul>
-            </li>
-            <li><a href="#contact">Contact</a></li> {% endcomment %}
             
             <!-- Mobile User Menu Items -->
             {% if user.is_authenticated %}
@@ -72,6 +45,13 @@
               <li class="mobile-user-menu d-xl-none">
                 <a href="/api/v1/order/history/"><i class="fas fa-receipt me-2"></i>訂單紀錄</a>
               </li>
+              
+              {% comment %} 行動版 — 生產監控 {% endcomment %}
+              {% if can_monitor %}
+              <li class="mobile-user-menu d-xl-none">
+                <a href="{% url 'monitoring:dashboard' %}"><i class="bi bi-graph-up me-2"></i>生產監控儀表板</a>
+              </li>
+              {% endif %}
               
               {% comment %} 行動版管理功能選項 - 根據使用者身分顯示 {% endcomment %}
               {% if user.is_superuser or user.is_staff %}
@@ -117,30 +97,54 @@
               <img src="{% static 'assets/img/specials-1.png' %}" alt="User Avatar" class="user-avatar-header">
             {% endif %}
           </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userProfileDropdown">
-            <li><h6 class="dropdown-header">{{ user.username }}</h6></li>
-            <li><a class="dropdown-item" href="{% url "profile" %}"><i class="fas fa-user-circle"></i>個人資料</a></li>
-            <li><a class="dropdown-item" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"></i>購物車</a></li>
-            <li><a class="dropdown-item" href="/api/v1/order/history/"><i class="fas fa-receipt"></i>訂單紀錄</a></li>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-premium" aria-labelledby="userProfileDropdown">
+            <!-- 使用者資訊 -->
+            <li class="dropdown-user-info">
+              <div class="d-flex align-items-center px-3 py-2">
+                {% if user.profile and user.profile.portrait %}
+                  <img src="{{ user.profile.portrait.url }}" alt="" class="dropdown-avatar">
+                {% else %}
+                  <img src="{% static 'assets/img/specials-1.png' %}" alt="" class="dropdown-avatar">
+                {% endif %}
+                <div class="ms-3">
+                  <div class="dropdown-user-name">{{ user.username }}</div>
+                  <div class="dropdown-user-email">{{ user.email|truncatechars:24 }}</div>
+                </div>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+
+            <!-- 一般功能 -->
+            <li class="dropdown-section-label">我的帳戶</li>
+            <li><a class="dropdown-item" href="{% url "profile" %}"><i class="bi bi-person-circle"></i>個人資料</a></li>
+            <li><a class="dropdown-item" href="{% url 'cart:cart_detail' %}"><i class="bi bi-cart3"></i>購物車</a></li>
+            <li><a class="dropdown-item" href="/api/v1/order/history/"><i class="bi bi-receipt"></i>訂單紀錄</a></li>
             
+            {% comment %} 生產監控 — 有權限才顯示 {% endcomment %}
+            {% if can_monitor %}
+            <li><hr class="dropdown-divider"></li>
+            <li class="dropdown-section-label">生產工具</li>
+            <li><a class="dropdown-item dropdown-item-highlight" href="{% url 'monitoring:dashboard' %}"><i class="bi bi-graph-up"></i>生產監控儀表板</a></li>
+            {% endif %}
+
             {% comment %} 管理功能選項 - 根據使用者身分顯示 {% endcomment %}
             {% if user.is_superuser or user.is_staff %}
               <li><hr class="dropdown-divider"></li>
-              <li><h6 class="dropdown-header text-muted">管理功能</h6></li>
+              <li class="dropdown-section-label">管理功能</li>
               {% if user.is_superuser or user.is_staff %}
-                <li><a class="dropdown-item" href="/admin/"><i class="fas fa-cogs"></i>後臺管理</a></li>
+                <li><a class="dropdown-item" href="/admin/"><i class="bi bi-gear"></i>後臺管理</a></li>
               {% endif %}
               {% if user.is_superuser %}
-                <li><a class="dropdown-item" href="/admin/product/product/"><i class="fas fa-box"></i>商品管理</a></li>
+                <li><a class="dropdown-item" href="/admin/product/product/"><i class="bi bi-box-seam"></i>商品管理</a></li>
               {% endif %}
             {% elif user.vendor_profile %}
               <li><hr class="dropdown-divider"></li>
-              <li><h6 class="dropdown-header text-muted">商家功能</h6></li>
-              <li><a class="dropdown-item" href="/admin/product/product/"><i class="fas fa-box"></i>商品管理</a></li>
+              <li class="dropdown-section-label">商家功能</li>
+              <li><a class="dropdown-item" href="/admin/product/product/"><i class="bi bi-box-seam"></i>商品管理</a></li>
             {% endif %}
             
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}?next=/" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i>登出</a></li>
+            <li><a class="dropdown-item dropdown-item-logout" href="{% url 'account_logout' %}?next=/" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-box-arrow-right"></i>登出</a></li>
           </ul>
         </div>
         <form id="logout-form" action="{% url 'account_logout' %}" method="post" style="display:none;">
@@ -158,8 +162,11 @@
           <a href="{% url 'account_login' %}" class="btn login-signup-btn rounded-pill px-4 py-2 fw-bold shadow-sm">
             <i class="fas fa-sign-in-alt me-2"></i>登入 / 註冊
           </a>
-        </div>        
+        </div>
+        {% endif %}
+
         <style>
+        /* ===== Login / Signup Button ===== */
         .login-signup-btn {
           background: linear-gradient(90deg, #cda45e 0%, #ffb03b 100%);
           color: #29261f !important;
@@ -177,7 +184,8 @@
           box-shadow: 0 4px 16px rgba(255, 176, 59, 0.18);
           text-decoration: none;
         }
-          /* Mobile menu styles */
+
+        /* ===== Mobile Menu Styles ===== */
         .mobile-login-btn {
           background: linear-gradient(135deg, #cda45e 0%, #ffb03b 100%) !important;
           color: #ffffff !important;
@@ -238,7 +246,6 @@
           transform: translateY(-1px);
         }
         
-        /* Add some spacing for mobile menu items */
         @media (max-width: 1199.98px) {
           .mobile-user-menu, .mobile-auth-menu {
             border-top: 2px solid rgba(205, 164, 94, 0.3);
@@ -251,23 +258,145 @@
             padding: 20px 15px;
           }
           
-          /* 調整選單項目間距 */
           .mobile-user-menu li, .mobile-auth-menu li {
             margin: 8px 0;
           }
           
-          /* 手機選單背景調整 */
           .navmenu {
             background-color: rgba(40, 38, 31, 0.98) !important;
           }
           
-          /* 選單項目文字陰影效果 */
           .mobile-user-menu a, .mobile-auth-menu a {
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
           }
         }
+
+        /* ===================================================
+           Premium Dropdown Menu
+           =================================================== */
+        .dropdown-menu-premium {
+          min-width: 260px;
+          background: #1e1c17;
+          border: 1px solid rgba(205, 164, 94, 0.2);
+          border-radius: 16px;
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(205, 164, 94, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+          padding: 8px 0;
+          animation: dropdownFadeIn 0.25s ease;
+          backdrop-filter: blur(20px);
+          overflow: hidden;
+        }
+
+        @keyframes dropdownFadeIn {
+          from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* 使用者資訊區 */
+        .dropdown-user-info {
+          padding: 4px 0;
+        }
+        .dropdown-avatar {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid rgba(205, 164, 94, 0.4);
+          box-shadow: 0 2px 8px rgba(205, 164, 94, 0.15);
+          flex-shrink: 0;
+        }
+        .dropdown-user-name {
+          color: #fff;
+          font-weight: 700;
+          font-size: 0.95rem;
+          line-height: 1.3;
+        }
+        .dropdown-user-email {
+          color: #999;
+          font-size: 0.78rem;
+          line-height: 1.3;
+        }
+
+        /* 分區標籤 */
+        .dropdown-section-label {
+          color: #cda45e;
+          font-size: 0.7rem;
+          font-weight: 700;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+          padding: 10px 20px 4px;
+          pointer-events: none;
+        }
+
+        /* 分隔線 */
+        .dropdown-menu-premium .dropdown-divider {
+          border-color: rgba(205, 164, 94, 0.12);
+          margin: 4px 16px;
+        }
+
+        /* 選項 */
+        .dropdown-menu-premium .dropdown-item {
+          color: rgba(255, 255, 255, 0.85);
+          font-size: 0.88rem;
+          font-weight: 500;
+          padding: 9px 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: all 0.2s ease;
+          border-radius: 0;
+          position: relative;
+        }
+        .dropdown-menu-premium .dropdown-item i {
+          font-size: 1rem;
+          width: 20px;
+          text-align: center;
+          color: rgba(205, 164, 94, 0.6);
+          transition: color 0.2s ease;
+          flex-shrink: 0;
+        }
+        .dropdown-menu-premium .dropdown-item:hover,
+        .dropdown-menu-premium .dropdown-item:focus {
+          background: rgba(205, 164, 94, 0.1);
+          color: #cda45e;
+        }
+        .dropdown-menu-premium .dropdown-item:hover i {
+          color: #cda45e;
+        }
+        .dropdown-menu-premium .dropdown-item:active {
+          background: rgba(205, 164, 94, 0.2);
+          color: #fff;
+        }
+
+        /* 特殊高亮選項（生產監控） */
+        .dropdown-item-highlight {
+          color: #cda45e !important;
+          font-weight: 600 !important;
+        }
+        .dropdown-item-highlight i {
+          color: #cda45e !important;
+        }
+        .dropdown-item-highlight:hover {
+          background: rgba(205, 164, 94, 0.15) !important;
+        }
+
+        /* 登出按鈕 */
+        .dropdown-item-logout {
+          color: rgba(255, 107, 107, 0.85) !important;
+        }
+        .dropdown-item-logout i {
+          color: rgba(255, 107, 107, 0.6) !important;
+        }
+        .dropdown-item-logout:hover {
+          background: rgba(255, 107, 107, 0.1) !important;
+          color: #ff6b6b !important;
+        }
+        .dropdown-item-logout:hover i {
+          color: #ff6b6b !important;
+        }
         </style>
-        {% endif %}
 
       </div>
 

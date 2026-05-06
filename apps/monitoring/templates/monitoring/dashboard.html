@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}monitoring-dashboard{% endblock %}
+
+{% block extra_css %}
+  <link href="{% static 'monitoring/css/monitoring.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block content %}
+<main class="main">
+
+  <!-- Page Title -->
+  <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
+    <div class="container position-relative">
+      <h1>生產監控儀表板</h1>
+      <p>即時掌握您的農場感測數據。</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">首頁</a></li>
+          <li class="current">生產監控</li>
+        </ol>
+      </nav>
+    </div>
+  </div><!-- End Page Title -->
+
+  <!-- Dashboard Section -->
+  <section class="monitoring-section section-bg">
+    <div class="container" data-aos="fade-up">
+
+      <!-- 統計卡片 -->
+      <div class="row g-4 mb-5">
+        <div class="col-lg-4 col-md-6">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-cpu"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">{{ total_sensors }}</span>
+              <span class="stat-label">感測器總數</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="stat-card">
+            <div class="stat-icon active-icon"><i class="bi bi-broadcast"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">{{ active_sensors }}</span>
+              <span class="stat-label">啟用中</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="stat-card">
+            <div class="stat-icon inactive-icon"><i class="bi bi-pause-circle"></i></div>
+            <div class="stat-info">
+              <span class="stat-number">{{ inactive_sensors }}</span>
+              <span class="stat-label">已停用</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快捷操作 -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <div class="d-flex flex-wrap gap-3">
+            <a href="{% url 'monitoring:sensor_create' %}" class="btn-monitoring-primary">
+              <i class="bi bi-plus-circle me-2"></i>新增感測器
+            </a>
+            <a href="{% url 'monitoring:sensor_list' %}" class="btn-monitoring-outline">
+              <i class="bi bi-list-ul me-2"></i>感測器列表
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 圖表區域 -->
+      {% if sensors %}
+      <div class="row mb-5">
+        <div class="col-12">
+          <div class="monitoring-card">
+            <div class="card-header-custom">
+              <h3><i class="bi bi-graph-up me-2"></i>感測數據總覽</h3>
+              <div class="chart-controls">
+                <select id="dashboardSensorSelect" class="form-select form-select-sm">
+                  {% for s in sensors %}
+                  <option value="{{ s.pk }}" data-unit="{{ s.unit }}">{{ s.name }} ({{ s.get_sensor_type_display }})</option>
+                  {% endfor %}
+                </select>
+                <div class="btn-group ms-2" role="group">
+                  <button type="button" class="btn btn-sm range-btn active" data-range="24h">24h</button>
+                  <button type="button" class="btn btn-sm range-btn" data-range="7d">7 天</button>
+                  <button type="button" class="btn btn-sm range-btn" data-range="30d">30 天</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body-custom">
+              <canvas id="dashboardChart" height="300"></canvas>
+              <div id="chartLoading" class="chart-loading" style="display:none;">
+                <div class="spinner-border text-warning" role="status">
+                  <span class="visually-hidden">載入中...</span>
+                </div>
+              </div>
+              <div id="chartNoData" class="chart-no-data" style="display:none;">
+                <i class="bi bi-inbox"></i>
+                <p>尚無感測數據</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- AI 即時建議 -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <div class="monitoring-card ai-card">
+            <div class="card-header-custom">
+              <h3><i class="bi bi-robot me-2"></i>AI 生產建議</h3>
+              <button type="button" class="btn-monitoring-primary btn-sm" id="btnGetAiAdvice" onclick="fetchAiRecommendation()">
+                <i class="bi bi-stars me-1"></i>取得 AI 建議
+              </button>
+            </div>
+            <div class="card-body-custom">
+              <!-- 初始狀態 -->
+              <div id="aiInitial" class="ai-initial-state">
+                <i class="bi bi-lightbulb"></i>
+                <p>點擊上方按鈕，AI 將根據您的感測器數據提供即時農業生產建議。</p>
+              </div>
+              <!-- 載入中 -->
+              <div id="aiLoading" class="ai-loading" style="display:none;">
+                <div class="spinner-border text-warning" role="status"></div>
+                <p class="mt-2">AI 正在分析您的感測器數據...</p>
+              </div>
+              <!-- 錯誤 -->
+              <div id="aiError" class="ai-error" style="display:none;"></div>
+              <!-- 結果 -->
+              <div id="aiResult" style="display:none;">
+                <div class="ai-status-bar mb-4" id="aiStatusBar">
+                  <div class="ai-status-indicator" id="aiStatusIndicator"></div>
+                  <div>
+                    <strong id="aiStatusText"></strong>
+                    <p class="mb-0 small text-muted" id="aiSummary"></p>
+                  </div>
+                </div>
+                <!-- 警告 -->
+                <div id="aiAlerts" class="mb-4"></div>
+                <!-- 建議 -->
+                <div id="aiRecommendations" class="mb-4"></div>
+                <!-- 趨勢 -->
+                <div id="aiTrends" class="ai-trends"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="monitoring-card">
+            <div class="card-header-custom">
+              <h3><i class="bi bi-clock-history me-2"></i>最近感測數據</h3>
+            </div>
+            <div class="card-body-custom">
+              {% if recent_readings %}
+              <div class="table-responsive">
+                <table class="table monitoring-table">
+                  <thead>
+                    <tr>
+                      <th>感測器</th>
+                      <th>類型</th>
+                      <th>數值</th>
+                      <th>記錄時間</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for reading in recent_readings %}
+                    <tr>
+                      <td>
+                        <a href="{% url 'monitoring:sensor_detail' reading.sensor.pk %}" class="sensor-link">
+                          {{ reading.sensor.name }}
+                        </a>
+                      </td>
+                      <td><span class="type-badge">{{ reading.sensor.get_sensor_type_display }}</span></td>
+                      <td class="reading-value">{{ reading.value }} {{ reading.sensor.unit }}</td>
+                      <td class="reading-time">{{ reading.recorded_at|date:"Y/m/d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <p>尚無感測數據。請先新增感測器並透過 API 上傳資料。</p>
+                <a href="{% url 'monitoring:sensor_create' %}" class="btn-monitoring-primary mt-3">
+                  <i class="bi bi-plus-circle me-2"></i>新增感測器
+                </a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sensorSelect = document.getElementById('dashboardSensorSelect');
+  const rangeBtns = document.querySelectorAll('.range-btn');
+  const canvas = document.getElementById('dashboardChart');
+  if (!canvas) return;
+
+  let chart = null;
+  let currentRange = '24h';
+
+  function fetchAndRender() {
+    const sensorId = sensorSelect.value;
+    const unit = sensorSelect.selectedOptions[0].dataset.unit || '';
+    const loading = document.getElementById('chartLoading');
+    const noData = document.getElementById('chartNoData');
+
+    loading.style.display = 'flex';
+    noData.style.display = 'none';
+    canvas.style.display = 'none';
+
+    fetch(`/monitoring/sensors/${sensorId}/data/?range=${currentRange}`)
+      .then(r => r.json())
+      .then(data => {
+        loading.style.display = 'none';
+        if (!data.values.length) {
+          noData.style.display = 'flex';
+          return;
+        }
+        canvas.style.display = 'block';
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: `${data.sensor_name} (${unit})`,
+              data: data.values,
+              borderColor: '#cda45e',
+              backgroundColor: 'rgba(205,164,94,0.15)',
+              tension: 0.3,
+              fill: true,
+              pointRadius: data.values.length > 100 ? 0 : 3,
+              pointBackgroundColor: '#cda45e',
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { labels: { color: '#ccc' } }
+            },
+            scales: {
+              x: {
+                ticks: { color: '#999', maxTicksLimit: 12 },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+              },
+              y: {
+                ticks: { color: '#999' },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+              }
+            }
+          }
+        });
+      })
+      .catch(() => {
+        loading.style.display = 'none';
+        noData.style.display = 'flex';
+      });
+  }
+
+  sensorSelect.addEventListener('change', fetchAndRender);
+  rangeBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      rangeBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentRange = this.dataset.range;
+      fetchAndRender();
+    });
+  });
+
+  fetchAndRender();
+});
+
+// --- AI 建議 ---
+function fetchAiRecommendation() {
+  const btn = document.getElementById('btnGetAiAdvice');
+  const initial = document.getElementById('aiInitial');
+  const loading = document.getElementById('aiLoading');
+  const error = document.getElementById('aiError');
+  const result = document.getElementById('aiResult');
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>分析中...';
+  initial.style.display = 'none';
+  error.style.display = 'none';
+  result.style.display = 'none';
+  loading.style.display = 'flex';
+
+  fetch('{% url "monitoring:ai_recommendation" %}')
+    .then(r => r.json())
+    .then(resp => {
+      loading.style.display = 'none';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-stars me-1"></i>重新分析';
+
+      if (resp.error) {
+        error.style.display = 'block';
+        error.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>' + resp.error;
+        return;
+      }
+
+      const d = resp.data;
+      result.style.display = 'block';
+
+      // 狀態列
+      const colorMap = {green:'#28a745',yellow:'#ffc107',orange:'#fd7e14',red:'#dc3545'};
+      const statusColor = colorMap[d.status_color] || '#ffc107';
+      document.getElementById('aiStatusIndicator').style.background = statusColor;
+      document.getElementById('aiStatusText').textContent = '環境狀態：' + d.overall_status;
+      document.getElementById('aiStatusText').style.color = statusColor;
+      document.getElementById('aiSummary').textContent = d.summary;
+
+      // 警告
+      const alertsEl = document.getElementById('aiAlerts');
+      alertsEl.innerHTML = '';
+      if (d.alerts && d.alerts.length) {
+        d.alerts.forEach(a => {
+          const cls = a.level === 'danger' ? 'danger' : a.level === 'warning' ? 'warning' : 'info';
+          const icon = a.level === 'danger' ? 'exclamation-triangle-fill' : a.level === 'warning' ? 'exclamation-circle' : 'info-circle';
+          alertsEl.innerHTML += `<div class="ai-alert ai-alert-${cls}"><i class="bi bi-${icon} me-2"></i><strong>${a.sensor_name || ''}</strong> ${a.message}</div>`;
+        });
+      }
+
+      // 建議
+      const recsEl = document.getElementById('aiRecommendations');
+      recsEl.innerHTML = '';
+      if (d.recommendations && d.recommendations.length) {
+        recsEl.innerHTML = '<h5 class="text-light mb-3"><i class="bi bi-lightbulb me-2"></i>生產建議</h5>';
+        d.recommendations.forEach(r => {
+          const prioClass = r.priority === 'high' ? 'high' : r.priority === 'medium' ? 'medium' : 'low';
+          const catIcons = {irrigation:'droplet',temperature:'thermometer-half',fertilizer:'flower1',pest:'bug',general:'gear'};
+          const catIcon = catIcons[r.category] || 'gear';
+          recsEl.innerHTML += `<div class="ai-rec-item ai-rec-${prioClass}"><div class="ai-rec-icon"><i class="bi bi-${catIcon}"></i></div><div class="ai-rec-content"><h6>${r.title}</h6><p>${r.description}</p></div><span class="ai-rec-priority">${r.priority}</span></div>`;
+        });
+      }
+
+      // 趨勢
+      const trendsEl = document.getElementById('aiTrends');
+      trendsEl.innerHTML = '';
+      if (d.trends) {
+        trendsEl.innerHTML = '<div class="ai-trend-box"><i class="bi bi-graph-up-arrow me-2"></i><span>' + d.trends + '</span></div>';
+      }
+    })
+    .catch(() => {
+      loading.style.display = 'none';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-stars me-1"></i>取得 AI 建議';
+      error.style.display = 'block';
+      error.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>連線失敗，請稍後再試。';
+    });
+}
+</script>
+{% endblock extra_js %}

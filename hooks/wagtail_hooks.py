@@ -5,6 +5,7 @@ from .api_v1_order import *
 from .group import *
 from .page import *
 from .site_settings_hooks import *
+from .monitoring import *
 
 from wagtail.admin.menu import MenuItem
 from wagtail import hooks

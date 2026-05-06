@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}monitoring-sensor-form{% endblock %}
+
+{% block extra_css %}
+  <link href="{% static 'monitoring/css/monitoring.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block content %}
+<main class="main">
+  <div class="page-title position-relative" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.webp' %});">
+    <div class="container position-relative">
+      <h1>{% if is_edit %}編輯感測器{% else %}新增感測器{% endif %}</h1>
+      <nav class="breadcrumbs"><ol>
+        <li><a href="/">首頁</a></li>
+        <li><a href="{% url 'monitoring:dashboard' %}">生產監控</a></li>
+        <li class="current">{% if is_edit %}編輯{% else %}新增{% endif %}</li>
+      </ol></nav>
+    </div>
+  </div>
+
+  <section class="monitoring-section section-bg">
+    <div class="container" data-aos="fade-up">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="monitoring-card">
+            <div class="card-header-custom">
+              <h3><i class="bi bi-{% if is_edit %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if is_edit %}編輯感測器{% else %}新增感測器{% endif %}</h3>
+            </div>
+            <div class="card-body-custom">
+              <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-4">
+                  {% if field.name == "is_active" %}
+                  <div class="form-check form-switch">
+                    {{ field }}
+                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  </div>
+                  {% else %}
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}</label>
+                  {{ field }}
+                  {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                  {% endif %}
+                  {% if field.errors %}<div class="invalid-feedback d-block">{% for error in field.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                </div>
+                {% endfor %}
+                <div class="d-flex gap-3 mt-4">
+                  <button type="submit" class="btn-monitoring-primary"><i class="bi bi-check-circle me-2"></i>{% if is_edit %}儲存變更{% else %}建立感測器{% endif %}</button>
+                  <a href="{% url 'monitoring:sensor_list' %}" class="btn-monitoring-outline">取消</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock content %}

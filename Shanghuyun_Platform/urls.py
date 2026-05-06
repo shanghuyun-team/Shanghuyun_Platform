@@ -29,12 +29,14 @@ urlpatterns = [
     path("api/v1/order/", include("api.v1.order.urls")),
     path("api/v1/payment/", include("api.v1.payment.urls")),
     path("api/v1/vendor/", include("api.v1.vendor.urls")),
+    path("api/v1/monitoring/", include("api.v1.monitoring.urls")),
 
     ############## APP URLS ##############
     path('users/', include('apps.users.urls')),
     path('news/', include('apps.news.urls')),
     path('home/', include('apps.home.urls')),
     path('cart/', include('apps.cart.urls')),
+    path('monitoring/', include('apps.monitoring.urls')),
 
 
     ############## THIRD-PARTY URLS ##############

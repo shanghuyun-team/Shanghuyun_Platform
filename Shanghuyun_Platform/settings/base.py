@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     "apps.cart.apps.CartConfig",
     "apps.users.apps.UsersConfig",
     "apps.news.apps.NewsConfig",
+    "apps.monitoring.apps.MonitoringConfig",
     "search",
 
 
